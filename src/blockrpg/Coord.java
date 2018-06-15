@@ -10,6 +10,9 @@ package blockrpg;
  * @author L
  */
 class Coord {
+	
+	protected final double ERROR = 0.001;
+	
 	protected double x;
 	protected double y;
 	protected double z;
@@ -40,14 +43,57 @@ class Coord {
 	}
 
 	/**
+	 * Custom Coord Constructor. Creates a Coord at (x,y,z)
 	 * 
-	 * @param arr
+	 * @param coords
+	 *            double array containing x, y, z information in that order
+	 * 
+	 */
+	public Coord(double[] coords) {
+		this.x = coords[0];
+		this.y = coords[1];
+		this.z = coords[2];
+	}
+
+	/**
+	 * 
+	 * @param coords
 	 *            Sets coordinate to given array (in x, y, z form)
 	 */
-	public void setCoord(double[] arr) {
-		this.x = arr[0];
-		this.y = arr[1];
-		this.y = arr[2];
+	public void setCoord(double[] coords) {
+		this.x = coords[0];
+		this.y = coords[1];
+		this.y = coords[2];
+	}
+
+	/**
+	 * 
+	 * @param x
+	 *            Adds inputed value to the X coordinate
+	 */
+	public void addX(double x) {
+		double[] coords = { x, this.y, this.z };
+		setCoord(coords);
+	}
+
+	/**
+	 * 
+	 * @param y
+	 *            Adds inputed value to the Y coordinate
+	 */
+	public void addY(double y) {
+		double[] coords = { this.x, y, this.z };
+		setCoord(coords);
+	}
+
+	/**
+	 * 
+	 * @param z
+	 *            Adds inputed value to the Z coordinate
+	 */
+	public void addZ(double z) {
+		double[] coords = { this.x, this.y, z };
+		setCoord(coords);
 	}
 
 	/**
