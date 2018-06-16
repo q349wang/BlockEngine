@@ -63,7 +63,7 @@ class Coord {
 	public void setCoord(double[] coords) {
 		this.x = coords[0];
 		this.y = coords[1];
-		this.y = coords[2];
+		this.z = coords[2];
 	}
 
 	/**

@@ -8,9 +8,7 @@ class Vector extends Coord {
 	 * Default Vector Constructor. Creates a Vector of (0,0,0) of length 0
 	 */
 	public Vector() {
-		this.x = 0;
-		this.y = 0;
-		this.z = 0;
+		super();
 		this.length = 0;
 	}
 
@@ -26,9 +24,7 @@ class Vector extends Coord {
 	 *            z-Coordinate
 	 */
 	public Vector(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		super(x, y, z);
 		length = Math.sqrt(x * x + y * y + z * z);
 	}
 
@@ -41,9 +37,7 @@ class Vector extends Coord {
 	 * 
 	 */
 	public Vector(double[] coords) {
-		this.x = coords[0];
-		this.y = coords[1];
-		this.z = coords[2];
+		super(coords);
 		length = Math.sqrt(x * x + y * y + z * z);
 	}
 
@@ -53,14 +47,13 @@ class Vector extends Coord {
 	 * @return normalized vector as Vector
 	 */
 	public Vector normalize() {
-		Vector normalized = new Vector();
-		normalized.length = Math.sqrt(x * x + y * y + z * z);
+		Vector normalized = new Vector(this.getCoord());
 
 		// Don't normalize if length is already close to 1 or length is 0 tiny changes
 		if (Math.abs(normalized.length - 1.0) > ERROR && Math.abs(normalized.length - 0.0) > ERROR) {
-			normalized.x = this.x / normalized.length;
-			normalized.y = this.x / normalized.length;
-			normalized.z = this.x / normalized.length;
+			normalized.x = this.x / normalized.length + 0.0;
+			normalized.y = this.y / normalized.length + 0.0;
+			normalized.z = this.z / normalized.length + 0.0;
 		}
 		normalized.length = 1.0;
 
@@ -69,10 +62,8 @@ class Vector extends Coord {
 	}
 
 	@Override
-	public void setCoord(double arr[]) {
-		this.x = arr[0];
-		this.y = arr[1];
-		this.y = arr[2];
+	public void setCoord(double coords[]) {
+		super.setCoord(coords);
 		length = Math.sqrt(x * x + y * y + z * z);
 	}
 
@@ -118,32 +109,41 @@ class Vector extends Coord {
 	 * @return returns cross product as Vector
 	 */
 	public Vector cross(Vector other) {
-		Vector product = new Vector(this.y * other.z - this.z * other.y, this.z * other.x - this.x * other.z,
-				this.x * other.y - this.y * other.x);
+		Vector product = new Vector(this.y * other.z - this.z * other.y + 0.0, this.z * other.x - this.x * other.z + 0.0,
+				this.x * other.y - this.y * other.x + 0.0);
 		return product;
 	}
 
 	/**
 	 * 
-	 * @param other other vector for projection
+	 * @param other
+	 *            other vector for projection
 	 * @return returns projection of other vector on this vector as Vector
 	 */
 	public Vector proj(Vector other) {
-		double projVal = this.normalize().dot(other);
+		double dotProd = this.dot(other);
+		double projVal;
+		if (Math.abs(dotProd - 0.0) < ERROR) {
+			projVal = 0.0;
+		} else {
+			projVal = dotProd / (x * x + y * y + z * z) + 0.0;
+		}
+
 		return this.multiply(projVal);
 
 	}
-	
+
 	/**
 	 * 
-	 * @param other other vector for rejection
+	 * @param other
+	 *            other vector for rejection
 	 * @return returns rejection of other vector on this vector as Vector
 	 */
 	public Vector perp(Vector other) {
 		Vector rejection = this.proj(other);
-		double coords[] = {this.x-rejection.x, this.y-rejection.y, this.y-rejection.y};
+		double coords[] = { other.x - rejection.x, other.y - rejection.y, other.z - rejection.z };
 		rejection.setCoord(coords);
-		
+
 		return rejection;
 	}
 }

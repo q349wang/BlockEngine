@@ -6,9 +6,7 @@ public class Position extends Coord {
 	 * Default Position Constructor. Creates a Position of (0,0,0)
 	 */
 	public Position() {
-		this.x = 0;
-		this.y = 0;
-		this.z = 0;
+		super();
 	}
 
 	/**
@@ -21,10 +19,8 @@ public class Position extends Coord {
 	 * @param z
 	 *            z-Coordinate
 	 */
-	public Position(int x, int y, int z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public Position(double x, double y, double z) {
+		super(x, y, z);
 	}
 
 	/**
@@ -35,9 +31,7 @@ public class Position extends Coord {
 	 * 
 	 */
 	public Position(double[] coords) {
-		this.x = coords[0];
-		this.y = coords[1];
-		this.z = coords[2];
+		super(coords);
 	}
 
 	/**
