@@ -21,21 +21,25 @@ class Face extends JComponent {
 	private static final long serialVersionUID = -3860601078926040180L;
 
 	private Polygon seenFace;
-	private int[] xVal;
-	private int[] yVal;
+	private int[] viewX;
+	private int[] viewY;
 	private int numPoints;
 	private Position[] points;
 	private Position center;
 
-	// Default Face - Nothing
+	/**
+	 * Default constructor for face
+	 */
 	public Face() {
 
 		seenFace = new Polygon();
-		xVal = null;
-		yVal = null;
+		viewX = null;
+		viewY = null;
+		points =null;
 		numPoints = 0;
 		center = new Position();
 	}
+
 	
 	@Override
 	public void paintComponent(Graphics g) {

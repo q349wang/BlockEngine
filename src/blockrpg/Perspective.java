@@ -34,10 +34,11 @@ class Perspective {
 	public Perspective(double[] posCoords, double[] dirCoords, double[] tiltCoords) {
 		pos = new Position(posCoords);
 		dir = new Vector(dirCoords);
+		dir=dir.normalize();
 
 		tilt = new Vector(tiltCoords);
-		tilt = dir.perp(tilt);
-		norm = dir.cross(tilt);
+		tilt = dir.perp(tilt).normalize();
+		norm = dir.cross(tilt).normalize();
 
 		viewBasis = new double[3][3];
 		viewBasisInverse = new double[3][3];
@@ -140,7 +141,9 @@ class Perspective {
 	public Vector toViewBasis(Vector stdCoord) {
 		double[] newCoords = new double[3];
 		double[] oldCoords = stdCoord.getCoord();
+		double[] posCoords = pos.getCoord();
 		for (int i = 0; i < 3; i++) {
+			oldCoords[i] -= posCoords[i];
 			for (int j = 0; j < 3; j++) {
 				newCoords[j] += viewBasisInverse[i][j] * oldCoords[i] + 0.0;
 			}
@@ -159,10 +162,15 @@ class Perspective {
 	public Vector toStdBasis(Vector viewCoord) {
 		double[] newCoords = new double[3];
 		double[] oldCoords = viewCoord.getCoord();
+		double[] posCoords = pos.getCoord();
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				newCoords[j] += viewBasis[i][j] * oldCoords[i] + 0.0;
 			}
+		}
+		
+		for(int i = 0; i < 3; i++) {
+			newCoords[i] += posCoords[i];
 		}
 		Vector stdCoord = new Vector();
 		stdCoord.setCoord(newCoords);
@@ -178,7 +186,9 @@ class Perspective {
 	public Position toViewBasis(Position stdCoord) {
 		double[] newCoords = new double[3];
 		double[] oldCoords = stdCoord.getCoord();
+		double[] posCoords = pos.getCoord();
 		for (int i = 0; i < 3; i++) {
+			oldCoords[i] -= posCoords[i];
 			for (int j = 0; j < 3; j++) {
 				newCoords[j] += viewBasisInverse[i][j] * oldCoords[i] + 0.0;
 			}
@@ -197,10 +207,16 @@ class Perspective {
 	public Position toStdBasis(Position viewCoord) {
 		double[] newCoords = new double[3];
 		double[] oldCoords = viewCoord.getCoord();
+		double[] posCoords = pos.getCoord();
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				newCoords[j] += viewBasis[i][j] * oldCoords[i] + 0.0;
 			}
+		}
+		
+
+		for(int i = 0; i < 3; i++) {
+			newCoords[i] += posCoords[i];
 		}
 		Position stdCoord = new Position();
 		stdCoord.setCoord(newCoords);

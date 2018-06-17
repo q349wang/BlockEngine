@@ -96,12 +96,12 @@ public class MainWindow extends javax.swing.JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(() -> {
 			new MainWindow().setVisible(true);
-			double[] pos = {0.0,0.0,0.0};
-			double[] dir = {1.0, 2.0,0.0};
-			double[] tilt = {-2.0,1.0,0.0};
+			double[] pos = {1.0,2.0,0.0};
+			double[] dir = {0, 2,0};
+			double[] tilt = {0,0,2};
 			Perspective test = new Perspective(pos, dir, tilt);
-			Position test2 = new Position(1, 2, 0);
-			test2 = test.toViewBasis(test2);
+			Position test2 = new Position(1, 0, 0);
+			test2 = test.toStdBasis(test2);
 			System.out.println("Yo");
 		});
 	}
