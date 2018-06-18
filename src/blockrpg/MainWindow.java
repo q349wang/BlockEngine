@@ -100,7 +100,7 @@ public class MainWindow extends javax.swing.JFrame {
 			double[] dir = {0, 2,0};
 			double[] tilt = {0,0,2};
 			Perspective test = new Perspective(pos, dir, tilt);
-			Position test2 = new Position(1, 0, 0);
+			Position3D test2 = new Position3D(1, 0, 0);
 			test2 = test.toStdBasis(test2);
 			System.out.println("Yo");
 		});

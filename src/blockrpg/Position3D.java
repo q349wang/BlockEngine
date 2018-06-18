@@ -1,16 +1,16 @@
 package blockrpg;
 
-public class Position extends Coord {
+public class Position3D extends Coord3D {
 
 	/**
-	 * Default Position Constructor. Creates a Position of (0,0,0)
+	 * Default Position3D Constructor. Creates a Position3D of (0,0,0)
 	 */
-	public Position() {
+	public Position3D() {
 		super();
 	}
 
 	/**
-	 * Custom Position Constructor. Creates a Position at (x,y,z)
+	 * Custom Position3D Constructor. Creates a Position3D at (x,y,z)
 	 * 
 	 * @param x
 	 *            x-Coordinate
@@ -19,18 +19,18 @@ public class Position extends Coord {
 	 * @param z
 	 *            z-Coordinate
 	 */
-	public Position(double x, double y, double z) {
+	public Position3D(double x, double y, double z) {
 		super(x, y, z);
 	}
 
 	/**
-	 * Custom Position Constructor. Creates a Position at (x,y,z)
+	 * Custom Position3D Constructor. Creates a Position3D at (x,y,z)
 	 * 
 	 * @param coords
 	 *            double array containing x, y, z information in that order
 	 * 
 	 */
-	public Position(double[] coords) {
+	public Position3D(double[] coords) {
 		super(coords);
 	}
 
@@ -40,7 +40,7 @@ public class Position extends Coord {
 	 *            Another position
 	 * @return the x distance from this to the other position as a double
 	 */
-	public double xDistancefrom(Position other) {
+	public double xDistancefrom(Position3D other) {
 		return other.x - this.x;
 	}
 
@@ -50,7 +50,7 @@ public class Position extends Coord {
 	 *            Another position
 	 * @return the y distance from this to the other position as a double
 	 */
-	public double yDistancefrom(Position other) {
+	public double yDistancefrom(Position3D other) {
 		return other.y - this.y;
 	}
 
@@ -60,7 +60,7 @@ public class Position extends Coord {
 	 *            Another position
 	 * @return the z distance from this to the other position as a double
 	 */
-	public double zDistancefrom(Position other) {
+	public double zDistancefrom(Position3D other) {
 		return other.z - this.z;
 	}
 
@@ -70,7 +70,7 @@ public class Position extends Coord {
 	 *            Another position
 	 * @return the total distance from this to the other position as a double
 	 */
-	public double totDistanceFrom(Position other) {
+	public double totDistanceFrom(Position3D other) {
 
 		double deltaX = xDistancefrom(other);
 		double deltaY = yDistancefrom(other);
@@ -82,10 +82,10 @@ public class Position extends Coord {
 	 * 
 	 * @param other
 	 *            Another position
-	 * @return the direction from this to the other position as a Vector
+	 * @return the direction from this to the other position as a Vector3D
 	 */
-	public Vector getDirection(Position other) {
-		Vector direction = new Vector(xDistancefrom(other), yDistancefrom(other), zDistancefrom(other));
+	public Vector3D getDirection(Position3D other) {
+		Vector3D direction = new Vector3D(xDistancefrom(other), yDistancefrom(other), zDistancefrom(other));
 		return direction;
 	}
 }

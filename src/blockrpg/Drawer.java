@@ -3,7 +3,7 @@ package blockrpg;
 import javax.swing.JPanel;
 import java.awt.*;
 
-class Drawer extends JPanel {
+public class Drawer extends JPanel {
 
 	/**
 	 * 

@@ -9,7 +9,7 @@ package blockrpg;
  *
  * @author L
  */
-class Coord {
+public class Coord3D {
 	
 	protected final double ERROR = 0.001;
 	
@@ -18,16 +18,16 @@ class Coord {
 	protected double z;
 
 	/**
-	 * Default Coord Constructor. Creates a Coord at (0,0,0)
+	 * Default Coord3D Constructor. Creates a Coord3D at (0,0,0)
 	 */
-	public Coord() {
+	public Coord3D() {
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
 	}
 
 	/**
-	 * Custom Coord Constructor. Creates a Coord at (x,y,z)
+	 * Custom Coord3D Constructor. Creates a Coord3D at (x,y,z)
 	 * 
 	 * @param x
 	 *            x-Coordinate
@@ -36,20 +36,20 @@ class Coord {
 	 * @param z
 	 *            z-Coordinate
 	 */
-	public Coord(double x, double y, double z) {
+	public Coord3D(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 
 	/**
-	 * Custom Coord Constructor. Creates a Coord at (x,y,z)
+	 * Custom Coord3D Constructor. Creates a Coord3D at (x,y,z)
 	 * 
 	 * @param coords
 	 *            double array containing x, y, z information in that order
 	 * 
 	 */
-	public Coord(double[] coords) {
+	public Coord3D(double[] coords) {
 		this.x = coords[0];
 		this.y = coords[1];
 		this.z = coords[2];
@@ -72,7 +72,7 @@ class Coord {
 	 *            Adds inputed value to the X coordinate
 	 */
 	public void addX(double x) {
-		double[] coords = { x, this.y, this.z };
+		double[] coords = { this.x+x, this.y, this.z };
 		setCoord(coords);
 	}
 
@@ -82,7 +82,7 @@ class Coord {
 	 *            Adds inputed value to the Y coordinate
 	 */
 	public void addY(double y) {
-		double[] coords = { this.x, y, this.z };
+		double[] coords = { this.x, this.y+ y, this.z };
 		setCoord(coords);
 	}
 
@@ -92,7 +92,7 @@ class Coord {
 	 *            Adds inputed value to the Z coordinate
 	 */
 	public void addZ(double z) {
-		double[] coords = { this.x, this.y, z };
+		double[] coords = { this.x, this.y, this.z+z };
 		setCoord(coords);
 	}
 

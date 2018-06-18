@@ -1,19 +1,19 @@
 package blockrpg;
 
-class Vector extends Coord {
+public class Vector3D extends Coord3D {
 
 	private double length;
 
 	/**
-	 * Default Vector Constructor. Creates a Vector of (0,0,0) of length 0
+	 * Default Vector3D Constructor. Creates a Vector3D of (0,0,0) of length 0
 	 */
-	public Vector() {
+	public Vector3D() {
 		super();
 		this.length = 0;
 	}
 
 	/**
-	 * Custom Vector Constructor. Creates a Vector of (x,y,z) using separate values
+	 * Custom Vector3D Constructor. Creates a Vector3D of (x,y,z) using separate values
 	 * with calculated length
 	 * 
 	 * @param x
@@ -23,20 +23,20 @@ class Vector extends Coord {
 	 * @param z
 	 *            z-Coordinate
 	 */
-	public Vector(double x, double y, double z) {
+	public Vector3D(double x, double y, double z) {
 		super(x, y, z);
 		length = Math.sqrt(x * x + y * y + z * z);
 	}
 
 	/**
-	 * Custom Vector Constructor. Creates a Vector of (x,y,z) using array with
+	 * Custom Vector3D Constructor. Creates a Vector3D of (x,y,z) using array with
 	 * calculated length
 	 * 
 	 * @param coords
 	 *            double array containing x, y, z information in that order
 	 * 
 	 */
-	public Vector(double[] coords) {
+	public Vector3D(double[] coords) {
 		super(coords);
 		length = Math.sqrt(x * x + y * y + z * z);
 	}
@@ -44,10 +44,10 @@ class Vector extends Coord {
 	/**
 	 * Normalizes vector to length of 1
 	 * 
-	 * @return normalized vector as Vector
+	 * @return normalized vector as Vector3D
 	 */
-	public Vector normalize() {
-		Vector normalized = new Vector(this.getCoord());
+	public Vector3D normalize() {
+		Vector3D normalized = new Vector3D(this.getCoord());
 
 		// Don't normalize if length is already close to 1 or length is 0 tiny changes
 		if (Math.abs(normalized.length - 1.0) > ERROR && Math.abs(normalized.length - 0.0) > ERROR) {
@@ -69,7 +69,7 @@ class Vector extends Coord {
 
 	/**
 	 * 
-	 * @return length of Vector as double
+	 * @return length of Vector3D as double
 	 */
 	public double getLength() {
 		return length;
@@ -80,10 +80,10 @@ class Vector extends Coord {
 	 * @param scalar
 	 *            multiplies vector by double scalar
 	 * 
-	 * @return returns vector multiplied by scalar as Vector
+	 * @return returns vector multiplied by scalar as Vector3D
 	 */
-	public Vector multiply(double scalar) {
-		Vector product = new Vector();
+	public Vector3D multiply(double scalar) {
+		Vector3D product = new Vector3D();
 		product.x = this.x * scalar;
 		product.y = this.y * scalar;
 		product.z = this.z * scalar;
@@ -95,21 +95,21 @@ class Vector extends Coord {
 	/**
 	 * 
 	 * @param other
-	 *            other Vector to dot with
+	 *            other Vector3D to dot with
 	 * @return returns dot product as double
 	 */
-	public double dot(Vector other) {
+	public double dot(Vector3D other) {
 		return this.x * other.x + this.y * other.y + this.z * other.z;
 	}
 
 	/**
 	 * 
 	 * @param other
-	 *            other Vector to cross with
-	 * @return returns cross product as Vector
+	 *            other Vector3D to cross with
+	 * @return returns cross product as Vector3D
 	 */
-	public Vector cross(Vector other) {
-		Vector product = new Vector(this.y * other.z - this.z * other.y + 0.0, this.z * other.x - this.x * other.z + 0.0,
+	public Vector3D cross(Vector3D other) {
+		Vector3D product = new Vector3D(this.y * other.z - this.z * other.y + 0.0, this.z * other.x - this.x * other.z + 0.0,
 				this.x * other.y - this.y * other.x + 0.0);
 		return product;
 	}
@@ -118,9 +118,9 @@ class Vector extends Coord {
 	 * 
 	 * @param other
 	 *            other vector for projection
-	 * @return returns projection of other vector on this vector as Vector
+	 * @return returns projection of other vector on this vector as Vector3D
 	 */
-	public Vector proj(Vector other) {
+	public Vector3D proj(Vector3D other) {
 		double dotProd = this.dot(other);
 		double projVal;
 		if (Math.abs(dotProd - 0.0) < ERROR) {
@@ -137,10 +137,10 @@ class Vector extends Coord {
 	 * 
 	 * @param other
 	 *            other vector for rejection
-	 * @return returns rejection of other vector on this vector as Vector
+	 * @return returns rejection of other vector on this vector as Vector3D
 	 */
-	public Vector perp(Vector other) {
-		Vector rejection = this.proj(other);
+	public Vector3D perp(Vector3D other) {
+		Vector3D rejection = this.proj(other);
 		double coords[] = { other.x - rejection.x, other.y - rejection.y, other.z - rejection.z };
 		rejection.setCoord(coords);
 

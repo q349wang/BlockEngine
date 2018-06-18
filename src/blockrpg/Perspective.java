@@ -1,10 +1,10 @@
 package blockrpg;
 
-class Perspective {
-	private Position pos;
-	private Vector dir; // Direction of perspective (into screen is positive)
-	private Vector tilt; // Tilt of perspective (left is positive)
-	private Vector norm; // Cross product of dir X tilt (up is positive)
+public class Perspective {
+	private Position3D pos;
+	private Vector3D dir; // Direction of perspective (into screen is positive)
+	private Vector3D tilt; // Tilt of perspective (left is positive)
+	private Vector3D norm; // Cross product of dir X tilt (up is positive)
 	private double[][] viewBasis;
 	private double[][] viewBasisInverse;
 
@@ -13,9 +13,9 @@ class Perspective {
 	 * position, direciton and tilt
 	 */
 	public Perspective() {
-		pos = new Position();
-		dir = new Vector();
-		tilt = new Vector();
+		pos = new Position3D();
+		dir = new Vector3D();
+		tilt = new Vector3D();
 
 		viewBasis = new double[3][3];
 		viewBasisInverse = new double[3][3];
@@ -32,11 +32,11 @@ class Perspective {
 	 *            coords for perspective tilt
 	 */
 	public Perspective(double[] posCoords, double[] dirCoords, double[] tiltCoords) {
-		pos = new Position(posCoords);
-		dir = new Vector(dirCoords);
+		pos = new Position3D(posCoords);
+		dir = new Vector3D(dirCoords);
 		dir=dir.normalize();
 
-		tilt = new Vector(tiltCoords);
+		tilt = new Vector3D(tiltCoords);
 		tilt = dir.perp(tilt).normalize();
 		norm = dir.cross(tilt).normalize();
 
@@ -86,33 +86,33 @@ class Perspective {
 
 	/**
 	 * 
-	 * @return returns position of perspective as Position
+	 * @return returns position of perspective as Position3D
 	 */
-	public Position getPos() {
+	public Position3D getPos() {
 		return pos;
 	}
 
 	/**
 	 * 
-	 * @return returns direction of perspective as Vector
+	 * @return returns direction of perspective as Vector3D
 	 */
-	public Vector getDir() {
+	public Vector3D getDir() {
 		return dir;
 	}
 
 	/**
 	 * 
-	 * @return returns tilt of perspective as Vector
+	 * @return returns tilt of perspective as Vector3D
 	 */
-	public Vector getTilt() {
+	public Vector3D getTilt() {
 		return tilt;
 	}
 
 	/**
 	 * 
-	 * @return returns norm of perspective as Vector
+	 * @return returns norm of perspective as Vector3D
 	 */
-	public Vector getNorm() {
+	public Vector3D getNorm() {
 		return norm;
 	}
 
@@ -135,10 +135,10 @@ class Perspective {
 	/**
 	 * 
 	 * @param stdCoord
-	 *            Vector in standard basis
-	 * @return returns Vector in view basis
+	 *            Vector3D in standard basis
+	 * @return returns Vector3D in view basis
 	 */
-	public Vector toViewBasis(Vector stdCoord) {
+	public Vector3D toViewBasis(Vector3D stdCoord) {
 		double[] newCoords = new double[3];
 		double[] oldCoords = stdCoord.getCoord();
 		double[] posCoords = pos.getCoord();
@@ -148,7 +148,7 @@ class Perspective {
 				newCoords[j] += viewBasisInverse[i][j] * oldCoords[i] + 0.0;
 			}
 		}
-		Vector viewCoord = new Vector();
+		Vector3D viewCoord = new Vector3D();
 		viewCoord.setCoord(newCoords);
 		return viewCoord;
 	}
@@ -156,10 +156,10 @@ class Perspective {
 	/**
 	 * 
 	 * @param viewCoord
-	 *            Vector in view basis
+	 *            Vector3D in view basis
 	 * @return returns coordinate in standard basis
 	 */
-	public Vector toStdBasis(Vector viewCoord) {
+	public Vector3D toStdBasis(Vector3D viewCoord) {
 		double[] newCoords = new double[3];
 		double[] oldCoords = viewCoord.getCoord();
 		double[] posCoords = pos.getCoord();
@@ -172,7 +172,7 @@ class Perspective {
 		for(int i = 0; i < 3; i++) {
 			newCoords[i] += posCoords[i];
 		}
-		Vector stdCoord = new Vector();
+		Vector3D stdCoord = new Vector3D();
 		stdCoord.setCoord(newCoords);
 		return stdCoord;
 	}
@@ -180,10 +180,10 @@ class Perspective {
 	/**
 	 * 
 	 * @param stdCoord
-	 *            Vector in standard basis
-	 * @return returns Vector in view basis
+	 *            Vector3D in standard basis
+	 * @return returns Vector3D in view basis
 	 */
-	public Position toViewBasis(Position stdCoord) {
+	public Position3D toViewBasis(Position3D stdCoord) {
 		double[] newCoords = new double[3];
 		double[] oldCoords = stdCoord.getCoord();
 		double[] posCoords = pos.getCoord();
@@ -193,7 +193,7 @@ class Perspective {
 				newCoords[j] += viewBasisInverse[i][j] * oldCoords[i] + 0.0;
 			}
 		}
-		Position viewCoord = new Position();
+		Position3D viewCoord = new Position3D();
 		viewCoord.setCoord(newCoords);
 		return viewCoord;
 	}
@@ -201,10 +201,10 @@ class Perspective {
 	/**
 	 * 
 	 * @param viewCoord
-	 *            Position in view basis
+	 *            Position3D in view basis
 	 * @return returns coordinate in standard basis
 	 */
-	public Position toStdBasis(Position viewCoord) {
+	public Position3D toStdBasis(Position3D viewCoord) {
 		double[] newCoords = new double[3];
 		double[] oldCoords = viewCoord.getCoord();
 		double[] posCoords = pos.getCoord();
@@ -218,7 +218,7 @@ class Perspective {
 		for(int i = 0; i < 3; i++) {
 			newCoords[i] += posCoords[i];
 		}
-		Position stdCoord = new Position();
+		Position3D stdCoord = new Position3D();
 		stdCoord.setCoord(newCoords);
 		return stdCoord;
 	}
