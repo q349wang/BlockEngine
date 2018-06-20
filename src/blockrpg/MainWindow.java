@@ -101,6 +101,10 @@ public class MainWindow extends javax.swing.JFrame {
 			double[] tilt = {0,0,2};
 			Perspective test = new Perspective(pos, dir, tilt);
 			Position3D test2 = new Position3D(1, 0, 0);
+			Vector3D test3 = new Vector3D(1, 0,  0);
+			Vector3D testAxis = new Vector3D(0,1,0);
+			test3 = test3.rotate(Math.PI / 2, testAxis);
+			test3 = test3.rotateY(-Math.PI/2);
 			test2 = test.toStdBasis(test2);
 			System.out.println("Yo");
 		});

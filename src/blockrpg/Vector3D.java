@@ -13,8 +13,8 @@ public class Vector3D extends Coord3D {
 	}
 
 	/**
-	 * Custom Vector3D Constructor. Creates a Vector3D of (x,y,z) using separate values
-	 * with calculated length
+	 * Custom Vector3D Constructor. Creates a Vector3D of (x,y,z) using separate
+	 * values with calculated length
 	 * 
 	 * @param x
 	 *            x-Coordinate
@@ -109,8 +109,8 @@ public class Vector3D extends Coord3D {
 	 * @return returns cross product as Vector3D
 	 */
 	public Vector3D cross(Vector3D other) {
-		Vector3D product = new Vector3D(this.y * other.z - this.z * other.y + 0.0, this.z * other.x - this.x * other.z + 0.0,
-				this.x * other.y - this.y * other.x + 0.0);
+		Vector3D product = new Vector3D(this.y * other.z - this.z * other.y + 0.0,
+				this.z * other.x - this.x * other.z + 0.0, this.x * other.y - this.y * other.x + 0.0);
 		return product;
 	}
 
@@ -145,5 +145,75 @@ public class Vector3D extends Coord3D {
 		rejection.setCoord(coords);
 
 		return rejection;
+	}
+
+	public Vector3D rotateX(double ang) {
+		Vector3D rotation = new Vector3D();
+		double coords[] = { this.x, this.y * Math.cos(ang) - this.z * Math.sin(ang),
+				this.y * Math.sin(ang) + this.z * Math.cos(ang) };
+		rotation.setCoord(coords);
+
+		return rotation;
+	}
+
+	public Vector3D rotateY(double ang) {
+		Vector3D rotation = new Vector3D();
+		double coords[] = { this.x * Math.cos(ang) + this.z * Math.sin(ang), this.y,
+				-this.x * Math.sin(ang) + this.z * Math.cos(ang) };
+		rotation.setCoord(coords);
+
+		return rotation;
+	}
+
+	public Vector3D rotateZ(double ang) {
+		Vector3D rotation = new Vector3D();
+		double coords[] = { this.x * Math.cos(ang) - this.y * Math.sin(ang),
+				this.x * Math.sin(ang) + this.y * Math.cos(ang), this.z };
+		rotation.setCoord(coords);
+
+		return rotation;
+	}
+
+	public Vector3D rotate(double ang, Vector3D axis) {
+		Vector3D rotation = new Vector3D();
+		double[] oldCoords = this.getCoord();
+		double[] axisCoords = axis.getCoord();
+		double[] newCoords = new double[3];
+		double[][] rotMatrix = new double[3][3];
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				if (i == j) {
+					rotMatrix[i][j] = Math.cos(ang);
+				} else {
+					int index = i + j;
+					switch (index) {
+					case 1:
+						rotMatrix[i][j] = Math.sin(ang) * axisCoords[2] * (j - i);
+						break;
+					case 2:
+						rotMatrix[i][j] = Math.sin(ang) * axisCoords[1] * (i - j) / 2;
+						break;
+					case 3:
+						rotMatrix[i][j] = Math.sin(ang) * axisCoords[0] * (j - i);
+						break;
+					default:
+						break;
+					}
+				}
+
+				rotMatrix[i][j] += axisCoords[i] * axisCoords[j] * (1 - Math.cos(ang));
+			}
+
+		}
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				newCoords[j] += rotMatrix[i][j] * oldCoords[i] + 0.0;
+			}
+		}
+		rotation.setCoord(newCoords);
+
+		return rotation;
 	}
 }

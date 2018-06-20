@@ -8,12 +8,12 @@ public class Vector2D extends Coord2D {
 	 * Default Vector2D Constructor. Creates a Vector2D of (0,0) of length 0
 	 */
 	public Vector2D() {
-		this.length= 0;
+		this.length = 0;
 	}
 
 	/**
-	 * Custom Vector2D Constructor. Creates a Vector2D of (x,y) using separate values
-	 * with calculated length
+	 * Custom Vector2D Constructor. Creates a Vector2D of (x,y) using separate
+	 * values with calculated length
 	 * 
 	 * @param x
 	 *            x-Coordinate
@@ -22,7 +22,7 @@ public class Vector2D extends Coord2D {
 	 */
 	public Vector2D(double x, double y) {
 		super(x, y);
-		length = Math.sqrt(x*x+y*y);
+		length = Math.sqrt(x * x + y * y);
 	}
 
 	/**
@@ -35,9 +35,9 @@ public class Vector2D extends Coord2D {
 	 */
 	public Vector2D(double[] coords) {
 		super(coords);
-		length = Math.sqrt(x*x+y*y);
+		length = Math.sqrt(x * x + y * y);
 	}
-	
+
 	/**
 	 * Normalizes vector to length of 1
 	 * 
@@ -56,7 +56,6 @@ public class Vector2D extends Coord2D {
 		return normalized;
 
 	}
-	
 
 	@Override
 	public void setCoord(double coords[]) {
@@ -97,7 +96,7 @@ public class Vector2D extends Coord2D {
 	public double dot(Vector2D other) {
 		return this.x * other.x + this.y * other.y;
 	}
-	
+
 	/**
 	 * 
 	 * @param other
@@ -125,10 +124,25 @@ public class Vector2D extends Coord2D {
 	 */
 	public Vector2D perp(Vector2D other) {
 		Vector2D rejection = this.proj(other);
-		double coords[] = { other.x - rejection.x, other.y - rejection.y};
+		double coords[] = { other.x - rejection.x, other.y - rejection.y };
 		rejection.setCoord(coords);
 
 		return rejection;
+	}
+
+	/**
+	 * 
+	 * @param ang
+	 *            Angle in radians to turn Vector counter clockwise
+	 * @return Returns vector rotated ang radians counter clockwise
+	 */
+	public Vector2D rotate(double ang) {
+		Vector2D rotation = new Vector2D();
+		double coords[] = { this.x * Math.cos(ang) - this.y * Math.sin(ang),
+				this.x * Math.sin(ang) + this.y * Math.cos(ang) };
+		rotation.setCoord(coords);
+
+		return rotation;
 	}
 
 }

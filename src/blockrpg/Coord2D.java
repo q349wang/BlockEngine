@@ -2,7 +2,7 @@ package blockrpg;
 
 public class Coord2D {
 
-	protected final double ERROR = 0.001;
+	protected final static double ERROR = 0.00000000001;
 
 	protected double x;
 	protected double y;
@@ -45,6 +45,12 @@ public class Coord2D {
 	 *            Sets coordinate to given array (in x, y form)
 	 */
 	public void setCoord(double[] coords) {
+		//Rounds numbers that are very close to integers
+		for(int i = 0;i<2;i++) {
+			if (Math.abs(coords[i] - Math.round(coords[i])) < ERROR) {
+				coords[i] = Math.round(coords[i]);
+			}
+		}
 		this.x = coords[0];
 		this.y = coords[1];
 	}

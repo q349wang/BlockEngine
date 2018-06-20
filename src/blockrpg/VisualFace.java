@@ -21,10 +21,11 @@ public class VisualFace extends JComponent {
 	private static final long serialVersionUID = -3860601078926040180L;
 
 	private Polygon seenFace;
-	private int[] viewX;
-	private int[] viewY;
+	private Position2D[] viewPoints;
+	private Position2D[] relPoints;
+	private Position2D anchor;
 	private int numPoints;
-	private Position3D[] points;
+	private Position3D[] absPoints;
 	private Position3D center;
 
 	/**
@@ -33,11 +34,18 @@ public class VisualFace extends JComponent {
 	public VisualFace() {
 
 		seenFace = new Polygon();
-		viewX = null;
-		viewY = null;
+		viewPoints = null;
 		numPoints = 0;
-		points =null;
+		relPoints =null;
 		center = new Position3D();
+	}
+	
+	public VisualFace(Position2D[] relPoints, Position2D anchor, int numPoints) {
+
+		
+		this.relPoints = relPoints;
+		this.anchor = anchor;
+		this.numPoints = numPoints;
 	}
 
 	
