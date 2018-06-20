@@ -45,7 +45,7 @@ public class Coord2D {
 	 *            Sets coordinate to given array (in x, y form)
 	 */
 	public void setCoord(double[] coords) {
-		//Rounds numbers that are very close to integers
+		// Rounds numbers that are very close to integers
 		for(int i = 0;i<2;i++) {
 			if (Math.abs(coords[i] - Math.round(coords[i])) < ERROR) {
 				coords[i] = Math.round(coords[i]);

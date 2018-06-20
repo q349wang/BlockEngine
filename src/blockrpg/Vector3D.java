@@ -147,6 +147,13 @@ public class Vector3D extends Coord3D {
 		return rejection;
 	}
 
+	/**
+	 * 
+	 * @param ang
+	 *            angle in radians
+	 * @return Returns Vector3D rotated ang radians counter clockwise about the X
+	 *         axis
+	 */
 	public Vector3D rotateX(double ang) {
 		Vector3D rotation = new Vector3D();
 		double coords[] = { this.x, this.y * Math.cos(ang) - this.z * Math.sin(ang),
@@ -156,6 +163,13 @@ public class Vector3D extends Coord3D {
 		return rotation;
 	}
 
+	/**
+	 * 
+	 * @param ang
+	 *            angle in radians
+	 * @return Returns Vector3D rotated ang radians counter clockwise about the Y
+	 *         axis
+	 */
 	public Vector3D rotateY(double ang) {
 		Vector3D rotation = new Vector3D();
 		double coords[] = { this.x * Math.cos(ang) + this.z * Math.sin(ang), this.y,
@@ -165,6 +179,13 @@ public class Vector3D extends Coord3D {
 		return rotation;
 	}
 
+	/**
+	 * 
+	 * @param ang
+	 *            angle in radians
+	 * @return Returns Vector3D rotated ang radians counter clockwise about the Y
+	 *         axis
+	 */
 	public Vector3D rotateZ(double ang) {
 		Vector3D rotation = new Vector3D();
 		double coords[] = { this.x * Math.cos(ang) - this.y * Math.sin(ang),
@@ -174,6 +195,15 @@ public class Vector3D extends Coord3D {
 		return rotation;
 	}
 
+	/**
+	 * 
+	 * @param ang
+	 *            angle in radians
+	 * @param axis
+	 *            axis to rotate about
+	 * @return Returns Vector3D rotated ang radians counter clockwise about the
+	 *         specified axis
+	 */
 	public Vector3D rotate(double ang, Vector3D axis) {
 		Vector3D rotation = new Vector3D();
 		double[] oldCoords = this.getCoord();
