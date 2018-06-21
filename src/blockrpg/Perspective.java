@@ -121,7 +121,7 @@ public class Perspective {
 	 * @return returns view basis matrix
 	 */
 	public double[][] getBasis() {
-		return viewBasis;
+		return this.viewBasis;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class Perspective {
 	 * @return returns inverse of view basis matrix
 	 */
 	public double[][] getInverse() {
-		return viewBasisInverse;
+		return this.viewBasisInverse;
 	}
 
 	/**
@@ -239,6 +239,8 @@ public class Perspective {
 	 */
 	public void setDir(double[] dirCoords) {
 		dir.setCoord(dirCoords);
+		dir = dir.normalize();
+		tilt = dir.perp(tilt).normalize();
 		norm = dir.cross(tilt);
 		setBasis();
 	}
@@ -250,6 +252,7 @@ public class Perspective {
 	 */
 	public void setTilt(double[] tiltCoords) {
 		tilt.setCoord(tiltCoords);
+		tilt = dir.perp(tilt).normalize();
 		norm = dir.cross(tilt);
 		setBasis();
 	}

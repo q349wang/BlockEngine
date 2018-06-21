@@ -1,8 +1,10 @@
 package blockrpg;
 
+import java.util.Arrays;
+
 public class Coord2D {
 
-	protected final static double ERROR = 0.00000000001;
+	protected final static double ERROR = 0.0000000000001;
 
 	protected double x;
 	protected double y;
@@ -46,7 +48,7 @@ public class Coord2D {
 	 */
 	public void setCoord(double[] coords) {
 		// Rounds numbers that are very close to integers
-		for(int i = 0;i<2;i++) {
+		for (int i = 0; i < 2; i++) {
 			if (Math.abs(coords[i] - Math.round(coords[i])) < ERROR) {
 				coords[i] = Math.round(coords[i]);
 			}
@@ -77,6 +79,26 @@ public class Coord2D {
 
 	/**
 	 * 
+	 * @param x
+	 *            Sets X coordinate to the inputed value
+	 */
+	public void setX(double x) {
+		double[] coords = { x, this.y };
+		setCoord(coords);
+	}
+
+	/**
+	 * 
+	 * @param y
+	 *            Sets Y coordinate to the inputed value
+	 */
+	public void setY(double y) {
+		double[] coords = { this.x, y };
+		setCoord(coords);
+	}
+
+	/**
+	 * 
 	 * @return double[2] Array of the x, and y values in that order
 	 */
 	public double[] getCoord() {
@@ -86,4 +108,22 @@ public class Coord2D {
 
 		return coords;
 	}
+	
+    // Overriding equals() to compare two Coord2D objects
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof Coord2D)) {
+            return false;
+        }
+
+        Coord2D c = (Coord2D) o;
+         
+        // Compare the data members and return accordingly 
+        return Arrays.equals(this.getCoord(), c.getCoord());
+    }
 }

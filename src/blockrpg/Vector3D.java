@@ -48,12 +48,14 @@ public class Vector3D extends Coord3D {
 	 */
 	public Vector3D normalize() {
 		Vector3D normalized = new Vector3D(this.getCoord());
-
-		// Don't normalize if length is already close to 1 or length is 0 tiny changes
+		if (Math.abs(normalized.length - 0.0) < ERROR) {
+			return this;
+		}
+		// Don't normalize if length is already close to 1 or length is 0
 		if (Math.abs(normalized.length - 1.0) > ERROR && Math.abs(normalized.length - 0.0) > ERROR) {
-			normalized.x = this.x / normalized.length + 0.0;
-			normalized.y = this.y / normalized.length + 0.0;
-			normalized.z = this.z / normalized.length + 0.0;
+			normalized.setX(this.x / normalized.length + 0.0);
+			normalized.setY(this.y / normalized.length + 0.0);
+			normalized.setZ(this.z / normalized.length + 0.0);
 		}
 		normalized.length = 1.0;
 
@@ -84,9 +86,9 @@ public class Vector3D extends Coord3D {
 	 */
 	public Vector3D multiply(double scalar) {
 		Vector3D product = new Vector3D();
-		product.x = this.x * scalar;
-		product.y = this.y * scalar;
-		product.z = this.z * scalar;
+		product.setX(this.x * scalar);
+		product.setY(this.y * scalar);
+		product.setZ(this.z * scalar);
 		product.length = this.length * scalar;
 
 		return product;
@@ -99,7 +101,12 @@ public class Vector3D extends Coord3D {
 	 * @return returns dot product as double
 	 */
 	public double dot(Vector3D other) {
-		return this.x * other.x + this.y * other.y + this.z * other.z;
+		double product = this.x * other.x + this.y * other.y + this.z * other.z;
+		if (Math.abs(product - 0.0) < ERROR) {
+			product = 0.0;
+		}
+		
+		return product;
 	}
 
 	/**

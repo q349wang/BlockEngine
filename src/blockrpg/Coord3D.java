@@ -5,13 +5,15 @@
  */
 package blockrpg;
 
+import java.util.Arrays;
+
 /**
  *
  * @author L
  */
 public class Coord3D {
 	
-	protected final static double ERROR = 0.00000000001;
+	protected final static double ERROR = 0.0000000000001;
 	
 	protected double x;
 	protected double y;
@@ -101,6 +103,37 @@ public class Coord3D {
 		double[] coords = { this.x, this.y, this.z+z };
 		setCoord(coords);
 	}
+	
+	/**
+	 * 
+	 * @param x
+	 *            Sets X coordinate to the inputed value
+	 */
+	public void setX(double x) {
+		double[] coords = {x, this.y, this.z };
+		setCoord(coords);
+	}
+
+	/**
+	 * 
+	 * @param y
+	 *            Sets Y coordinate to the inputed value
+	 */
+	public void setY(double y) {
+		double[] coords = { this.x, y, this.z };
+		setCoord(coords);
+	}
+
+	/**
+	 * 
+	 * @param z
+	 *            Sets Z coordinate to the inputed value
+	 */
+	public void setZ(double z) {
+		double[] coords = { this.x, this.y, z };
+		setCoord(coords);
+	}
+
 
 	/**
 	 * 
@@ -114,4 +147,22 @@ public class Coord3D {
 
 		return coords;
 	}
+	
+    // Overriding equals() to compare two Coord3D objects
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof Coord3D)) {
+            return false;
+        }
+
+        Coord3D c = (Coord3D) o;
+         
+        // Compare the data members and return accordingly 
+        return Arrays.equals(this.getCoord(), c.getCoord());
+    }
 }
