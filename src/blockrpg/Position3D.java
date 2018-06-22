@@ -88,4 +88,24 @@ public class Position3D extends Coord3D {
 		Vector3D direction = new Vector3D(xDistancefrom(other), yDistancefrom(other), zDistancefrom(other));
 		return direction;
 	}
+	
+	@Override
+	public Position3D add(Coord3D other) {
+		Position3D sum = new Position3D(super.add(other).getCoord());
+		return sum;
+	}
+
+	@Override
+	public Position3D subtract(Coord3D other) {
+		Position3D diff = new Position3D(super.subtract(other).getCoord());
+		return diff;
+	}
+	
+	/**
+	 * 
+	 * @return Returns vector with same coordinates
+	 */
+	public Vector3D toVec() {
+		return new Vector3D(this.getCoord());
+	}
 }

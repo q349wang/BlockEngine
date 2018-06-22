@@ -144,5 +144,25 @@ public class Vector2D extends Coord2D {
 
 		return rotation;
 	}
+	
+	@Override
+	public Vector2D add(Coord2D other) {
+		Vector2D sum = new Vector2D(super.add(other).getCoord());
+		return sum;
+	}
 
+	@Override
+	public Vector2D subtract(Coord2D other) {
+		Vector2D diff = new Vector2D(super.subtract(other).getCoord());
+		return diff;
+	}
+	
+	/**
+	 * 
+	 * @return Returns position with same coordinates
+	 */
+	public Position2D toPos() {
+		return new Position2D(this.getCoord());
+	}
+	
 }

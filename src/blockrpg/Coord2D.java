@@ -1,10 +1,11 @@
 package blockrpg;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 public class Coord2D {
 
-	protected final static double ERROR = 0.0000000000001;
+	protected final static double ERROR = 0.000000001;
 
 	protected double x;
 	protected double y;
@@ -27,6 +28,7 @@ public class Coord2D {
 	 */
 	public Coord2D(double x, double y) {
 		this.x = x;
+		this.y = y;
 	}
 
 	/**
@@ -47,10 +49,11 @@ public class Coord2D {
 	 *            Sets coordinate to given array (in x, y form)
 	 */
 	public void setCoord(double[] coords) {
-		// Rounds numbers that are very close to integers
-		for (int i = 0; i < 2; i++) {
-			if (Math.abs(coords[i] - Math.round(coords[i])) < ERROR) {
-				coords[i] = Math.round(coords[i]);
+		DecimalFormat df = new DecimalFormat("#.##########");
+		// Rounds numbers that are very close to nearest billionth
+		for (int i = 0; i < 3; i++) {
+			if (Math.abs(coords[i] - Double.parseDouble(df.format(coords[i]))) < ERROR) {
+				coords[i] = Double.parseDouble(df.format(coords[i]));
 			}
 		}
 		this.x = coords[0];
@@ -107,6 +110,33 @@ public class Coord2D {
 		coords[1] = this.y;
 
 		return coords;
+	}
+	
+
+	/**
+	 * 
+	 * @param other
+	 *            Other Coord2D to add
+	 * @return returns Coord2D with other added to it
+	 */
+	public Coord2D add(Coord2D other) {
+		Coord2D sum = new Coord2D();
+		double coords[] = { this.x + other.x, this.y + other.y};
+		sum.setCoord(coords);
+		return sum;
+	}
+
+	/**
+	 * 
+	 * @param other
+	 *            Other Coord2D to subtract
+	 * @return returns Coord2D with other subtracted from it
+	 */
+	public Coord2D subtract(Coord2D other) {
+		Coord2D diff = new Coord2D();
+		double coords[] = { this.x - other.x, this.y - other.y};
+		diff.setCoord(coords);
+		return diff;
 	}
 	
     // Overriding equals() to compare two Coord2D objects

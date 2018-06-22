@@ -76,6 +76,18 @@ public class Vector3D extends Coord3D {
 	public double getLength() {
 		return length;
 	}
+	
+	@Override
+	public Vector3D add(Coord3D other) {
+		Vector3D sum = new Vector3D(super.add(other).getCoord());
+		return sum;
+	}
+
+	@Override
+	public Vector3D subtract(Coord3D other) {
+		Vector3D diff = new Vector3D(super.subtract(other).getCoord());
+		return diff;
+	}
 
 	/**
 	 * 
@@ -252,5 +264,13 @@ public class Vector3D extends Coord3D {
 		rotation.setCoord(newCoords);
 
 		return rotation;
+	}
+	
+	/**
+	 * 
+	 * @return Returns position with same coordinates
+	 */
+	public Position3D toPos() {
+		return new Position3D(this.getCoord());
 	}
 }

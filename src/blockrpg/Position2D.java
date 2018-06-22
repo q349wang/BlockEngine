@@ -75,5 +75,25 @@ public class Position2D extends Coord2D {
 		Vector2D direction = new Vector2D(xDistancefrom(other), yDistancefrom(other));
 		return direction;
 	}
+	
+	@Override
+	public Position2D add(Coord2D other) {
+		Position2D sum = new Position2D(super.add(other).getCoord());
+		return sum;
+	}
+
+	@Override
+	public Position2D subtract(Coord2D other) {
+		Position2D diff = new Position2D(super.subtract(other).getCoord());
+		return diff;
+	}
+	
+	/**
+	 * 
+	 * @return Returns vector with same coordinates
+	 */
+	public Vector2D toVec() {
+		return new Vector2D(this.getCoord());
+	}
 
 }

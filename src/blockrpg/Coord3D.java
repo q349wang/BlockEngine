@@ -5,6 +5,7 @@
  */
 package blockrpg;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 /**
@@ -12,9 +13,9 @@ import java.util.Arrays;
  * @author L
  */
 public class Coord3D {
-	
-	protected final static double ERROR = 0.0000000000001;
-	
+
+	protected final static double ERROR = 0.000000001;
+
 	protected double x;
 	protected double y;
 	protected double z;
@@ -63,10 +64,11 @@ public class Coord3D {
 	 *            Sets coordinate to given array (in x, y, z form)
 	 */
 	public void setCoord(double[] coords) {
-		//Rounds numbers that are very close to integers
-		for(int i = 0;i<3;i++) {
-			if (Math.abs(coords[i] - Math.round(coords[i])) < ERROR) {
-				coords[i] = Math.round(coords[i]);
+		DecimalFormat df = new DecimalFormat("#.##########");
+		// Rounds numbers that are very close to nearest billionth
+		for (int i = 0; i < 3; i++) {
+			if (Math.abs(coords[i] - Double.parseDouble(df.format(coords[i]))) < ERROR) {
+				coords[i] = Double.parseDouble(df.format(coords[i]));
 			}
 		}
 		this.x = coords[0];
@@ -80,7 +82,7 @@ public class Coord3D {
 	 *            Adds inputed value to the X coordinate
 	 */
 	public void addX(double x) {
-		double[] coords = { this.x+x, this.y, this.z };
+		double[] coords = { this.x + x, this.y, this.z };
 		setCoord(coords);
 	}
 
@@ -90,7 +92,7 @@ public class Coord3D {
 	 *            Adds inputed value to the Y coordinate
 	 */
 	public void addY(double y) {
-		double[] coords = { this.x, this.y+ y, this.z };
+		double[] coords = { this.x, this.y + y, this.z };
 		setCoord(coords);
 	}
 
@@ -100,17 +102,17 @@ public class Coord3D {
 	 *            Adds inputed value to the Z coordinate
 	 */
 	public void addZ(double z) {
-		double[] coords = { this.x, this.y, this.z+z };
+		double[] coords = { this.x, this.y, this.z + z };
 		setCoord(coords);
 	}
-	
+
 	/**
 	 * 
 	 * @param x
 	 *            Sets X coordinate to the inputed value
 	 */
 	public void setX(double x) {
-		double[] coords = {x, this.y, this.z };
+		double[] coords = { x, this.y, this.z };
 		setCoord(coords);
 	}
 
@@ -134,7 +136,6 @@ public class Coord3D {
 		setCoord(coords);
 	}
 
-
 	/**
 	 * 
 	 * @return double[3] Array of the x, y, and z values in that order
@@ -147,22 +148,48 @@ public class Coord3D {
 
 		return coords;
 	}
-	
-    // Overriding equals() to compare two Coord3D objects
-    @Override
-    public boolean equals(Object o) {
 
-        if (o == this) {
-            return true;
-        }
+	/**
+	 * 
+	 * @param other
+	 *            Other Coord3D to add
+	 * @return returns Coord3D with other added to it
+	 */
+	public Coord3D add(Coord3D other) {
+		Coord3D sum = new Coord3D();
+		double coords[] = { this.x + other.x, this.y + other.y, this.z + other.z };
+		sum.setCoord(coords);
+		return sum;
+	}
 
-        if (!(o instanceof Coord3D)) {
-            return false;
-        }
+	/**
+	 * 
+	 * @param other
+	 *            Other Coord3D to subtract
+	 * @return returns Coord3D with other subtracted from it
+	 */
+	public Coord3D subtract(Coord3D other) {
+		Coord3D diff = new Coord3D();
+		double coords[] = { this.x - other.x, this.y - other.y, this.z - other.z };
+		diff.setCoord(coords);
+		return diff;
+	}
 
-        Coord3D c = (Coord3D) o;
-         
-        // Compare the data members and return accordingly 
-        return Arrays.equals(this.getCoord(), c.getCoord());
-    }
+	// Overriding equals() to compare two Coord3D objects
+	@Override
+	public boolean equals(Object o) {
+
+		if (o == this) {
+			return true;
+		}
+
+		if (!(o instanceof Coord3D)) {
+			return false;
+		}
+
+		Coord3D c = (Coord3D) o;
+
+		// Compare the data members and return accordingly
+		return Arrays.equals(this.getCoord(), c.getCoord());
+	}
 }

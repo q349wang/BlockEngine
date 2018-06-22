@@ -96,7 +96,6 @@ public class MainWindow extends javax.swing.JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(() -> {
 			new MainWindow().setVisible(true);
-			System.out.println("Yo");
 		});
 	}
 
