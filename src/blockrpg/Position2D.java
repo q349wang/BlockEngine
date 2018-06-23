@@ -90,6 +90,19 @@ public class Position2D extends Coord2D {
 	
 	/**
 	 * 
+	 * @param ang
+	 *            Angle in radians to turn Position2D counter clockwise
+	 * @return Returns Position2D rotated ang radians counter clockwise
+	 */
+	public Position2D rotate(double ang) {
+		Position2D rotation = new Position2D();
+		rotation.setCoord(super.rotate(ang).getCoord());
+
+		return rotation;
+	}
+	
+	/**
+	 * 
 	 * @return Returns vector with same coordinates
 	 */
 	public Vector2D toVec() {

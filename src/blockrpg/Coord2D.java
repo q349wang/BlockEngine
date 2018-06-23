@@ -51,7 +51,7 @@ public class Coord2D {
 	public void setCoord(double[] coords) {
 		DecimalFormat df = new DecimalFormat("#.##########");
 		// Rounds numbers that are very close to nearest billionth
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			if (Math.abs(coords[i] - Double.parseDouble(df.format(coords[i]))) < ERROR) {
 				coords[i] = Double.parseDouble(df.format(coords[i]));
 			}
@@ -137,6 +137,21 @@ public class Coord2D {
 		double coords[] = { this.x - other.x, this.y - other.y};
 		diff.setCoord(coords);
 		return diff;
+	}
+	
+	/**
+	 * 
+	 * @param ang
+	 *            Angle in radians to turn Coord2D counter clockwise
+	 * @return Returns Coord2D rotated ang radians counter clockwise
+	 */
+	public Coord2D rotate(double ang) {
+		Coord2D rotation = new Coord2D();
+		double coords[] = { this.x * Math.cos(ang) - this.y * Math.sin(ang),
+				this.x * Math.sin(ang) + this.y * Math.cos(ang) };
+		rotation.setCoord(coords);
+
+		return rotation;
 	}
 	
     // Overriding equals() to compare two Coord2D objects

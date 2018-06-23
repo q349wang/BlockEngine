@@ -45,7 +45,9 @@ public class Vector2D extends Coord2D {
 	 */
 	public Vector2D normalize() {
 		Vector2D normalized = new Vector2D(this.getCoord());
-
+		if (Math.abs(normalized.length - 0.0) < ERROR) {
+			return this;
+		}
 		// Don't normalize if length is already close to 1 or length is 0 tiny changes
 		if (Math.abs(normalized.length - 1.0) > ERROR && Math.abs(normalized.length - 0.0) > ERROR) {
 			normalized.x = this.x / normalized.length + 0.0;
@@ -133,14 +135,12 @@ public class Vector2D extends Coord2D {
 	/**
 	 * 
 	 * @param ang
-	 *            Angle in radians to turn Vector counter clockwise
-	 * @return Returns vector rotated ang radians counter clockwise
+	 *            Angle in radians to turn Vector2D counter clockwise
+	 * @return Returns Vector2D rotated ang radians counter clockwise
 	 */
 	public Vector2D rotate(double ang) {
 		Vector2D rotation = new Vector2D();
-		double coords[] = { this.x * Math.cos(ang) - this.y * Math.sin(ang),
-				this.x * Math.sin(ang) + this.y * Math.cos(ang) };
-		rotation.setCoord(coords);
+		rotation.setCoord(super.rotate(ang).getCoord());
 
 		return rotation;
 	}

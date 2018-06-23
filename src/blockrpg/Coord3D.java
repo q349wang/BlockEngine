@@ -174,6 +174,107 @@ public class Coord3D {
 		diff.setCoord(coords);
 		return diff;
 	}
+	
+
+	/**
+	 * 
+	 * @param ang
+	 *            angle in radians
+	 * @return Returns Coord3D rotated ang radians counter clockwise about the X
+	 *         axis
+	 */
+	public Coord3D rotateX(double ang) {
+		Coord3D rotation = new Vector3D();
+		double coords[] = { this.x, this.y * Math.cos(ang) - this.z * Math.sin(ang),
+				this.y * Math.sin(ang) + this.z * Math.cos(ang) };
+		rotation.setCoord(coords);
+
+		return rotation;
+	}
+
+	/**
+	 * 
+	 * @param ang
+	 *            angle in radians
+	 * @return Returns Coord3D rotated ang radians counter clockwise about the Y
+	 *         axis
+	 */
+	public Coord3D rotateY(double ang) {
+		Coord3D rotation = new Coord3D();
+		double coords[] = { this.x * Math.cos(ang) + this.z * Math.sin(ang), this.y,
+				-this.x * Math.sin(ang) + this.z * Math.cos(ang) };
+		rotation.setCoord(coords);
+
+		return rotation;
+	}
+
+	/**
+	 * 
+	 * @param ang
+	 *            angle in radians
+	 * @return Returns Coord3D rotated ang radians counter clockwise about the Y
+	 *         axis
+	 */
+	public Coord3D rotateZ(double ang) {
+		Coord3D rotation = new Coord3D();
+		double coords[] = { this.x * Math.cos(ang) - this.y * Math.sin(ang),
+				this.x * Math.sin(ang) + this.y * Math.cos(ang), this.z };
+		rotation.setCoord(coords);
+
+		return rotation;
+	}
+
+	/**
+	 * 
+	 * @param ang
+	 *            angle in radians
+	 * @param axis
+	 *            axis to rotate about
+	 * @return Returns Coord3D rotated ang radians counter clockwise about the
+	 *         specified axis
+	 */
+	public Coord3D rotate(double ang, Vector3D axis) {
+		Coord3D rotation = new Coord3D();
+		double[] oldCoords = this.getCoord();
+		double[] axisCoords = axis.getCoord();
+		double[] newCoords = new double[3];
+		double[][] rotMatrix = new double[3][3];
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				if (i == j) {
+					rotMatrix[i][j] = Math.cos(ang);
+				} else {
+					int index = i + j;
+					switch (index) {
+					case 1:
+						rotMatrix[i][j] = Math.sin(ang) * axisCoords[2] * (j - i);
+						break;
+					case 2:
+						rotMatrix[i][j] = Math.sin(ang) * axisCoords[1] * (i - j) / 2;
+						break;
+					case 3:
+						rotMatrix[i][j] = Math.sin(ang) * axisCoords[0] * (j - i);
+						break;
+					default:
+						break;
+					}
+				}
+
+				rotMatrix[i][j] += axisCoords[i] * axisCoords[j] * (1 - Math.cos(ang));
+			}
+
+		}
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				newCoords[j] += rotMatrix[i][j] * oldCoords[i] + 0.0;
+			}
+		}
+		rotation.setCoord(newCoords);
+
+		return rotation;
+	}
 
 	// Overriding equals() to compare two Coord3D objects
 	@Override
