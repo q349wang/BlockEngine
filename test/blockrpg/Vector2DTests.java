@@ -155,5 +155,14 @@ class Vector2DTests {
 		Position2D expected = new Position2D(1, 1);
 		assertTrue(Arrays.equals(expected.getCoord(), vec1.getCoord()));
 	}
+	
+	@Test
+	void testClone() {
+		Vector2D vec1 = new Vector2D(3,4);
+		Vector2D vec2 = vec1.clone();
+		Vector2D expected = new Vector2D(3,4);
+		assertEquals(5, vec2.getLength());
+		assertEquals(expected, vec2);
+	}
 
 }

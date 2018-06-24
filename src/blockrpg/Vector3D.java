@@ -231,4 +231,13 @@ public class Vector3D extends Coord3D {
 	public Position3D toPos() {
 		return new Position3D(this.getCoord());
 	}
+	
+	/**
+	 * @return Returns copy of this object
+	 */
+	@Override
+	public Vector3D clone() {
+		Vector3D clone = new Vector3D(super.clone().getCoord());
+		return clone;
+	}
 }

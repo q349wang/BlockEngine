@@ -218,5 +218,14 @@ class Vector3DTests {
 		Position3D expected = new Position3D(1, 1,9);
 		assertTrue(Arrays.equals(expected.getCoord(), vec1.getCoord()));
 	}
+	
+	@Test
+	void testClone() {
+		Vector3D vec1 = new Vector3D(1,2,2);
+		Vector3D vec2 = vec1.clone();
+		Vector3D expected = new Vector3D(1,2,2);
+		assertEquals(3, vec2.getLength());
+		assertEquals(expected, vec2);
+	}
 
 }

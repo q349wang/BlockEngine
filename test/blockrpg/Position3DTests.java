@@ -151,5 +151,13 @@ class Position3DTests {
 		Vector3D expected = new Vector3D(1, 1,9);
 		assertTrue(Arrays.equals(expected.getCoord(), pos1.getCoord()));
 	}
+	
+	@Test
+	void testClone() {
+		Position3D pos1 = new Position3D(1,1,1);
+		Position3D pos2 = pos1.clone();
+		Position3D expected = new Position3D(1,1,1);
+		assertEquals(expected, pos2);
+	}
 
 }

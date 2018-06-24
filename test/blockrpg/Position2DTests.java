@@ -84,6 +84,14 @@ class Position2DTests {
 		Vector2D expected = new Vector2D(1, 1);
 		assertTrue(Arrays.equals(expected.getCoord(), pos1.getCoord()));
 	}
+	
+	@Test
+	void testClone() {
+		Position2D pos1 = new Position2D(1,1);
+		Position2D pos2 = pos1.clone();
+		Position2D expected = new Position2D(1,1);
+		assertEquals(expected, pos2);
+	}
 
 
 }

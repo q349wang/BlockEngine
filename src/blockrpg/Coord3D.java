@@ -275,6 +275,15 @@ public class Coord3D {
 
 		return rotation;
 	}
+	
+	/**
+	 * @return Returns copy of this object
+	 */
+	@Override
+	public Coord3D clone() {
+		Coord3D clone = new Coord3D(this.getCoord());
+		return clone;
+	}
 
 	// Overriding equals() to compare two Coord3D objects
 	@Override

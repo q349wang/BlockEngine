@@ -154,6 +154,15 @@ public class Coord2D {
 		return rotation;
 	}
 	
+	/**
+	 * @return Returns copy of this object
+	 */
+	@Override
+	public Coord2D clone() {
+		Coord2D clone = new Coord2D(this.getCoord());
+		return clone;
+	}
+	
     // Overriding equals() to compare two Coord2D objects
     @Override
     public boolean equals(Object o) {

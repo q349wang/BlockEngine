@@ -108,5 +108,14 @@ public class Position2D extends Coord2D {
 	public Vector2D toVec() {
 		return new Vector2D(this.getCoord());
 	}
+	
+	/**
+	 * @return Returns copy of this object
+	 */
+	@Override
+	public Position2D clone() {
+		Position2D clone = new Position2D(this.getCoord());
+		return clone;
+	}
 
 }

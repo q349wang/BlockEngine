@@ -165,4 +165,13 @@ public class Vector2D extends Coord2D {
 		return new Position2D(this.getCoord());
 	}
 	
+	/**
+	 * @return Returns copy of this object
+	 */
+	@Override
+	public Vector2D clone() {
+		Vector2D clone = new Vector2D(this.getCoord());
+		return clone;
+	}
+	
 }

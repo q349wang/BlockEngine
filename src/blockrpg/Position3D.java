@@ -166,4 +166,14 @@ public class Position3D extends Coord3D {
 	public Vector3D toVec() {
 		return new Vector3D(this.getCoord());
 	}
+	
+	
+	/**
+	 * @return Returns copy of this object
+	 */
+	@Override
+	public Position3D clone() {
+		Position3D clone = new Position3D(super.clone().getCoord());
+		return clone;
+	}
 }
