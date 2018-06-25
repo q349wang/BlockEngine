@@ -165,19 +165,35 @@ public class Coord2D {
 	
     // Overriding equals() to compare two Coord2D objects
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object other) {
 
-        if (o == this) {
+        if (other == this) {
             return true;
         }
 
-        if (!(o instanceof Coord2D)) {
+        if (!(other instanceof Coord2D)) {
             return false;
         }
 
-        Coord2D c = (Coord2D) o;
-         
-        // Compare the data members and return accordingly 
-        return Arrays.equals(this.getCoord(), c.getCoord());
+        Coord2D coord = (Coord2D) other;
+		boolean equals = true;
+		for(int i = 0;i <2;i++) {
+			if(Math.abs(this.getCoord()[i]- coord.getCoord()[i]) > ERROR) {
+				equals = false;
+				break;
+			}
+		}
+		// Compare the data members and return accordingly
+		return equals;
     }
+    
+	
+	/**
+	 * 
+	 * @return Returns true if origin
+	 */
+	public boolean isOrigin() {
+		double origin[] = {0.0,0.0};
+		return Arrays.equals(this.getCoord(), origin);
+	}
 }

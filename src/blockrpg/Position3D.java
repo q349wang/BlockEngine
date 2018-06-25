@@ -176,4 +176,5 @@ public class Position3D extends Coord3D {
 		Position3D clone = new Position3D(super.clone().getCoord());
 		return clone;
 	}
+	
 }

@@ -75,7 +75,7 @@ public class Position2D extends Coord2D {
 		Vector2D direction = new Vector2D(xDistancefrom(other), yDistancefrom(other));
 		return direction;
 	}
-	
+
 	@Override
 	public Position2D add(Coord2D other) {
 		Position2D sum = new Position2D(super.add(other).getCoord());
@@ -87,7 +87,7 @@ public class Position2D extends Coord2D {
 		Position2D diff = new Position2D(super.subtract(other).getCoord());
 		return diff;
 	}
-	
+
 	/**
 	 * 
 	 * @param ang
@@ -100,7 +100,7 @@ public class Position2D extends Coord2D {
 
 		return rotation;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns vector with same coordinates
@@ -108,7 +108,7 @@ public class Position2D extends Coord2D {
 	public Vector2D toVec() {
 		return new Vector2D(this.getCoord());
 	}
-	
+
 	/**
 	 * @return Returns copy of this object
 	 */

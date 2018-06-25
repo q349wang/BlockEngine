@@ -174,7 +174,6 @@ public class Coord3D {
 		diff.setCoord(coords);
 		return diff;
 	}
-	
 
 	/**
 	 * 
@@ -236,7 +235,7 @@ public class Coord3D {
 	public Coord3D rotate(double ang, Vector3D axis) {
 		Coord3D rotation = new Coord3D();
 		double[] oldCoords = this.getCoord();
-		double[] axisCoords = axis.getCoord();
+		double[] axisCoords = axis.normalize().getCoord();
 		double[] newCoords = new double[3];
 		double[][] rotMatrix = new double[3][3];
 
@@ -251,7 +250,7 @@ public class Coord3D {
 						rotMatrix[i][j] = Math.sin(ang) * axisCoords[2] * (j - i);
 						break;
 					case 2:
-						rotMatrix[i][j] = Math.sin(ang) * axisCoords[1] * (i - j) / 2;
+						rotMatrix[i][j] = Math.sin(ang) * axisCoords[1] * ((i - j) / 2);
 						break;
 					case 3:
 						rotMatrix[i][j] = Math.sin(ang) * axisCoords[0] * (j - i);
@@ -275,7 +274,7 @@ public class Coord3D {
 
 		return rotation;
 	}
-	
+
 	/**
 	 * @return Returns copy of this object
 	 */
@@ -287,19 +286,34 @@ public class Coord3D {
 
 	// Overriding equals() to compare two Coord3D objects
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object other) {
 
-		if (o == this) {
+		if (other == this) {
 			return true;
 		}
 
-		if (!(o instanceof Coord3D)) {
+		if (!(other instanceof Coord3D)) {
 			return false;
 		}
 
-		Coord3D c = (Coord3D) o;
-
+		Coord3D coord = (Coord3D) other;
+		boolean equals = true;
+		for(int i = 0;i <3;i++) {
+			if(Math.abs(this.getCoord()[i]- coord.getCoord()[i]) > ERROR) {
+				equals = false;
+				break;
+			}
+		}
 		// Compare the data members and return accordingly
-		return Arrays.equals(this.getCoord(), c.getCoord());
+		return equals;
+	}
+	
+	/**
+	 * 
+	 * @return Returns true if origin
+	 */
+	public boolean isOrigin() {
+		double origin[] = {0.0,0.0,0.0};
+		return Arrays.equals(this.getCoord(), origin);
 	}
 }

@@ -144,7 +144,7 @@ public class Vector2D extends Coord2D {
 
 		return rotation;
 	}
-	
+
 	@Override
 	public Vector2D add(Coord2D other) {
 		Vector2D sum = new Vector2D(super.add(other).getCoord());
@@ -156,7 +156,7 @@ public class Vector2D extends Coord2D {
 		Vector2D diff = new Vector2D(super.subtract(other).getCoord());
 		return diff;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns position with same coordinates
@@ -164,7 +164,7 @@ public class Vector2D extends Coord2D {
 	public Position2D toPos() {
 		return new Position2D(this.getCoord());
 	}
-	
+
 	/**
 	 * @return Returns copy of this object
 	 */
@@ -173,5 +173,53 @@ public class Vector2D extends Coord2D {
 		Vector2D clone = new Vector2D(this.getCoord());
 		return clone;
 	}
-	
+
+	/**
+	 * 
+	 * @param other
+	 *            other vector to check
+	 * @return Returns true if parallel to other vector
+	 */
+	public boolean isParallel(Vector2D other) {
+		if (!this.isOrigin() && !other.isOrigin()) {
+				if (this.x == 0 && other.x == 0) {
+					return true;
+				}else if (this.y == 0 && other.y == 0) {
+					return true;
+				} else if (this.x == 0 || other.x == 0 || this.y == 0 || other.y == 0){
+					return false;
+				} else {
+					return Math.abs(this.x / other.x - this.y / other.y) < ERROR;
+				}
+
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * 
+	 * @param other
+	 *            Other vector that is multiple of this vector
+	 * @return Returns scalar multiple
+	 */
+	public double getMultiple(Vector2D other) {
+		if(other.isOrigin()) {
+			return 0;
+		}
+		if (this.isParallel(other)) {
+			double thisCoords[] = this.getCoord();
+			double otherCoords[] = other.getCoord();
+			for (int i = 0; i < 2; i++) {
+				if (thisCoords[i] != 0) {
+					return otherCoords[i] / thisCoords[i];
+				}
+			}
+		} else {
+			throw new IllegalArgumentException();
+		}
+		return 0;
+	}
+
 }

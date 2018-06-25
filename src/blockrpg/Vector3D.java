@@ -48,14 +48,15 @@ public class Vector3D extends Coord3D {
 	 */
 	public Vector3D normalize() {
 		Vector3D normalized = new Vector3D(this.getCoord());
-		if (Math.abs(normalized.length - 0.0) < ERROR) {
+		double oldLen = this.getLength();
+		if (Math.abs(normalized.length) < ERROR) {
 			return this;
 		}
 		// Don't normalize if length is already close to 1 or length is 0
-		if (Math.abs(normalized.length - 1.0) > ERROR && Math.abs(normalized.length - 0.0) > ERROR) {
-			normalized.setX(this.x / normalized.length + 0.0);
-			normalized.setY(this.y / normalized.length + 0.0);
-			normalized.setZ(this.z / normalized.length + 0.0);
+		if (Math.abs(normalized.length - 1.0) > ERROR && Math.abs(normalized.length) > ERROR) {
+			normalized.setX(this.x / oldLen + 0.0);
+			normalized.setY(this.y / oldLen + 0.0);
+			normalized.setZ(this.z / oldLen + 0.0);
 		}
 		normalized.length = 1.0;
 
@@ -76,7 +77,7 @@ public class Vector3D extends Coord3D {
 	public double getLength() {
 		return length;
 	}
-	
+
 	@Override
 	public Vector3D add(Coord3D other) {
 		Vector3D sum = new Vector3D(super.add(other).getCoord());
@@ -117,7 +118,7 @@ public class Vector3D extends Coord3D {
 		if (Math.abs(product - 0.0) < ERROR) {
 			product = 0.0;
 		}
-		
+
 		return product;
 	}
 
@@ -223,7 +224,7 @@ public class Vector3D extends Coord3D {
 
 		return rotation;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns position with same coordinates
@@ -231,7 +232,7 @@ public class Vector3D extends Coord3D {
 	public Position3D toPos() {
 		return new Position3D(this.getCoord());
 	}
-	
+
 	/**
 	 * @return Returns copy of this object
 	 */
@@ -239,5 +240,42 @@ public class Vector3D extends Coord3D {
 	public Vector3D clone() {
 		Vector3D clone = new Vector3D(super.clone().getCoord());
 		return clone;
+	}
+	
+	/**
+	 * 
+	 * @param other other vector to check
+	 * @return Returns true if parallel to other vector
+	 */
+	public boolean isParallel(Vector3D other) {
+		if(!this.isOrigin() && !other.isOrigin()) {
+			Vector3D origin = new Vector3D();
+			return this.cross(other).equals(origin);
+		}
+
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param other Other vector that is multiple of this vector
+	 * @return
+	 */
+	public double getMultiple(Vector3D other) {
+		if(other.isOrigin()) {
+			return 0;
+		}
+		if(this.isParallel(other)) {
+			double thisCoords[] = this.getCoord();
+			double otherCoords[] = other.getCoord();
+			for(int i = 0; i<3;i++) {
+				if(thisCoords[i] != 0) {
+					return otherCoords[i]/thisCoords[i];
+				}
+			}
+		} else {
+			throw new IllegalArgumentException();
+		}
+		return 0;
 	}
 }

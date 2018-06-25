@@ -148,21 +148,102 @@ class Vector2DTests {
 		Vector2D expected = new Vector2D(-1, 1);
 		assertEquals(expected, vec1.rotate(Math.PI / 2));
 	}
-	
+
 	@Test
 	void testToPos() {
 		Vector2D vec1 = new Vector2D(1, 1);
 		Position2D expected = new Position2D(1, 1);
 		assertTrue(Arrays.equals(expected.getCoord(), vec1.getCoord()));
 	}
-	
+
 	@Test
 	void testClone() {
-		Vector2D vec1 = new Vector2D(3,4);
+		Vector2D vec1 = new Vector2D(3, 4);
 		Vector2D vec2 = vec1.clone();
-		Vector2D expected = new Vector2D(3,4);
+		Vector2D expected = new Vector2D(3, 4);
 		assertEquals(5, vec2.getLength());
 		assertEquals(expected, vec2);
+	}
+
+	@Test
+	void testIsParallelTrue() {
+		Vector2D vec1 = new Vector2D(-2, 0);
+		Vector2D vec2 = new Vector2D(1, 0);
+		assertTrue(vec1.isParallel(vec2));
+		assertTrue(vec2.isParallel(vec1));
+	}
+
+	@Test
+	void testIsParallelFalse() {
+		Vector2D vec1 = new Vector2D(-2, 2);
+		Vector2D vec2 = new Vector2D(1, 0);
+		assertFalse(vec1.isParallel(vec2));
+		assertFalse(vec2.isParallel(vec1));
+	}
+
+	@Test
+	void testIsParallelOneXZero() {
+		Vector2D vec1 = new Vector2D(0, 2);
+		Vector2D vec2 = new Vector2D(1, 2);
+		assertFalse(vec1.isParallel(vec2));
+		assertFalse(vec2.isParallel(vec1));
+	}
+	
+	@Test
+	void testIsParallelBothXZero() {
+		Vector2D vec1 = new Vector2D(0, 2);
+		Vector2D vec2 = new Vector2D(0, 1);
+		assertTrue(vec1.isParallel(vec2));
+		assertTrue(vec2.isParallel(vec1));
+	}
+	
+	@Test
+	void testIsParallelOneYZero() {
+		Vector2D vec1 = new Vector2D(7, 0);
+		Vector2D vec2 = new Vector2D(1, 2);
+		assertFalse(vec1.isParallel(vec2));
+		assertFalse(vec2.isParallel(vec1));
+	}
+	
+	@Test
+	void testIsParallelBothYZero() {
+		Vector2D vec1 = new Vector2D(6, 0);
+		Vector2D vec2 = new Vector2D(1, 0);
+		assertTrue(vec1.isParallel(vec2));
+		assertTrue(vec2.isParallel(vec1));
+	}
+	
+
+	@Test
+	void testGetMultipleOriginAsThis() {
+		Vector2D origin = new Vector2D();
+		Vector2D vec = new Vector2D(1, 0);
+
+		assertThrows(IllegalArgumentException.class, () -> origin.getMultiple(vec));
+	}
+
+	@Test
+	void testGetMultipleOriginAsOther() {
+		Vector2D origin = new Vector2D();
+		Vector2D vec = new Vector2D(1, 0);
+
+		assertEquals(0, vec.getMultiple(origin));
+	}
+
+	@Test
+	void testGetMultipleNotParallel() {
+		Vector2D vec1 = new Vector2D(0, 1);
+		Vector2D vec2 = new Vector2D(1, 0);
+
+		assertThrows(IllegalArgumentException.class, () -> vec1.getMultiple(vec2));
+	}
+
+	@Test
+	void testGetMultipleParallel() {
+		Vector2D vec1 = new Vector2D(3, 0);
+		Vector2D vec2 = new Vector2D(-6, 0);
+
+		assertEquals(-2, vec1.getMultiple(vec2));
 	}
 
 }

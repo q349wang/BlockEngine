@@ -211,21 +211,77 @@ class Vector3DTests {
 		Vector3D expected = new Vector3D(4, -4, 0);
 		assertEquals(expected, vec1.rotate(Math.PI, axis));
 	}
-	
+
 	@Test
 	void testToPos() {
-		Vector3D vec1 = new Vector3D(1, 1,9);
-		Position3D expected = new Position3D(1, 1,9);
+		Vector3D vec1 = new Vector3D(1, 1, 9);
+		Position3D expected = new Position3D(1, 1, 9);
 		assertTrue(Arrays.equals(expected.getCoord(), vec1.getCoord()));
 	}
-	
+
 	@Test
 	void testClone() {
-		Vector3D vec1 = new Vector3D(1,2,2);
+		Vector3D vec1 = new Vector3D(1, 2, 2);
 		Vector3D vec2 = vec1.clone();
-		Vector3D expected = new Vector3D(1,2,2);
+		Vector3D expected = new Vector3D(1, 2, 2);
 		assertEquals(3, vec2.getLength());
 		assertEquals(expected, vec2);
 	}
 
+	@Test
+	void testIsParallelOrigin() {
+		Vector3D origin = new Vector3D();
+		Vector3D vec = new Vector3D(1, 0, 0);
+		assertFalse(origin.isParallel(vec));
+		assertFalse(vec.isParallel(origin));
+	}
+
+	@Test
+	void testIsParallelTrue() {
+		Vector3D vec1 = new Vector3D(-2, 0, 0);
+		Vector3D vec2 = new Vector3D(1, 0, 0);
+		assertTrue(vec1.isParallel(vec2));
+		assertTrue(vec2.isParallel(vec1));
+	}
+
+	@Test
+	void testIsParallelFalse() {
+		Vector3D vec1 = new Vector3D(-2, 2, 0);
+		Vector3D vec2 = new Vector3D(1, 0, 0);
+		assertFalse(vec1.isParallel(vec2));
+		assertFalse(vec2.isParallel(vec1));
+	}
+
+	@Test
+	void testGetMultipleOriginAsThis() {
+		Vector3D origin = new Vector3D();
+		Vector3D vec = new Vector3D(1, 0, 0);
+
+		assertThrows(IllegalArgumentException.class, () -> origin.getMultiple(vec));
+	}
+
+	@Test
+	void testGetMultipleOriginAsOther() {
+		Vector3D origin = new Vector3D();
+		Vector3D vec = new Vector3D(1, 0, 0);
+
+		assertEquals(0, vec.getMultiple(origin));
+	}
+
+	@Test
+	void testGetMultipleNotParallel() {
+		Vector3D vec1 = new Vector3D(0,1,0);
+		Vector3D vec2 = new Vector3D(1, 0, 0);
+
+		assertThrows(IllegalArgumentException.class, () -> vec1.getMultiple(vec2));
+	}
+
+	@Test
+	void testGetMultipleParallel() {
+		Vector3D vec1 = new Vector3D(3,0,0);
+		Vector3D vec2 = new Vector3D(-6, 0, 0);
+
+		assertEquals(-2, vec1.getMultiple(vec2));
+	}
+	
 }
