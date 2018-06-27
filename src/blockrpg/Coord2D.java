@@ -42,6 +42,16 @@ public class Coord2D {
 		this.x = coords[0];
 		this.y = coords[1];
 	}
+	
+	/**
+	 * Copys another Coord2D
+	 * @param other Other Coord2D to copy
+	 */
+	public Coord2D(Coord2D other) {
+		this.x = other.x;
+		this.y= other.y;
+	}
+
 
 	/**
 	 * 

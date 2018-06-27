@@ -157,14 +157,23 @@ class Vector2DTests {
 	}
 
 	@Test
-	void testClone() {
+	void testCloneFunction() {
 		Vector2D vec1 = new Vector2D(3, 4);
 		Vector2D vec2 = vec1.clone();
 		Vector2D expected = new Vector2D(3, 4);
 		assertEquals(5, vec2.getLength());
 		assertEquals(expected, vec2);
 	}
-
+	
+	@Test
+	void testCloneConstructor() {
+		Vector2D vec1 = new Vector2D(3, 4);
+		Vector2D vec2 = new Vector2D(vec1);
+		Vector2D expected = new Vector2D(3, 4);
+		assertEquals(5, vec2.getLength());
+		assertEquals(expected, vec2);
+	}
+	
 	@Test
 	void testIsParallelTrue() {
 		Vector2D vec1 = new Vector2D(-2, 0);

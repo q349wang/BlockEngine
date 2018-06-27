@@ -18,6 +18,16 @@ class PlaneTests {
 
 		assertEquals(expected, result);
 	}
+	
+	@Test
+	void testCloneConstructor() {
+		Vector3D x = new Vector3D(1, 0, 0);
+		Vector3D y = new Vector3D(0, 3.0 / 5, 4.0 / 5);
+		Position3D pos = new Position3D(-1, 1, -1);
+		Plane testPlane = new Plane(x, y, pos);
+		Plane cloned = new Plane(testPlane);
+		assertEquals(testPlane, cloned);
+	}
 
 	@Test
 	void testPlaceOnPlaneTypical() {

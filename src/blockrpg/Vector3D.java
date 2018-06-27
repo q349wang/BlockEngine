@@ -40,6 +40,15 @@ public class Vector3D extends Coord3D {
 		super(coords);
 		length = Math.sqrt(x * x + y * y + z * z);
 	}
+	
+	/**
+	 * Copys another Vector3D
+	 * @param other Other Vector3D to copy
+	 */
+	public Vector3D(Vector3D other) {
+		super(other);
+		this.length = other.length;
+	}
 
 	/**
 	 * Normalizes vector to length of 1

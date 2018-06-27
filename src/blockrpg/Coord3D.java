@@ -57,6 +57,16 @@ public class Coord3D {
 		this.y = coords[1];
 		this.z = coords[2];
 	}
+	
+	/**
+	 * Copys another Coord3D
+	 * @param other Other Coord3D to copy
+	 */
+	public Coord3D(Coord3D other) {
+		this.x = other.x;
+		this.y = other.y;
+		this.z = other.y;;
+	}
 
 	/**
 	 * 

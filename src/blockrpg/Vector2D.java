@@ -39,6 +39,15 @@ public class Vector2D extends Coord2D {
 	}
 
 	/**
+	 * Copys another Vector3D
+	 * @param other Other Vector3D to copy
+	 */
+	public Vector2D(Vector2D other) {
+		super(other);
+		this.length = other.length;
+	}
+
+	/**
 	 * Normalizes vector to length of 1
 	 * 
 	 * @return normalized vector as Vector2D

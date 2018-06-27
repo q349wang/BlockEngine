@@ -31,6 +31,15 @@ public class Position2D extends Coord2D {
 	public Position2D(double[] coords) {
 		super(coords);
 	}
+	
+	/**
+	 * Copys another Vector3D
+	 * @param other Other Vector3D to copy
+	 */
+	public Position2D(Position2D other) {
+		super(other);
+	}
+
 
 	/**
 	 * 

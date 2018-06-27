@@ -153,9 +153,17 @@ class Position3DTests {
 	}
 	
 	@Test
-	void testClone() {
+	void testCloneFunction() {
 		Position3D pos1 = new Position3D(1,1,1);
 		Position3D pos2 = pos1.clone();
+		Position3D expected = new Position3D(1,1,1);
+		assertEquals(expected, pos2);
+	}
+	
+	@Test
+	void testCloneConstructor() {
+		Position3D pos1 = new Position3D(1,1,1);
+		Position3D pos2 = new Position3D(pos1);
 		Position3D expected = new Position3D(1,1,1);
 		assertEquals(expected, pos2);
 	}

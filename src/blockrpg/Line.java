@@ -4,15 +4,37 @@ public class Line {
 	private Position3D pos;
 	private Vector3D dir;
 
+	/**
+	 * Default constructor for line
+	 */
 	public Line() {
 		pos = new Position3D();
 		dir = new Vector3D();
 	}
 
+	/**
+	 * Custom constructor for line with coords for direction and position
+	 * 
+	 * @param dir
+	 *            Direction Vector3D
+	 * @param pos
+	 *            Position Position3D
+	 */
 	public Line(Vector3D dir, Position3D pos) {
 		this.dir = new Vector3D(dir.getCoord());
 		dir = dir.normalize();
 		this.pos = new Position3D(pos.getCoord());
+	}
+
+	/**
+	 * Copies Line
+	 * 
+	 * @param other
+	 *            Other line to copy
+	 */
+	public Line(Line other) {
+		this.pos = other.pos;
+		this.dir = other.dir;
 	}
 
 	/**
@@ -49,22 +71,39 @@ public class Line {
 	public Position3D getPos() {
 		return pos;
 	}
-	
+
 	/**
 	 * 
-	 * @param t Scalar multiple of 
-	 * @return
+	 * @param t
+	 *            Scalar multiple
+	 * @return Returns point on line at t
 	 */
 	public Position3D getLinePoint(double t) {
 		return pos.add(dir.multiply(t));
 	}
 
+	/**
+	 * 
+	 * @param ang
+	 *            Angle to rotate line direction
+	 * @param axis
+	 *            Axis to rotate line direction
+	 * @return Returns rotated line
+	 */
 	public Line rotateDir(double ang, Vector3D axis) {
 		Line rotatedDir = new Line(this.dir, this.pos);
 		rotatedDir.setDir(dir.rotate(ang, axis).getCoord());
 		return rotatedDir;
 	}
 
+	/**
+	 * 
+	 * @param ang
+	 *            Angle to rotate line position
+	 * @param axis
+	 *            Axis to rotate line position
+	 * @return Returns rotated line
+	 */
 	public Line rotatePos(double ang, Vector3D axis) {
 		Line rotatedDir = new Line(this.dir, this.pos);
 		rotatedDir.setDir(dir.rotate(ang, axis).getCoord());
@@ -72,9 +111,44 @@ public class Line {
 		return rotatedDir;
 	}
 
+	/**
+	 * 
+	 * @param other
+	 *            Other line to check
+	 * @return Returns true if lines are parallel
+	 */
 	public boolean isParallel(Line other) {
 		Vector3D origin = new Vector3D();
 		return this.dir.cross(other.dir).equals(origin);
+
+	}
+
+	/**
+	 * 
+	 * @param other
+	 *            Other line to check
+	 * @return Returns null if no intersection and Position3D if there is one
+	 */
+	public Position3D intersects(Line other) {
+
+		if (this.isParallel(other)) {
+			return null;
+		}
+		Position3D poi = new Position3D();
+		try {
+			double multiple = other.dir.cross(this.dir)
+					.getMultiple(this.pos.subtract(other.pos).toVec().cross(this.dir));
+			poi = other.getLinePoint(multiple);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+
+		if (poi.equals(this.getLinePoint(
+				this.dir.cross(other.dir).getMultiple(other.pos.subtract(this.pos).toVec().cross(other.dir))))) {
+			return poi;
+		} else {
+			return null;
+		}
 
 	}
 
@@ -92,30 +166,7 @@ public class Line {
 
 		Line line = (Line) other;
 
-		return this.isParallel(line) && this.pos.equals(line.pos);
-
-	}
-
-	public Position3D intersects(Line other) {
-
-		if (this.isParallel(other)) {
-			return null;
-		}
-		Position3D poi = new Position3D();
-		try {
-			double multiple = other.dir.cross(this.dir).getMultiple(this.pos.subtract(other.pos).toVec().cross(this.dir));
-			poi = other.getLinePoint(multiple);
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
-		
-		
-		if(poi.equals(this.getLinePoint(this.dir.cross(other.dir).getMultiple(other.pos.subtract(this.pos).toVec().cross(other.dir))))) {
-			return poi;
-		} else {
-			return null;
-		}
-		
+		return this.dir.equals(line.dir) && this.pos.equals(line.pos);
 
 	}
 }

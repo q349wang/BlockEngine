@@ -35,6 +35,14 @@ public class Position3D extends Coord3D {
 	}
 
 	/**
+	 * Copys another Position3D
+	 * @param other Other Position3D to copy
+	 */
+	public Position3D(Position3D other) {
+		super(other);
+	}
+	
+	/**
 	 * 
 	 * @param other
 	 *            Another position

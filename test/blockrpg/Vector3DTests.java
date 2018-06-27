@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 class Vector3DTests {
+	
 
 	@Test
 	void testSetAndGetCoords() {
@@ -220,9 +221,18 @@ class Vector3DTests {
 	}
 
 	@Test
-	void testClone() {
+	void testCloneFunction() {
 		Vector3D vec1 = new Vector3D(1, 2, 2);
 		Vector3D vec2 = vec1.clone();
+		Vector3D expected = new Vector3D(1, 2, 2);
+		assertEquals(3, vec2.getLength());
+		assertEquals(expected, vec2);
+	}
+	
+	@Test
+	void testCloneConstructor() {
+		Vector3D vec1 = new Vector3D(1, 2, 2);
+		Vector3D vec2 = new Vector3D(vec1);
 		Vector3D expected = new Vector3D(1, 2, 2);
 		assertEquals(3, vec2.getLength());
 		assertEquals(expected, vec2);

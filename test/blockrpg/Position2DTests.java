@@ -86,9 +86,17 @@ class Position2DTests {
 	}
 	
 	@Test
-	void testClone() {
+	void testCloneFunction() {
 		Position2D pos1 = new Position2D(1,1);
 		Position2D pos2 = pos1.clone();
+		Position2D expected = new Position2D(1,1);
+		assertEquals(expected, pos2);
+	}
+	
+	@Test
+	void testCloneConstructor() {
+		Position2D pos1 = new Position2D(1,1);
+		Position2D pos2 = new Position2D(pos1);
 		Position2D expected = new Position2D(1,1);
 		assertEquals(expected, pos2);
 	}

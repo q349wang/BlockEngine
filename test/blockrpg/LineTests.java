@@ -7,6 +7,17 @@ import org.junit.jupiter.api.Test;
 class LineTests {
 
 	@Test
+	void testCloneConstructor() {
+		Line expected = new Line();
+		double dirCoords[] = { 2.0/3, 1.0/3, 2.0/3 };
+		double posCoords[] = { 1, 2, 3 };
+		expected.setDir(dirCoords);
+		expected.setPos(posCoords);
+		Line test = new Line(expected);
+		assertEquals(expected, test);
+	}
+	
+	@Test
 	void testSetAndGetDir() {
 		Line test = new Line();
 		double dirCoords[] = { 1, 2, 3 };

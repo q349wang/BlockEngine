@@ -7,6 +7,20 @@ import org.junit.jupiter.api.Test;
 class PerspectiveTests {
 
 	@Test
+	void testCloneConstructor() {
+		Perspective expected = new Perspective();
+		Vector3D dir = new Vector3D(0, 2, 0);
+		Vector3D tilt = new Vector3D(0, 0, 2);
+		Position3D pos = new Position3D(1, 0, 0);
+		expected.setPos(pos.getCoord());
+		expected.setDir(dir.getCoord());
+		expected.setTilt(tilt.getCoord());
+		
+		Perspective test = new Perspective(expected);
+		assertEquals(expected, test);
+	}
+	
+	@Test
 	void testSetAndGetPos() {
 		Perspective test = new Perspective();
 		Position3D pos = new Position3D(1, 2, 0);

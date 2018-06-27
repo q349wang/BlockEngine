@@ -45,6 +45,19 @@ public class Perspective {
 
 		setBasis();
 	}
+	
+	/**
+	 * Copies other Perspective
+	 * @param other Other Perspective to copy
+	 */
+	public Perspective(Perspective other) {
+		this.pos = other.pos;
+		this.dir = other.dir;
+		this.tilt = other.tilt;
+		this.norm = other.norm;
+		this.viewBasis = other.viewBasis;
+		this.viewBasisInverse = other.viewBasisInverse;
+	}
 
 	/**
 	 * Procedure to set the view basis matrix and the inverse of said matrix
@@ -255,6 +268,24 @@ public class Perspective {
 		tilt = dir.perp(tilt).normalize();
 		norm = dir.cross(tilt);
 		setBasis();
+	}
+	
+	// Overriding equals() to compare two Perspective objects
+	@Override
+	public boolean equals(Object other) {
+
+		if (other == this) {
+			return true;
+		}
+
+		if (!(other instanceof Perspective)) {
+			return false;
+		}
+
+		Perspective p = (Perspective) other;
+
+		return this.dir.equals(p.dir) && this.pos.equals(p.pos) && this.tilt.equals(p.tilt);
+
 	}
 
 }
