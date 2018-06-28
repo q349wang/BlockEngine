@@ -24,6 +24,7 @@ public class VisualFace extends JComponent {
 	private Position2D[] viewPoints;
 	private Position2D[] relPoints;
 	private Position2D anchor;
+	private Plane facePlane;
 	private int numPoints;
 	private Position3D[] absPoints;
 	private Position3D center;
@@ -36,6 +37,7 @@ public class VisualFace extends JComponent {
 		seenFace = new Polygon();
 		viewPoints = null;
 		numPoints = 0;
+		viewPoints = null;
 		relPoints =null;
 		center = new Position3D();
 	}
