@@ -26,8 +26,9 @@ public class VisualFace extends JComponent {
 	private Position2D anchor;
 	private Plane facePlane;
 	private int numPoints;
-	private Position3D[] absPoints;
+	private Position3D[] truePoints;
 	private Position3D center;
+	private Perspective pov;
 
 	/**
 	 * Default constructor for face
@@ -40,14 +41,29 @@ public class VisualFace extends JComponent {
 		viewPoints = null;
 		relPoints =null;
 		center = new Position3D();
+		pov = new Perspective();
 	}
 	
-	public VisualFace(Position2D[] relPoints, Position2D anchor, int numPoints) {
+	public VisualFace(Position2D[] relPoints, Position2D anchor, int numPoints, Plane facePlane) {
 
-		
+		this.facePlane = facePlane;
 		this.relPoints = relPoints;
 		this.anchor = anchor;
 		this.numPoints = numPoints;
+		double coords[] = new double[3];
+		
+		for (int i = 0; i < numPoints;i++) {
+			truePoints[i] = facePlane.placeOnPlane(relPoints[i]);
+			for (int j = 0; j < 3;j++) {
+				coords[j] += truePoints[i].getCoord()[j];
+			}
+		}
+
+		for(int i = 0; i < 3;i++) {
+			coords[i] /= numPoints;
+		}
+		
+		this.center = new Position3D(coords);
 	}
 
 	
