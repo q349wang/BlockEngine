@@ -133,4 +133,91 @@ class LineTests {
 		assertEquals(null, test1.intersects(test2));
 		assertEquals(null, test2.intersects(test1));
 	}
+	
+	@Test
+	void testOnLineTrue() {
+		Line test1 = new Line();
+		double dirCoords1[] = {1, 2, 3};
+		
+		double posCoords1[] = {1,1,0};
+		
+		Position3D point = new Position3D(2, 3, 3);
+		
+		test1.setDir(dirCoords1);
+		test1.setPos(posCoords1);
+
+		assertTrue(test1.onLine(point));
+	}
+	
+	@Test
+	void testOnLineFalse() {
+		Line test1 = new Line();
+		double dirCoords1[] = {1, 2, 3};
+		
+		double posCoords1[] = {1,1,0};
+		
+		Position3D point = new Position3D(2, 7, 3);
+		
+		test1.setDir(dirCoords1);
+		test1.setPos(posCoords1);
+
+		assertFalse(test1.onLine(point));
+	}
+	
+	@Test
+	void testSimilarTrue() {
+		Line test1 = new Line();
+		Line test2 = new Line();
+		double dirCoords1[] = {1, 2, 3};
+		double dirCoords2[] = {-2,-4,-6};
+		
+		double posCoords1[] = {1,1,0};
+		double posCoords2[] = {2,3,3};
+		
+		test1.setDir(dirCoords1);
+		test2.setDir(dirCoords2);
+		test1.setPos(posCoords1);
+		test2.setPos(posCoords2);
+
+		assertTrue(test1.similar(test2));
+		assertTrue(test2.similar(test1));
+	}
+	
+	@Test
+	void testSimilarFalseLine() {
+		Line test1 = new Line();
+		Line test2 = new Line();
+		double dirCoords1[] = {1, 1, 3};
+		double dirCoords2[] = {-2,-4,-6};
+		
+		double posCoords1[] = {1,1,0};
+		double posCoords2[] = {2,3,3};
+		
+		test1.setDir(dirCoords1);
+		test2.setDir(dirCoords2);
+		test1.setPos(posCoords1);
+		test2.setPos(posCoords2);
+
+		assertFalse(test1.similar(test2));
+		assertFalse(test2.similar(test1));
+	}
+	
+	@Test
+	void testSimilarFalsePoint() {
+		Line test1 = new Line();
+		Line test2 = new Line();
+		double dirCoords1[] = {1, 2, 3};
+		double dirCoords2[] = {-2,-4,-6};
+		
+		double posCoords1[] = {1,1,8};
+		double posCoords2[] = {2,3,3};
+		
+		test1.setDir(dirCoords1);
+		test2.setDir(dirCoords2);
+		test1.setPos(posCoords1);
+		test2.setPos(posCoords2);
+
+		assertFalse(test1.similar(test2));
+		assertFalse(test2.similar(test1));
+	}
 }

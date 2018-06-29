@@ -169,4 +169,27 @@ public class Line {
 		return this.dir.equals(line.dir) && this.pos.equals(line.pos);
 
 	}
+	
+	/**
+	 * 
+	 * @param other Other line to compare
+	 * @return Returns whether two lines objects represent the same line in space
+	 */
+	public boolean similar(Object other) {
+		if (other == this) {
+			return true;
+		}
+
+		if (!(other instanceof Line)) {
+			return false;
+		}
+
+		Line line = (Line) other;
+
+		return this.dir.isParallel(line.dir) && this.onLine(line.pos);
+	}
+	
+	public boolean onLine(Position3D pos) {
+		return pos.subtract(this.pos).toVec().isParallel(this.dir);
+	}
 }
