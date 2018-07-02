@@ -178,6 +178,14 @@ class Vector3DTests {
 	}
 
 	@Test
+	void testGetAng() {
+		Vector3D vec1 = new Vector3D(2,-4,-1);
+		Vector3D vec2 = new Vector3D(0,5,2);
+		assertEquals(2.6714087557718225, vec1.getAng(vec2), Vector3D.ERROR);
+		assertEquals(2.6714087557718225, vec2.getAng(vec1), Vector3D.ERROR);
+	}
+	
+	@Test
 	void testRotateX() {
 		Vector3D vec1 = new Vector3D(1, 0, 3);
 		Vector3D expected = new Vector3D(1, -3, 0);

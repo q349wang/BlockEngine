@@ -141,6 +141,14 @@ class Vector2DTests {
 		Vector2D expected = new Vector2D(1, -2);
 		assertEquals(expected, vec1);
 	}
+	
+	@Test
+	void testGetAng() {
+		Vector2D vec1 = new Vector2D(3,0);
+		Vector2D vec2 = new Vector2D(2,2);
+		assertEquals(Math.PI/4, vec1.getAng(vec2), Vector2D.ERROR);
+		assertEquals(Math.PI/4, vec2.getAng(vec1), Vector2D.ERROR);
+	}
 
 	@Test
 	void testRotate() {

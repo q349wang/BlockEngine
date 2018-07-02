@@ -178,6 +178,17 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
+	 * @param other Other Vector3D to compare
+	 * @return Returns smallest angle between two Vector2Ds (between 0 and pi radians) 
+	 */
+	public double getAng(Vector3D other) {
+		double cosVal = this.dot(other) / this.length / other.length;
+		return Math.acos(cosVal);
+		
+	}
+	
+	/**
+	 * 
 	 * @param ang
 	 *            angle in radians
 	 * @return Returns Vector3D rotated ang radians counter clockwise about the X

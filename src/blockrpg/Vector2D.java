@@ -140,6 +140,17 @@ public class Vector2D extends Coord2D {
 
 		return rejection;
 	}
+	
+	/**
+	 * 
+	 * @param other Other Vector2D to compare
+	 * @return Returns smallest angle between two Vector2Ds (between 0 and pi radians) 
+	 */
+	public double getAng(Vector2D other) {
+		double cosVal = this.dot(other) / this.length / other.length;
+		return Math.acos(cosVal);
+		
+	}
 
 	/**
 	 * 
