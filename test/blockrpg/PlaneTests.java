@@ -31,11 +31,11 @@ class PlaneTests {
 	
 	@Test
 	void testGetD() {
-		Vector3D x = new Vector3D(1, -2, -2);
-		Vector3D y = new Vector3D(2, 3, -2);
-		Position3D pos = new Position3D(1, 0, 3);
+		Vector3D x = new Vector3D(1, 0, 0);
+		Vector3D y = new Vector3D(0, 3.0 / 5, 4.0 / 5);
+		Position3D pos = new Position3D(-1, 1, -1);
 		Plane testPlane = new Plane(x, y, pos);
-		assertEquals(-31, testPlane.getD());
+		assertEquals(-1.4, testPlane.getD());
 	}
 
 	@Test
