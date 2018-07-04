@@ -108,7 +108,7 @@ class PlaneTests {
 		Vector3D y = new Vector3D(0, 3.0 / 5, 4.0 / 5);
 		Position3D pos = new Position3D(-1, 1, -1);
 		Plane testPlane = new Plane(x, y, pos);
-		Position3D testPoint = new Position3D(-4,1,-1);
+		Position3D testPoint = new Position3D(-4,1,0);
 		
 		assertFalse(testPlane.onPlane(testPoint));
 	}

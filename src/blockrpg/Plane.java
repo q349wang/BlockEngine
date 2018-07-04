@@ -150,7 +150,8 @@ public class Plane {
 	 * @return Returns whether pos is on plane
 	 */
 	public boolean onPlane(Position3D pos) {
-		return Math.abs(norm.x * pos.x + norm.y * pos.y + norm.z * pos.z - d) < Coord3D.ERROR;
+		double result = norm.x * pos.x + norm.y * pos.y + norm.z * pos.z;
+		return Math.abs(result - d) < Coord3D.ERROR;
 	}
 
 	// Overriding equals() to compare two Plane objects
