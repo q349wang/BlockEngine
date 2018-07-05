@@ -26,9 +26,6 @@ public class Drawer extends JPanel {
 
 		g2.setRenderingHints(rh);
 
-		// Sets background
-		g2.setColor(Color.WHITE);
-		g2.fillRect(0, 0, this.getWidth(), this.getHeight());
 
 	}
 }

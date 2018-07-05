@@ -64,6 +64,8 @@ public class VisualFace extends JComponent {
 		}
 		
 		this.center = new Position3D(coords);
+		
+		
 	}
 
 	

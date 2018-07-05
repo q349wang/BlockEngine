@@ -7,6 +7,7 @@ public class Perspective {
 	private Vector3D norm; // Cross product of dir X tilt (up is positive)
 	private double[][] viewBasis;
 	private double[][] viewBasisInverse;
+	private double zoom;
 
 	/**
 	 * Default constructor for a perspective (Calls default constructors for
@@ -16,7 +17,7 @@ public class Perspective {
 		pos = new Position3D();
 		dir = new Vector3D();
 		tilt = new Vector3D();
-
+		setZoom(1);
 		viewBasis = new double[3][3];
 		viewBasisInverse = new double[3][3];
 	}
@@ -34,8 +35,8 @@ public class Perspective {
 	public Perspective(double[] posCoords, double[] dirCoords, double[] tiltCoords) {
 		pos = new Position3D(posCoords);
 		dir = new Vector3D(dirCoords);
-		dir=dir.normalize();
-
+		dir = dir.normalize();
+		setZoom(1);
 		tilt = new Vector3D(tiltCoords);
 		tilt = dir.perp(tilt).normalize();
 		norm = dir.cross(tilt).normalize();
@@ -45,10 +46,12 @@ public class Perspective {
 
 		setBasis();
 	}
-	
+
 	/**
 	 * Copies other Perspective
-	 * @param other Other Perspective to copy
+	 * 
+	 * @param other
+	 *            Other Perspective to copy
 	 */
 	public Perspective(Perspective other) {
 		this.pos = other.pos;
@@ -181,15 +184,15 @@ public class Perspective {
 				newCoords[j] += viewBasis[i][j] * oldCoords[i] + 0.0;
 			}
 		}
-		
-		for(int i = 0; i < 3; i++) {
+
+		for (int i = 0; i < 3; i++) {
 			newCoords[i] += posCoords[i];
 		}
 		Vector3D stdCoord = new Vector3D();
 		stdCoord.setCoord(newCoords);
 		return stdCoord;
 	}
-	
+
 	/**
 	 * 
 	 * @param stdCoord
@@ -226,9 +229,8 @@ public class Perspective {
 				newCoords[j] += viewBasis[i][j] * oldCoords[i] + 0.0;
 			}
 		}
-		
 
-		for(int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) {
 			newCoords[i] += posCoords[i];
 		}
 		Position3D stdCoord = new Position3D();
@@ -269,7 +271,22 @@ public class Perspective {
 		norm = dir.cross(tilt);
 		setBasis();
 	}
-	
+
+	/**
+	 * 
+	 * @param point Position3D to convert (in standard basis)
+	 * @return Returns Position2D for what a perspective sees
+	 */
+	public Position2D getViewPoint(Position3D point) {
+		Position3D viewPoint3D = this.toViewBasis(point);
+		Position2D viewPoint2D = new Position2D();
+		double viewX = this.pos.xDistancefrom(viewPoint3D) / this.pos.zDistancefrom(viewPoint3D) * zoom;
+		double viewY = this.pos.yDistancefrom(viewPoint3D) / this.pos.zDistancefrom(viewPoint3D) * zoom;
+		viewPoint2D.setX(viewX);
+		viewPoint2D.setY(viewY);
+		return viewPoint2D;
+	}
+
 	// Overriding equals() to compare two Perspective objects
 	@Override
 	public boolean equals(Object other) {
@@ -286,6 +303,24 @@ public class Perspective {
 
 		return this.dir.equals(p.dir) && this.pos.equals(p.pos) && this.tilt.equals(p.tilt);
 
+	}
+
+	/**
+	 * 
+	 * @return Returns zoom
+	 */
+	public double getZoom() {
+		return zoom;
+	}
+
+	/**
+	 * Sets zoom
+	 * 
+	 * @param zoom
+	 *            double value to set zoom to
+	 */
+	public void setZoom(double zoom) {
+		this.zoom = zoom;
 	}
 
 }
