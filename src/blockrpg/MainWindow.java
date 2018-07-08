@@ -128,16 +128,7 @@ public class MainWindow extends javax.swing.JFrame {
 		// javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
 		// Short.MAX_VALUE));
 		gamePanel.addKeyListener(new KeyInput());
-		gamePanel.requestFocus();
-		
-		
-		Perspective pov = new Perspective(new double[] {10, 0,0}, new double[] {-1, 0,0}, new double[] {0,-1,0});
-		Position2D[] points = {new Position2D(0,0), new Position2D(0, 10), new Position2D(10, 10), new Position2D(10, 0)};
-		Plane plane = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D());
-		pov.setZoom(10);
-		VisualFace face = new VisualFace(points, 4, plane, pov);
-		gamePanel.addShape(face);
-		gamePanel.repaint();
+		gamePanel.requestFocus();	
 		pack();
 	}
 
@@ -168,10 +159,60 @@ public class MainWindow extends javax.swing.JFrame {
 		}
 
 		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(() -> {
-			new MainWindow().setVisible(true);
+		
+		Thread thread = new Thread(new Runnable() {
+
+		    @Override
+		    public void run() {
+		    	MainWindow window = new MainWindow();
+				window.setVisible(true);
+				window.testFunc();  
+		    }
+		    
 		});
+
+		thread.start();
+		
+//		java.awt.EventQueue.invokeLater(() -> {
+//			MainWindow window = new MainWindow();
+//			window.setVisible(true);
+//			window.testFunc();
+//		});
 	}
 
+	private void testFunc(){
+		Perspective pov = new Perspective(new double[] {8000,0,0}, new double[] {-1, 0,0}, new double[] {0,1,0});
+		Position2D[] points = {new Position2D(-750,-500), new Position2D(-750, 500), new Position2D(1250, 500), new Position2D(1250, -500)};
+		Plane plane = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D());
+		pov.setZoom(4000);
+		VisualFace face1 = new VisualFace(points, points.length, plane, pov);
+		gamePanel.addShape(face1);
+		gamePanel.repaint();
+		
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		face.rotate(Math.PI, new Vector3D(0,0,1));
+//		gamePanel.faces.clear();
+//		gamePanel.faces.add(face);
+//		gamePanel.repaint();
+
+		while(true) {
+			face1 = face1.rotate(0.01, new Vector3D(0,0,1));
+			gamePanel.faces.clear();
+			gamePanel.faces.add(face1);
+			gamePanel.repaint();
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	private Drawer gamePanel;
 }

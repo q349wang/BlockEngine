@@ -283,12 +283,13 @@ public class Perspective {
 		Position2D viewPoint2D = new Position2D();
 		double viewX = 0;
 		double viewY = 0;
-		
-		if (posPoint.zDistancefrom(viewPoint3D) == 0) {
-			// TODO infinity
+		double dis = posPoint.totDistanceFrom(viewPoint3D);
+		if (dis == 0) {
+			// TODO on point
 		} else {
-			viewX = posPoint.xDistancefrom(viewPoint3D) / posPoint.zDistancefrom(viewPoint3D) * zoom;
-			viewY = posPoint.yDistancefrom(viewPoint3D) / posPoint.zDistancefrom(viewPoint3D) * zoom;
+			// Needs to translate like this
+			viewX = -posPoint.yDistancefrom(viewPoint3D) / dis * zoom;
+			viewY = posPoint.zDistancefrom(viewPoint3D) / dis * zoom;
 		}
 		viewPoint2D.setX(viewX);
 		viewPoint2D.setY(viewY);

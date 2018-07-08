@@ -11,7 +11,7 @@ public class Drawer extends JPanel {
 	 */
 	private static final long serialVersionUID = -2810583553938140766L;
 
-	private Vector<VisualFace> faces;
+	public Vector<VisualFace> faces;
 
 	public Drawer() {
 		faces = new Vector<VisualFace>();

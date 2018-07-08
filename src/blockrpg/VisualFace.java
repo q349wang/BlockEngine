@@ -30,7 +30,7 @@ public class VisualFace {
 
 	private double xOffset;
 	private double yOffset;
-	
+
 	private Polygon seenFace;
 	private Position2D[] viewPoints;
 	private Position2D[] relPoints;
@@ -51,11 +51,11 @@ public class VisualFace {
 		viewPoints = null;
 		numPoints = 0;
 		viewPoints = null;
-		relPoints =null;
+		relPoints = null;
 		center = new Position3D();
 		pov = new Perspective();
 	}
-	
+
 	public VisualFace(Position2D[] relPoints, int numPoints, Plane facePlane, Perspective pov) {
 
 		setOffset();
@@ -63,45 +63,68 @@ public class VisualFace {
 		this.facePlane = facePlane;
 		this.relPoints = relPoints;
 		this.pov = pov;
-		//this.anchor = anchor;
+		// this.anchor = anchor;
 		this.numPoints = numPoints;
-		double coords[] = new double[3];
 		truePoints = new Position3D[numPoints];
 		viewPoints = new Position2D[numPoints];
 
-		for (int i = 0; i < numPoints;i++) {
-			truePoints[i] = facePlane.placeOnPlane(relPoints[i]);
-			viewPoints[i] = pov.getViewPoint(truePoints[i]);
-			for (int j = 0; j < 3;j++) {
-				coords[j] += truePoints[i].getCoord()[j];
-			}
-		}
+		setPoints();
 
-		setPoly(viewPoints, numPoints);
-		
-		for(int i = 0; i < 3;i++) {
-			coords[i] /= numPoints;
-		}
-		
-		this.center = new Position3D(coords);
-		
-		
+	}
+
+	public VisualFace(VisualFace other) {
+
+		setOffset();
+		seenFace = new Polygon();
+		this.facePlane = other.facePlane;
+		this.relPoints = other.relPoints;
+		this.pov = other.pov;
+		// this.anchor = anchor;
+		this.numPoints = other.numPoints;
+		this.truePoints = new Position3D[numPoints];
+		this.viewPoints = new Position2D[numPoints];
+		setPoints();
 	}
 	
+	public void setPOV(Perspective pov) {
+		this.pov = pov;
+		setPoints();
+	}
+
 	private void setPoly(Position2D[] points, int num) {
 		int[] x = new int[num];
 		int[] y = new int[num];
-		
-		for(int i = 0; i < num;i++) {
+
+		for (int i = 0; i < num; i++) {
 			x[i] = (int) (points[i].getX() + xOffset);
 			y[i] = (int) (-points[i].getY() + yOffset);
 		}
-		
+
 		seenFace.npoints = num;
 		seenFace.xpoints = x;
 		seenFace.ypoints = y;
 	}
-	
+
+	private void setPoints() {
+
+		double coords[] = new double[3];
+		for (int i = 0; i < numPoints; i++) {
+			this.truePoints[i] = this.facePlane.placeOnPlane(this.relPoints[i]);
+			this.viewPoints[i] = this.pov.getViewPoint(this.truePoints[i]);
+			for (int j = 0; j < 3; j++) {
+				coords[j] += this.truePoints[i].getCoord()[j];
+			}
+		}
+
+		setPoly(this.viewPoints, this.numPoints);
+
+		for (int i = 0; i < 3; i++) {
+			coords[i] /= this.numPoints;
+		}
+
+		this.center = new Position3D(coords);
+	}
+
 	private void setOffset() {
 		File file = new File("src\\blockrpg\\MainWindow.form");
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -110,8 +133,8 @@ public class VisualFace {
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document document = documentBuilder.parse(file);
 
-			xOffset = Integer.parseInt(document.getElementsByTagName("width").item(0).getTextContent())/2;
-			yOffset = Integer.parseInt(document.getElementsByTagName("height").item(0).getTextContent())/2;
+			xOffset = Integer.parseInt(document.getElementsByTagName("width").item(0).getTextContent()) / 2;
+			yOffset = Integer.parseInt(document.getElementsByTagName("height").item(0).getTextContent()) / 2;
 
 		} catch (SAXException | IOException e) {
 			e.printStackTrace();
@@ -119,7 +142,14 @@ public class VisualFace {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public VisualFace rotate(double ang, Vector3D axis) {
+		VisualFace face = new VisualFace(this);
+		face.facePlane = face.facePlane.rotatePlane(ang, axis);
+		face.setPoints();
+		return face;
+	}
+
 	public Polygon getPoly() {
 		return seenFace;
 	}
