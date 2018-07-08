@@ -180,5 +180,18 @@ class PerspectiveTests {
 
 		assertEquals(expected, test.toStdBasis(viewPos));
 	}
+	
+	@Test
+	void testGetViewPointDefaultZoom() {
+		Perspective test = new Perspective();
+		Vector3D dir = new Vector3D(1, 0, 0);
+		Vector3D tilt = new Vector3D(0, 0, 1);
+		Position3D pos = new Position3D(0, 0, 0);
+		test.setPos(pos.getCoord());
+		test.setDir(dir.getCoord());
+		test.setTilt(tilt.getCoord());
+		
+		Position3D point = new Position3D();
+	}
 
 }

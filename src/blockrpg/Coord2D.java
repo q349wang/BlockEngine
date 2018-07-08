@@ -69,6 +69,22 @@ public class Coord2D {
 		this.x = coords[0];
 		this.y = coords[1];
 	}
+	
+	/**
+	 * 
+	 * @return Returns X
+	 */
+	public double getX() {
+		return this.x;
+	}
+	
+	/**
+	 * 
+	 * @return Returns Y
+	 */
+	public double getY() {
+		return this.y;
+	}
 
 	/**
 	 * 

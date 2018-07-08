@@ -32,12 +32,9 @@ public class Coord3D {
 	/**
 	 * Custom Coord3D Constructor. Creates a Coord3D at (x,y,z)
 	 * 
-	 * @param x
-	 *            x-Coordinate
-	 * @param y
-	 *            y-Coordinate
-	 * @param z
-	 *            z-Coordinate
+	 * @param x x-Coordinate
+	 * @param y y-Coordinate
+	 * @param z z-Coordinate
 	 */
 	public Coord3D(double x, double y, double z) {
 		this.x = x;
@@ -48,8 +45,7 @@ public class Coord3D {
 	/**
 	 * Custom Coord3D Constructor. Creates a Coord3D at (x,y,z)
 	 * 
-	 * @param coords
-	 *            double array containing x, y, z information in that order
+	 * @param coords double array containing x, y, z information in that order
 	 * 
 	 */
 	public Coord3D(double[] coords) {
@@ -57,21 +53,22 @@ public class Coord3D {
 		this.y = coords[1];
 		this.z = coords[2];
 	}
-	
+
 	/**
 	 * Copys another Coord3D
+	 * 
 	 * @param other Other Coord3D to copy
 	 */
 	public Coord3D(Coord3D other) {
 		this.x = other.x;
 		this.y = other.y;
-		this.z = other.y;;
+		this.z = other.y;
+		;
 	}
 
 	/**
 	 * 
-	 * @param coords
-	 *            Sets coordinate to given array (in x, y, z form)
+	 * @param coords Sets coordinate to given array (in x, y, z form)
 	 */
 	public void setCoord(double[] coords) {
 		DecimalFormat df = new DecimalFormat("#.##########");
@@ -88,8 +85,31 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param x
-	 *            Adds inputed value to the X coordinate
+	 * @return Returns X
+	 */
+	public double getX() {
+		return this.x;
+	}
+
+	/**
+	 * 
+	 * @return Returns Y
+	 */
+	public double getY() {
+		return this.y;
+	}
+
+	/**
+	 * 
+	 * @return Returns Z
+	 */
+	public double getZ() {
+		return this.z;
+	}
+
+	/**
+	 * 
+	 * @param x Adds inputed value to the X coordinate
 	 */
 	public void addX(double x) {
 		double[] coords = { this.x + x, this.y, this.z };
@@ -98,8 +118,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param y
-	 *            Adds inputed value to the Y coordinate
+	 * @param y Adds inputed value to the Y coordinate
 	 */
 	public void addY(double y) {
 		double[] coords = { this.x, this.y + y, this.z };
@@ -108,8 +127,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param z
-	 *            Adds inputed value to the Z coordinate
+	 * @param z Adds inputed value to the Z coordinate
 	 */
 	public void addZ(double z) {
 		double[] coords = { this.x, this.y, this.z + z };
@@ -118,8 +136,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param x
-	 *            Sets X coordinate to the inputed value
+	 * @param x Sets X coordinate to the inputed value
 	 */
 	public void setX(double x) {
 		double[] coords = { x, this.y, this.z };
@@ -128,8 +145,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param y
-	 *            Sets Y coordinate to the inputed value
+	 * @param y Sets Y coordinate to the inputed value
 	 */
 	public void setY(double y) {
 		double[] coords = { this.x, y, this.z };
@@ -138,8 +154,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param z
-	 *            Sets Z coordinate to the inputed value
+	 * @param z Sets Z coordinate to the inputed value
 	 */
 	public void setZ(double z) {
 		double[] coords = { this.x, this.y, z };
@@ -161,8 +176,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param other
-	 *            Other Coord3D to add
+	 * @param other Other Coord3D to add
 	 * @return returns Coord3D with other added to it
 	 */
 	public Coord3D add(Coord3D other) {
@@ -174,8 +188,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param other
-	 *            Other Coord3D to subtract
+	 * @param other Other Coord3D to subtract
 	 * @return returns Coord3D with other subtracted from it
 	 */
 	public Coord3D subtract(Coord3D other) {
@@ -187,8 +200,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param ang
-	 *            angle in radians
+	 * @param ang angle in radians
 	 * @return Returns Coord3D rotated ang radians counter clockwise about the X
 	 *         axis
 	 */
@@ -203,8 +215,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param ang
-	 *            angle in radians
+	 * @param ang angle in radians
 	 * @return Returns Coord3D rotated ang radians counter clockwise about the Y
 	 *         axis
 	 */
@@ -219,8 +230,7 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param ang
-	 *            angle in radians
+	 * @param ang angle in radians
 	 * @return Returns Coord3D rotated ang radians counter clockwise about the Y
 	 *         axis
 	 */
@@ -235,10 +245,8 @@ public class Coord3D {
 
 	/**
 	 * 
-	 * @param ang
-	 *            angle in radians
-	 * @param axis
-	 *            axis to rotate about
+	 * @param ang  angle in radians
+	 * @param axis axis to rotate about
 	 * @return Returns Coord3D rotated ang radians counter clockwise about the
 	 *         specified axis
 	 */
@@ -308,8 +316,8 @@ public class Coord3D {
 
 		Coord3D coord = (Coord3D) other;
 		boolean equals = true;
-		for(int i = 0;i <3;i++) {
-			if(Math.abs(this.getCoord()[i]- coord.getCoord()[i]) > ERROR) {
+		for (int i = 0; i < 3; i++) {
+			if (Math.abs(this.getCoord()[i] - coord.getCoord()[i]) > ERROR) {
 				equals = false;
 				break;
 			}
@@ -317,13 +325,13 @@ public class Coord3D {
 		// Compare the data members and return accordingly
 		return equals;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns true if origin
 	 */
 	public boolean isOrigin() {
-		double origin[] = {0.0,0.0,0.0};
+		double origin[] = { 0.0, 0.0, 0.0 };
 		return Arrays.equals(this.getCoord(), origin);
 	}
 }

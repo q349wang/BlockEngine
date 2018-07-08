@@ -279,9 +279,17 @@ public class Perspective {
 	 */
 	public Position2D getViewPoint(Position3D point) {
 		Position3D viewPoint3D = this.toViewBasis(point);
+		Position3D posPoint = this.toViewBasis(this.pos);
 		Position2D viewPoint2D = new Position2D();
-		double viewX = this.pos.xDistancefrom(viewPoint3D) / this.pos.zDistancefrom(viewPoint3D) * zoom;
-		double viewY = this.pos.yDistancefrom(viewPoint3D) / this.pos.zDistancefrom(viewPoint3D) * zoom;
+		double viewX = 0;
+		double viewY = 0;
+		
+		if (posPoint.zDistancefrom(viewPoint3D) == 0) {
+			// TODO infinity
+		} else {
+			viewX = posPoint.xDistancefrom(viewPoint3D) / posPoint.zDistancefrom(viewPoint3D) * zoom;
+			viewY = posPoint.yDistancefrom(viewPoint3D) / posPoint.zDistancefrom(viewPoint3D) * zoom;
+		}
 		viewPoint2D.setX(viewX);
 		viewPoint2D.setY(viewY);
 		return viewPoint2D;
