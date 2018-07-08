@@ -31,10 +31,14 @@ public class Drawer extends JPanel {
 		// Turns on Anti-Aliasing
 		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHints(rh);
-		g2.setColor(new Color(45, 84, 38));
-		for (VisualFace face : faces) {
-			g2.fillPolygon(face.getPoly());
+		
+		if(faces.size() != 0) {
+			g2.setColor(new Color(45, 84, 38));
+			g2.fillPolygon(faces.get(0).getPoly());
+			
+			g2.setColor(new Color(72, 41, 124));
+			g2.fillPolygon(faces.get(1).getPoly());
 		}
-
+		
 	}
 }

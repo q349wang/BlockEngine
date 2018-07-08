@@ -104,7 +104,6 @@ public class MainWindow extends javax.swing.JFrame {
 		gamePanel.setBackground(new java.awt.Color(242, 242, 242));
 		gamePanel.setSize(_width, _height);
 		gamePanel.setPreferredSize(new Dimension(_width, _height));
-		;
 		gamePanel.setVisible(true);
 		add(gamePanel);
 		// javax.swing.GroupLayout gamePanelLayout = new
@@ -128,7 +127,7 @@ public class MainWindow extends javax.swing.JFrame {
 		// javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
 		// Short.MAX_VALUE));
 		gamePanel.addKeyListener(new KeyInput());
-		gamePanel.requestFocus();	
+		gamePanel.requestFocus();
 		pack();
 	}
 
@@ -181,12 +180,15 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void testFunc(){
-		Perspective pov = new Perspective(new double[] {8000,0,0}, new double[] {-1, 0,0}, new double[] {0,1,0});
-		Position2D[] points = {new Position2D(-750,-500), new Position2D(-750, 500), new Position2D(1250, 500), new Position2D(1250, -500)};
+		Perspective pov = new Perspective(new double[] {-8000,0,8000}, new double[] {1, 0,-1}, new double[] {0,-1,0});
+		Position2D[] points1 = {new Position2D(-1000,-500), new Position2D(-1000, 500), new Position2D(0, 500), new Position2D(0, -500)};
+		Position2D[] points2 = {new Position2D(0,-500), new Position2D(0, 500), new Position2D(1000, 500), new Position2D(1000, -500)};
 		Plane plane = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D());
 		pov.setZoom(4000);
-		VisualFace face1 = new VisualFace(points, points.length, plane, pov);
+		VisualFace face1 = new VisualFace(points1, points1.length, plane, pov);
+		VisualFace face2 = new VisualFace(points2, points2.length, plane, pov);
 		gamePanel.addShape(face1);
+		gamePanel.addShape(face2);
 		gamePanel.repaint();
 		
 //		try {
@@ -202,9 +204,12 @@ public class MainWindow extends javax.swing.JFrame {
 //		gamePanel.repaint();
 
 		while(true) {
-			face1 = face1.rotate(0.01, new Vector3D(0,0,1));
+			Vector3D axis = new Vector3D(1,0,0);
+			face1 = face1.rotate(0.01, axis);
+			face2 = face2.rotate(0.01, axis);
 			gamePanel.faces.clear();
-			gamePanel.faces.add(face1);
+			gamePanel.addShape(face1);
+			gamePanel.addShape(face2);
 			gamePanel.repaint();
 			try {
 				Thread.sleep(10);
