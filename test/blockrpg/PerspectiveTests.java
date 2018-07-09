@@ -185,13 +185,37 @@ class PerspectiveTests {
 	void testGetViewPointDefaultZoom() {
 		Perspective test = new Perspective();
 		Vector3D dir = new Vector3D(1, 0, 0);
-		Vector3D tilt = new Vector3D(0, 0, 1);
+		Vector3D tilt = new Vector3D(0, -1, 0);
 		Position3D pos = new Position3D(0, 0, 0);
 		test.setPos(pos.getCoord());
 		test.setDir(dir.getCoord());
 		test.setTilt(tilt.getCoord());
 		
-		Position3D point = new Position3D();
+		Position3D point1 = new Position3D(-3, 4, 0);
+		Position3D point2 = new Position3D(4, -3, 0);
+		Position2D expected1 = new Position2D(4.0/5, 0);
+		Position2D expected2 = new Position2D(-3.0/5, 0);
+		assertEquals(expected1, test.getViewPoint(point1));
+		assertEquals(expected2, test.getViewPoint(point2));
+	}
+	
+	@Test
+	void testGetViewPointCustomZoom() {
+		Perspective test = new Perspective();
+		Vector3D dir = new Vector3D(1, 0, 0);
+		Vector3D tilt = new Vector3D(0, -1, 0);
+		Position3D pos = new Position3D(0, 0, 0);
+		test.setPos(pos.getCoord());
+		test.setDir(dir.getCoord());
+		test.setTilt(tilt.getCoord());
+		test.setZoom(5);
+		
+		Position3D point1 = new Position3D(-3, 4, 0);
+		Position3D point2 = new Position3D(4, -3, 0);
+		Position2D expected1 = new Position2D(4.0, 0);
+		Position2D expected2 = new Position2D(-3.0, 0);
+		assertEquals(expected1, test.getViewPoint(point1));
+		assertEquals(expected2, test.getViewPoint(point2));
 	}
 
 }

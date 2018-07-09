@@ -42,7 +42,7 @@ public class VisualFace {
 	private Perspective pov;
 
 	/**
-	 * Default constructor for face
+	 * Default constructor for VisualFace
 	 */
 	public VisualFace() {
 
@@ -56,6 +56,13 @@ public class VisualFace {
 		pov = new Perspective();
 	}
 
+	/**
+	 * Custom constructor for VisualFace
+	 * @param relPoints Relative points of face on plane
+	 * @param numPoints Number of points
+	 * @param facePlane Plane that face lies on
+	 * @param pov POV used
+	 */
 	public VisualFace(Position2D[] relPoints, int numPoints, Plane facePlane, Perspective pov) {
 
 		setOffset();

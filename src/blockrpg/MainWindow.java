@@ -35,6 +35,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private int _width;
 	private int _height;
+	private int zoom;
 
 	/**
 	 * Creates new form MainWindow
@@ -66,6 +67,10 @@ public class MainWindow extends javax.swing.JFrame {
 				_height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 				document.getElementsByTagName("width").item(0).setTextContent(String.valueOf(_width));
 				document.getElementsByTagName("height").item(0).setTextContent(String.valueOf(_height));
+			}
+			
+			if(zoom == 0) {
+				zoom = Integer.parseInt(document.getElementsByTagName("zoom").item(0).getTextContent());
 			}
 
 			// write the content into xml file
@@ -184,7 +189,7 @@ public class MainWindow extends javax.swing.JFrame {
 		Position2D[] points1 = {new Position2D(-1000,-500), new Position2D(-1000, 500), new Position2D(0, 500), new Position2D(0, -500)};
 		Position2D[] points2 = {new Position2D(0,-500), new Position2D(0, 500), new Position2D(1000, 500), new Position2D(1000, -500)};
 		Plane plane = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D());
-		pov.setZoom(4000);
+		pov.setZoom(zoom);
 		VisualFace face1 = new VisualFace(points1, points1.length, plane, pov);
 		VisualFace face2 = new VisualFace(points2, points2.length, plane, pov);
 		gamePanel.addShape(face1);
