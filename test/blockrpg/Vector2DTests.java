@@ -141,13 +141,13 @@ class Vector2DTests {
 		Vector2D expected = new Vector2D(1, -2);
 		assertEquals(expected, vec1);
 	}
-	
+
 	@Test
 	void testGetAng() {
-		Vector2D vec1 = new Vector2D(3,0);
-		Vector2D vec2 = new Vector2D(2,2);
-		assertEquals(Math.PI/4, vec1.getAng(vec2), Vector2D.ERROR);
-		assertEquals(Math.PI/4, vec2.getAng(vec1), Vector2D.ERROR);
+		Vector2D vec1 = new Vector2D(3, 0);
+		Vector2D vec2 = new Vector2D(2, 2);
+		assertEquals(Math.PI / 4, vec1.getAng(vec2), Vector2D.ERROR);
+		assertEquals(Math.PI / 4, vec2.getAng(vec1), Vector2D.ERROR);
 	}
 
 	@Test
@@ -173,7 +173,7 @@ class Vector2DTests {
 		assertEquals(expected, vec2);
 		assertFalse(expected == vec2);
 	}
-	
+
 	@Test
 	void testCloneConstructor() {
 		Vector2D vec1 = new Vector2D(3, 4);
@@ -182,7 +182,7 @@ class Vector2DTests {
 		assertEquals(5, vec2.getLength());
 		assertEquals(expected, vec2);
 	}
-	
+
 	@Test
 	void testIsParallelTrue() {
 		Vector2D vec1 = new Vector2D(-2, 0);
@@ -206,7 +206,7 @@ class Vector2DTests {
 		assertFalse(vec1.isParallel(vec2));
 		assertFalse(vec2.isParallel(vec1));
 	}
-	
+
 	@Test
 	void testIsParallelBothXZero() {
 		Vector2D vec1 = new Vector2D(0, 2);
@@ -214,7 +214,7 @@ class Vector2DTests {
 		assertTrue(vec1.isParallel(vec2));
 		assertTrue(vec2.isParallel(vec1));
 	}
-	
+
 	@Test
 	void testIsParallelOneYZero() {
 		Vector2D vec1 = new Vector2D(7, 0);
@@ -222,7 +222,7 @@ class Vector2DTests {
 		assertFalse(vec1.isParallel(vec2));
 		assertFalse(vec2.isParallel(vec1));
 	}
-	
+
 	@Test
 	void testIsParallelBothYZero() {
 		Vector2D vec1 = new Vector2D(6, 0);
@@ -230,7 +230,6 @@ class Vector2DTests {
 		assertTrue(vec1.isParallel(vec2));
 		assertTrue(vec2.isParallel(vec1));
 	}
-	
 
 	@Test
 	void testGetMultipleOriginAsThis() {

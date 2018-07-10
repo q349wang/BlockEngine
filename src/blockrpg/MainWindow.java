@@ -207,11 +207,37 @@ public class MainWindow extends javax.swing.JFrame {
 //		gamePanel.faces.clear();
 //		gamePanel.faces.add(face);
 //		gamePanel.repaint();
-
-		while(true) {
-			Vector3D axis = new Vector3D(1,0,0);
+		int xSign = -1;
+		int ySign = -1;
+		int zSign = -1;
+		while (true) {
+			Vector3D axis = new Vector3D(1, 0, 0);
 			face1 = face1.rotate(0.01, axis);
 			face2 = face2.rotate(0.01, axis);
+
+			
+			if (face1.getPlane().getPos().getCoord()[0] <= -2000) {
+				xSign = 1;
+			} else if (face1.getPlane().getPos().getCoord()[0] >= 2000){
+				xSign = -1;
+			}
+			if (face1.getPlane().getPos().getCoord()[1] <= -2000) {
+				ySign = 1;
+			} else if (face1.getPlane().getPos().getCoord()[1] >= 2000){
+				ySign = -1;
+			}
+			if (face1.getPlane().getPos().getCoord()[1] <= -2000) {
+				zSign = 1;
+			} else if (face1.getPlane().getPos().getCoord()[1] >= 2000){
+				zSign = -1;
+			}
+			face1.addX(xSign * 10);
+			face2.addX(xSign * 10);
+			face1.addY(ySign * 10);
+			face2.addY(ySign * 10);
+			face1.addZ(zSign * 10);
+			face2.addZ(zSign * 10);
+			
 			gamePanel.faces.clear();
 			gamePanel.addShape(face1);
 			gamePanel.addShape(face2);
