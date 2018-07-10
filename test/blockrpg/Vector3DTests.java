@@ -235,6 +235,7 @@ class Vector3DTests {
 		Vector3D expected = new Vector3D(1, 2, 2);
 		assertEquals(3, vec2.getLength());
 		assertEquals(expected, vec2);
+		assertFalse(expected == vec2);
 	}
 	
 	@Test

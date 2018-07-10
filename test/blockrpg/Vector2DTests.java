@@ -171,6 +171,7 @@ class Vector2DTests {
 		Vector2D expected = new Vector2D(3, 4);
 		assertEquals(5, vec2.getLength());
 		assertEquals(expected, vec2);
+		assertFalse(expected == vec2);
 	}
 	
 	@Test

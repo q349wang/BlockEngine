@@ -25,12 +25,9 @@ public class Perspective {
 	/**
 	 * Custom constructor for a Perspective
 	 * 
-	 * @param posCoords
-	 *            coords for position
-	 * @param dirCoords
-	 *            coords for perspective direction
-	 * @param tiltCoords
-	 *            coords for perspective tilt
+	 * @param posCoords  coords for position
+	 * @param dirCoords  coords for perspective direction
+	 * @param tiltCoords coords for perspective tilt
 	 */
 	public Perspective(double[] posCoords, double[] dirCoords, double[] tiltCoords) {
 		pos = new Position3D(posCoords);
@@ -50,18 +47,21 @@ public class Perspective {
 	/**
 	 * Copies other Perspective
 	 * 
-	 * @param other
-	 *            Other Perspective to copy
+	 * @param other Other Perspective to copy
 	 */
 	public Perspective(Perspective other) {
-		this.pos = other.pos;
-		this.dir = other.dir;
-		this.tilt = other.tilt;
-		this.norm = other.norm;
-		this.viewBasis = other.viewBasis;
-		this.viewBasisInverse = other.viewBasisInverse;
+		this.pos = other.pos.clone();
+		this.dir = other.dir.clone();
+		this.tilt = other.tilt.clone();
+		this.norm = other.norm.clone();
+		this.viewBasis = other.viewBasis.clone();
+		this.viewBasisInverse = other.viewBasisInverse.clone();
 	}
 
+	@Override
+	public Perspective clone() {
+		return new Perspective(this);
+	}
 	/**
 	 * Procedure to set the view basis matrix and the inverse of said matrix
 	 */
@@ -150,8 +150,7 @@ public class Perspective {
 
 	/**
 	 * 
-	 * @param stdCoord
-	 *            Vector3D in standard basis
+	 * @param stdCoord Vector3D in standard basis
 	 * @return returns Vector3D in view basis
 	 */
 	public Vector3D toViewBasis(Vector3D stdCoord) {
@@ -171,8 +170,7 @@ public class Perspective {
 
 	/**
 	 * 
-	 * @param viewCoord
-	 *            Vector3D in view basis
+	 * @param viewCoord Vector3D in view basis
 	 * @return returns coordinate in standard basis
 	 */
 	public Vector3D toStdBasis(Vector3D viewCoord) {
@@ -195,8 +193,7 @@ public class Perspective {
 
 	/**
 	 * 
-	 * @param stdCoord
-	 *            Vector3D in standard basis
+	 * @param stdCoord Vector3D in standard basis
 	 * @return returns Vector3D in view basis
 	 */
 	public Position3D toViewBasis(Position3D stdCoord) {
@@ -216,8 +213,7 @@ public class Perspective {
 
 	/**
 	 * 
-	 * @param viewCoord
-	 *            Position3D in view basis
+	 * @param viewCoord Position3D in view basis
 	 * @return returns coordinate in standard basis
 	 */
 	public Position3D toStdBasis(Position3D viewCoord) {
@@ -240,8 +236,7 @@ public class Perspective {
 
 	/**
 	 * 
-	 * @param posCoords
-	 *            sets pos to posCoords
+	 * @param posCoords sets pos to posCoords
 	 */
 	public void setPos(double[] posCoords) {
 		pos.setCoord(posCoords);
@@ -249,8 +244,7 @@ public class Perspective {
 
 	/**
 	 * 
-	 * @param dirCoords
-	 *            sets dir to dirCoords
+	 * @param dirCoords sets dir to dirCoords
 	 */
 	public void setDir(double[] dirCoords) {
 		dir.setCoord(dirCoords);
@@ -262,8 +256,7 @@ public class Perspective {
 
 	/**
 	 * 
-	 * @param tiltCoords
-	 *            sets tilt to tiltCoords
+	 * @param tiltCoords sets tilt to tiltCoords
 	 */
 	public void setTilt(double[] tiltCoords) {
 		tilt.setCoord(tiltCoords);
@@ -325,8 +318,7 @@ public class Perspective {
 	/**
 	 * Sets zoom
 	 * 
-	 * @param zoom
-	 *            double value to set zoom to
+	 * @param zoom double value to set zoom to
 	 */
 	public void setZoom(double zoom) {
 		this.zoom = zoom;

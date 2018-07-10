@@ -9,7 +9,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JComponent;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -58,10 +57,11 @@ public class VisualFace {
 
 	/**
 	 * Custom constructor for VisualFace
+	 * 
 	 * @param relPoints Relative points of face on plane
 	 * @param numPoints Number of points
 	 * @param facePlane Plane that face lies on
-	 * @param pov POV used
+	 * @param pov       POV used
 	 */
 	public VisualFace(Position2D[] relPoints, int numPoints, Plane facePlane, Perspective pov) {
 
@@ -79,13 +79,21 @@ public class VisualFace {
 
 	}
 
+	/**
+	 * Copies another VisualFace
+	 * 
+	 * @param other VisualFace to copy
+	 */
 	public VisualFace(VisualFace other) {
 
 		setOffset();
 		seenFace = new Polygon();
-		this.facePlane = other.facePlane;
-		this.relPoints = other.relPoints;
-		this.pov = other.pov;
+		this.facePlane = other.facePlane.clone();
+		this.relPoints = new Position2D[other.numPoints];
+		for(int i = 0; i < other.numPoints;i++) {
+			this.relPoints[i] = other.relPoints[i].clone();
+		}
+		this.pov = other.pov; // You don't clone perspective
 		// this.anchor = anchor;
 		this.numPoints = other.numPoints;
 		this.truePoints = new Position3D[numPoints];
@@ -93,11 +101,102 @@ public class VisualFace {
 		setPoints();
 	}
 	
+	@Override
+	public VisualFace clone() {
+		return new VisualFace(this);
+	}
+
+	/**
+	 * 
+	 * @param x Adds inputed value to the X coordinate
+	 */
+	public void addX(double x) {
+		this.center.addX(x);
+		this.facePlane.addX(x);
+		setPoints();
+	}
+
+	/**
+	 * 
+	 * @param y Adds inputed value to the Y coordinate
+	 */
+	public void addY(double y) {
+		this.center.addY(y);
+		this.facePlane.addY(y);
+		setPoints();
+	}
+
+	/**
+	 * 
+	 * @param z Adds inputed value to the Z coordinate
+	 */
+	public void addZ(double z) {
+		this.center.addZ(z);
+		this.facePlane.addZ(z);
+		setPoints();
+	}
+
+	/**
+	 * 
+	 * @param x Sets X coordinate to the inputed value
+	 */
+	public void setX(double x) {
+		this.center.setX(x);
+		this.facePlane.setX(x);
+		setPoints();
+	}
+
+	/**
+	 * 
+	 * @param y Sets Y coordinate to the inputed value
+	 */
+	public void setY(double y) {
+		this.center.setY(y);
+		this.facePlane.setY(y);
+		setPoints();
+	}
+
+	/**
+	 * 
+	 * @param z Sets Z coordinate to the inputed value
+	 */
+	public void setZ(double z) {
+		this.center.setZ(z);
+		this.facePlane.setZ(z);
+		setPoints();
+	}
+	
+	/**
+	 * 
+	 * @return Returns center of VisualFace
+	 */
+	public Position3D getCenter() {
+		return this.center;
+	}
+
+	/**
+	 * 
+	 * @return Returns plane of VisualFace
+	 */
+	public Plane getPlane() {
+		return this.facePlane;
+	}
+	/**
+	 * Sets pov to set
+	 * 
+	 * @param pov Perspective to set
+	 */
 	public void setPOV(Perspective pov) {
 		this.pov = pov;
 		setPoints();
 	}
 
+	/**
+	 * Sets polygon's points with consideration of x and y offset
+	 * 
+	 * @param points Point position array
+	 * @param num    Number of points
+	 */
 	private void setPoly(Position2D[] points, int num) {
 		int[] x = new int[num];
 		int[] y = new int[num];
@@ -112,6 +211,17 @@ public class VisualFace {
 		seenFace.ypoints = y;
 	}
 
+	/**
+	 * 
+	 * @return Returns polygon
+	 */
+	public Polygon getPoly() {
+		return seenFace;
+	}
+
+	/**
+	 * Sets true, and view point arrays for face
+	 */
 	private void setPoints() {
 
 		double coords[] = new double[3];
@@ -132,6 +242,9 @@ public class VisualFace {
 		this.center = new Position3D(coords);
 	}
 
+	/**
+	 * Sets offset of origin for the coordinate system (set to standard
+	 */
 	private void setOffset() {
 		File file = new File("src\\blockrpg\\MainWindow.form");
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -150,15 +263,18 @@ public class VisualFace {
 		}
 	}
 
+	/**
+	 * Rotates VisualFace by given angle and axis
+	 * 
+	 * @param ang  Angle to rotate
+	 * @param axis Axis to rotate about
+	 * @return Returns VisualFace
+	 */
 	public VisualFace rotate(double ang, Vector3D axis) {
 		VisualFace face = new VisualFace(this);
 		face.facePlane = face.facePlane.rotatePlane(ang, axis);
 		face.setPoints();
 		return face;
-	}
-
-	public Polygon getPoly() {
-		return seenFace;
 	}
 
 }

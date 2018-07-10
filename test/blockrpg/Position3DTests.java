@@ -158,6 +158,7 @@ class Position3DTests {
 		Position3D pos2 = pos1.clone();
 		Position3D expected = new Position3D(1,1,1);
 		assertEquals(expected, pos2);
+		assertFalse(expected == pos2);
 	}
 	
 	@Test

@@ -91,6 +91,7 @@ class Position2DTests {
 		Position2D pos2 = pos1.clone();
 		Position2D expected = new Position2D(1,1);
 		assertEquals(expected, pos2);
+		assertFalse(expected == pos2);
 	}
 	
 	@Test

@@ -33,4 +33,11 @@ class Coord2DTests {
 		test.addY(2);
 		assertEquals(3, test.getY());
 	}
+	
+	@Test
+	void testClone() {
+		Coord2D test = new Coord2D(1,1);
+		assertEquals(test, test.clone());
+		assertFalse(test == test.clone());
+	}
 }

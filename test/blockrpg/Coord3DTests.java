@@ -47,5 +47,12 @@ class Coord3DTests {
 		test.addZ(2);
 		assertEquals(3, test.getZ());
 	}
+	
+	@Test
+	void testClone() {
+		Coord3D test = new Coord3D(1,1,8);
+		assertEquals(test, test.clone());
+		assertFalse(test == test.clone());
+	}
 
 }

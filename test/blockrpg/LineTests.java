@@ -18,6 +18,21 @@ class LineTests {
 	}
 	
 	@Test
+	void testCloneFunction() {
+		Line expected = new Line();
+		double dirCoords[] = { 2.0/3, 1.0/3, 2.0/3 };
+		double posCoords[] = { 1, 2, 3 };
+		expected.setDir(dirCoords);
+		expected.setPos(posCoords);
+		Line test = expected.clone();
+		
+		assertEquals(expected, test);
+		assertFalse(expected == test);
+		assertFalse(expected.getDir() == test.getDir());
+		assertFalse(expected.getPos() == test.getPos());
+	}
+	
+	@Test
 	void testSetAndGetDir() {
 		Line test = new Line();
 		double dirCoords[] = { 1, 2, 3 };

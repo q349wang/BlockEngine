@@ -21,12 +21,9 @@ public class Plane {
 	/**
 	 * Custom constructor for plane
 	 * 
-	 * @param vecX
-	 *            X-axis Vector3D
-	 * @param vecY
-	 *            Y-axis Vector3D
-	 * @param pos
-	 *            Position Position3D
+	 * @param vecX X-axis Vector3D
+	 * @param vecY Y-axis Vector3D
+	 * @param pos  Position Position3D
 	 */
 	public Plane(Vector3D vecX, Vector3D vecY, Position3D pos) {
 		this.vecX = vecX.normalize();
@@ -39,22 +36,25 @@ public class Plane {
 	/**
 	 * Copies other Plane
 	 * 
-	 * @param other
-	 *            Other Plane to copy
+	 * @param other Other Plane to copy
 	 */
 	public Plane(Plane other) {
-		this.pos = other.pos;
-		this.vecX = other.vecX;
-		this.vecY = other.vecY;
-		this.norm = other.norm;
+		this.pos = other.pos.clone();
+		this.vecX = other.vecX.clone();
+		this.vecY = other.vecY.clone();
+		this.norm = other.norm.clone();
 		this.d = other.d;
+	}
+	
+	@Override
+	public Plane clone() {
+		return new Plane(this);
 	}
 
 	/**
 	 * Set X-axis to given coords direction
 	 * 
-	 * @param coords
-	 *            double array of coords
+	 * @param coords double array of coords
 	 */
 	public void setvecX(double[] coords) {
 		this.vecX.setCoord(coords);
@@ -67,8 +67,7 @@ public class Plane {
 	/**
 	 * Set Y-axis to given coords direction
 	 * 
-	 * @param coords
-	 *            double array of coords
+	 * @param coords double array of coords
 	 */
 	public void setvecY(double[] coords) {
 		this.vecY.setCoord(coords);
@@ -80,11 +79,82 @@ public class Plane {
 	/**
 	 * Set position to given coords
 	 * 
-	 * @param coords
-	 *            double array of coords
+	 * @param coords double array of coords
 	 */
 	public void setPos(double[] coords) {
 		this.pos.setCoord(coords);
+	}
+	
+	/**
+	 * 
+	 * @return Returns x axis vector
+	 */
+	public Vector3D getVecX() {
+		return this.vecX;
+	}
+	
+	/**
+	 * 
+	 * @return Returns y axis vector
+	 */
+	public Vector3D getVecY() {
+		return this.vecY;
+	}
+	
+	/**
+	 * 
+	 * @return Returns position
+	 */
+	public Position3D getPos() {
+		return this.pos;
+	}
+
+	/**
+	 * 
+	 * @param x Adds inputed value to the X coordinate
+	 */
+	public void addX(double x) {
+		this.pos.addX(x);
+	}
+
+	/**
+	 * 
+	 * @param y Adds inputed value to the Y coordinate
+	 */
+	public void addY(double y) {
+		this.pos.addY(y);
+	}
+
+	/**
+	 * 
+	 * @param z Adds inputed value to the Z coordinate
+	 */
+	public void addZ(double z) {
+		this.pos.addZ(z);
+	}
+
+	/**
+	 * 
+	 * @param x Sets X coordinate to the inputed value
+	 */
+	public void setX(double x) {
+		this.pos.setX(x);
+	}
+
+	/**
+	 * 
+	 * @param y Sets Y coordinate to the inputed value
+	 */
+	public void setY(double y) {
+		this.pos.setY(y);
+	}
+
+	/**
+	 * 
+	 * @param z Sets Z coordinate to the inputed value
+	 */
+	public void setZ(double z) {
+		this.pos.setZ(z);
 	}
 
 	/**
@@ -98,8 +168,7 @@ public class Plane {
 	/**
 	 * Set d
 	 * 
-	 * @param d
-	 *            double
+	 * @param d double
 	 */
 	private void setD(double d) {
 		this.d = d;
@@ -115,8 +184,7 @@ public class Plane {
 
 	/**
 	 * 
-	 * @param point2D
-	 *            Point on plane as 2D space
+	 * @param point2D Point on plane as 2D space
 	 * @return Returns position in 3D space that point2D corresponds to as
 	 *         Position3D
 	 */
@@ -136,8 +204,7 @@ public class Plane {
 
 	/**
 	 * 
-	 * @param other
-	 *            Other plane to compare
+	 * @param other Other plane to compare
 	 * @return Returns whether two planes are parallel
 	 */
 	public boolean isParallel(Plane other) {

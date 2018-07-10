@@ -33,8 +33,13 @@ public class Line {
 	 *            Other line to copy
 	 */
 	public Line(Line other) {
-		this.pos = other.pos;
-		this.dir = other.dir;
+		this.pos = other.pos.clone();
+		this.dir = other.dir.clone();
+	}
+	
+	@Override
+	public Line clone() {
+		return new Line(this);
 	}
 
 	/**
