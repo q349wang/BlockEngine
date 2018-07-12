@@ -45,7 +45,7 @@ public class Plane {
 		this.norm = other.norm.clone();
 		this.d = other.d;
 	}
-	
+
 	@Override
 	public Plane clone() {
 		return new Plane(this);
@@ -84,7 +84,7 @@ public class Plane {
 	public void setPos(double[] coords) {
 		this.pos.setCoord(coords);
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns x axis vector
@@ -92,7 +92,7 @@ public class Plane {
 	public Vector3D getVecX() {
 		return this.vecX;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns y axis vector
@@ -100,13 +100,21 @@ public class Plane {
 	public Vector3D getVecY() {
 		return this.vecY;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns position
 	 */
 	public Position3D getPos() {
 		return this.pos;
+	}
+
+	/**
+	 * 
+	 * @return Returns normal vector
+	 */
+	public Vector3D getNorm() {
+		return this.norm;
 	}
 
 	/**
@@ -213,12 +221,35 @@ public class Plane {
 
 	/**
 	 * 
+	 * @param other Other Line to compare
+	 * @return Returns whether a line and a plane are parallel
+	 */
+	public boolean isParallel(Line other) {
+		return Math.abs(this.norm.dot(other.getDir())) < Coord3D.ERROR;
+	}
+
+	/**
+	 * 
 	 * @param pos Position3D to check
 	 * @return Returns whether pos is on plane
 	 */
 	public boolean onPlane(Position3D pos) {
 		double result = norm.x * pos.x + norm.y * pos.y + norm.z * pos.z;
 		return Math.abs(result - d) < Coord3D.ERROR;
+	}
+	
+	/**
+	 * Finds Position3D that a Line intersects a Plane on (returns null if Line is parallel to Plane)
+	 * @param other
+	 * @return Returns Position3D that is on line and plane
+	 */
+	public Position3D getIntersect(Line other) {
+		if (this.isParallel(other)) {
+			return null;
+		}
+		
+		double t = (this.d - this.norm.dot(other.getPos().toVec()))/this.norm.dot(other.getDir());
+		return other.getLinePoint(t);
 	}
 
 	// Overriding equals() to compare two Plane objects

@@ -15,10 +15,8 @@ public class Line {
 	/**
 	 * Custom constructor for line with coords for direction and position
 	 * 
-	 * @param dir
-	 *            Direction Vector3D
-	 * @param pos
-	 *            Position Position3D
+	 * @param dir Direction Vector3D
+	 * @param pos Position Position3D
 	 */
 	public Line(Vector3D dir, Position3D pos) {
 		this.dir = new Vector3D(dir.getCoord());
@@ -29,14 +27,24 @@ public class Line {
 	/**
 	 * Copies Line
 	 * 
-	 * @param other
-	 *            Other line to copy
+	 * @param other Other line to copy
 	 */
 	public Line(Line other) {
 		this.pos = other.pos.clone();
 		this.dir = other.dir.clone();
 	}
-	
+
+	/**
+	 * Creates a new line using two points
+	 * 
+	 * @param pos1 First point (set as pos)
+	 * @param pos2 Second point (dir is found using pos1.getDirection(pos2))
+	 */
+	public Line(Position3D pos1, Position3D pos2) {
+		this.pos = pos1.clone();
+		this.dir = pos1.getDirection(pos2).normalize();
+	}
+
 	@Override
 	public Line clone() {
 		return new Line(this);
@@ -44,8 +52,7 @@ public class Line {
 
 	/**
 	 * 
-	 * @param dirCoords
-	 *            Sets direction vector to inputed coordinates
+	 * @param dirCoords Sets direction vector to inputed coordinates
 	 */
 	public void setDir(double[] dirCoords) {
 		this.dir.setCoord(dirCoords);
@@ -54,8 +61,7 @@ public class Line {
 
 	/**
 	 * 
-	 * @param posCoords
-	 *            Sets position vector to inputed coordinates
+	 * @param posCoords Sets position vector to inputed coordinates
 	 */
 	public void setPos(double[] posCoords) {
 		this.pos.setCoord(posCoords);
@@ -79,8 +85,7 @@ public class Line {
 
 	/**
 	 * 
-	 * @param t
-	 *            Scalar multiple
+	 * @param t Scalar multiple
 	 * @return Returns point on line at t
 	 */
 	public Position3D getLinePoint(double t) {
@@ -89,10 +94,8 @@ public class Line {
 
 	/**
 	 * 
-	 * @param ang
-	 *            Angle to rotate line direction
-	 * @param axis
-	 *            Axis to rotate line direction
+	 * @param ang  Angle to rotate line direction
+	 * @param axis Axis to rotate line direction
 	 * @return Returns rotated line
 	 */
 	public Line rotateDir(double ang, Vector3D axis) {
@@ -103,10 +106,8 @@ public class Line {
 
 	/**
 	 * 
-	 * @param ang
-	 *            Angle to rotate line position
-	 * @param axis
-	 *            Axis to rotate line position
+	 * @param ang  Angle to rotate line position
+	 * @param axis Axis to rotate line position
 	 * @return Returns rotated line
 	 */
 	public Line rotatePos(double ang, Vector3D axis) {
@@ -118,8 +119,7 @@ public class Line {
 
 	/**
 	 * 
-	 * @param other
-	 *            Other line to check
+	 * @param other Other line to check
 	 * @return Returns true if lines are parallel
 	 */
 	public boolean isParallel(Line other) {
@@ -130,8 +130,16 @@ public class Line {
 
 	/**
 	 * 
-	 * @param other
-	 *            Other line to check
+	 * @param other Other Plane to compare
+	 * @return Returns whether a line and a plane are parallel
+	 */
+	public boolean isParallel(Plane other) {
+		return other.isParallel(this);
+	}
+
+	/**
+	 * 
+	 * @param other Other line to check
 	 * @return Returns null if no intersection and Position3D if there is one
 	 */
 	public Position3D intersects(Line other) {
@@ -174,7 +182,7 @@ public class Line {
 		return this.dir.equals(line.dir) && this.pos.equals(line.pos);
 
 	}
-	
+
 	/**
 	 * 
 	 * @param other Other line to compare
@@ -193,8 +201,25 @@ public class Line {
 
 		return this.dir.isParallel(line.dir) && this.onLine(line.pos);
 	}
-	
+
+	/**
+	 * Checks if Position3D is on the Line
+	 * 
+	 * @param pos Position3D to check
+	 * @return Returns true if on Line
+	 */
 	public boolean onLine(Position3D pos) {
 		return pos.subtract(this.pos).toVec().isParallel(this.dir);
+	}
+
+	/**
+	 * Finds Position3D that a Line intersects a Plane on (returns null if Line is
+	 * parallel to Plane)
+	 * 
+	 * @param other
+	 * @return Returns Position3D that is on line and plane
+	 */
+	public Position3D getIntersect(Plane other) {
+		return other.getIntersect(this);
 	}
 }

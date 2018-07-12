@@ -37,7 +37,7 @@ class Coord2DTests {
 	@Test
 	void testClone() {
 		Coord2D test = new Coord2D(1,1);
-		assertEquals(test, test.clone());
 		assertFalse(test == test.clone());
+		assertEquals(test, test.clone());
 	}
 }

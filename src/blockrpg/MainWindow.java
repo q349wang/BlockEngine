@@ -190,8 +190,8 @@ public class MainWindow extends javax.swing.JFrame {
 		Position2D[] points2 = {new Position2D(0,-500), new Position2D(0, 500), new Position2D(1000, 500), new Position2D(1000, -500)};
 		Plane plane = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D());
 		pov.setZoom(zoom);
-		VisualFace face1 = new VisualFace(points1, points1.length, plane, pov);
-		VisualFace face2 = new VisualFace(points2, points2.length, plane, pov);
+		Face face1 = new Face(points1, points1.length, plane, pov);
+		Face face2 = new Face(points2, points2.length, plane, pov);
 		gamePanel.addShape(face1);
 		gamePanel.addShape(face2);
 		gamePanel.repaint();
@@ -211,9 +211,12 @@ public class MainWindow extends javax.swing.JFrame {
 		int ySign = -1;
 		int zSign = -1;
 		while (true) {
-			Vector3D axis = new Vector3D(1, 0, 0);
+			Vector3D axis = new Vector3D(0, 1, 1);
+			Vector3D axis2 = new Vector3D(1, 0, 0);
 			face1 = face1.rotate(0.01, axis);
 			face2 = face2.rotate(0.01, axis);
+			
+			face1 = face1.rotate(0.01, axis2);
 
 			
 			if (face1.getPlane().getPos().getCoord()[0] <= -2000) {
@@ -221,22 +224,22 @@ public class MainWindow extends javax.swing.JFrame {
 			} else if (face1.getPlane().getPos().getCoord()[0] >= 2000){
 				xSign = -1;
 			}
-			if (face1.getPlane().getPos().getCoord()[1] <= -2000) {
+			if (face2.getPlane().getPos().getCoord()[1] <= -1000) {
 				ySign = 1;
-			} else if (face1.getPlane().getPos().getCoord()[1] >= 2000){
+			} else if (face2.getPlane().getPos().getCoord()[1] >= 1000){
 				ySign = -1;
 			}
-			if (face1.getPlane().getPos().getCoord()[1] <= -2000) {
+			if (face1.getPlane().getPos().getCoord()[2] <= -1000) {
 				zSign = 1;
-			} else if (face1.getPlane().getPos().getCoord()[1] >= 2000){
+			} else if (face1.getPlane().getPos().getCoord()[2] >= 1000){
 				zSign = -1;
 			}
-			face1.addX(xSign * 10);
-			face2.addX(xSign * 10);
-			face1.addY(ySign * 10);
+			//face1.addX(xSign * 10);
+			//face2.addX(xSign * 10);
+			//face1.addY(ySign * 10);
 			face2.addY(ySign * 10);
 			face1.addZ(zSign * 10);
-			face2.addZ(zSign * 10);
+			//face2.addZ(zSign * 10);
 			
 			gamePanel.faces.clear();
 			gamePanel.addShape(face1);

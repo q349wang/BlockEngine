@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Coord2D {
 
-	protected final static double ERROR = 0.000000001;
+	protected final static double ERROR = Coord3D.ERROR;
 
 	protected double x;
 	protected double y;

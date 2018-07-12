@@ -11,13 +11,13 @@ public class Drawer extends JPanel {
 	 */
 	private static final long serialVersionUID = -2810583553938140766L;
 
-	public Vector<VisualFace> faces;
+	public Vector<Face> faces;
 
 	public Drawer() {
-		faces = new Vector<VisualFace>();
+		faces = new Vector<Face>();
 	}
 
-	public void addShape(VisualFace face) {
+	public void addShape(Face face) {
 		faces.add(face);
 	}
 
