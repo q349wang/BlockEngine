@@ -27,12 +27,13 @@ public class Face {
 	 */
 	private static final long serialVersionUID = -3860601078926040180L;
 
-	private double xOffset;
-	private double yOffset;
+	public double xOffset;
+	public double yOffset;
 
 	private Polygon seenFace;
 	private Position2D[] viewPoints;
 	private Position2D[] relPoints;
+	private Line[] edges;
 	private Position2D anchor;
 	private Plane facePlane;
 	private int numPoints;
@@ -51,6 +52,8 @@ public class Face {
 		numPoints = 0;
 		viewPoints = null;
 		relPoints = null;
+		edges = null;
+		facePlane = new Plane();
 		center = new Position3D();
 		pov = new Perspective();
 	}
@@ -67,14 +70,17 @@ public class Face {
 
 		setOffset();
 		seenFace = new Polygon();
-		this.facePlane = facePlane;
-		this.relPoints = relPoints;
-		this.pov = pov;
+		this.facePlane = facePlane.clone();
+		this.relPoints = new Position2D[numPoints];
+		for(int i = 0; i < numPoints;i++) {
+			this.relPoints[i] = relPoints[i].clone();
+		}
+		this.pov = pov; // You don't clone perspective
 		// this.anchor = anchor;
 		this.numPoints = numPoints;
 		truePoints = new Position3D[numPoints];
 		viewPoints = new Position2D[numPoints];
-
+		edges = new Line[numPoints - 1];
 		setPoints();
 
 	}
@@ -98,6 +104,7 @@ public class Face {
 		this.numPoints = other.numPoints;
 		this.truePoints = new Position3D[numPoints];
 		this.viewPoints = new Position2D[numPoints];
+		this.edges = new Line[numPoints - 1];
 		setPoints();
 	}
 	
@@ -190,6 +197,14 @@ public class Face {
 		this.pov = pov;
 		setPoints();
 	}
+	
+	/**
+	 * 
+	 * @return Returns POV
+	 */
+	public Perspective getPOV() {
+		return this.pov;
+	}
 
 	/**
 	 * Sets polygon's points with consideration of x and y offset
@@ -223,6 +238,18 @@ public class Face {
 	 * Sets true, and view point arrays for face
 	 */
 	private void setPoints() {
+		
+		
+		// Sets arrays if they are null
+		if (this.viewPoints == null) {
+			this.viewPoints = new Position2D[numPoints];
+		}
+		if (this.edges == null) {
+			this.edges = new Line[numPoints -1];
+		}
+		if (this.truePoints == null) {
+			this.truePoints = new Position3D[numPoints];
+		}
 
 		double coords[] = new double[3];
 		for (int i = 0; i < numPoints; i++) {
@@ -231,6 +258,11 @@ public class Face {
 			for (int j = 0; j < 3; j++) {
 				coords[j] += this.truePoints[i].getCoord()[j];
 			}
+		}
+		
+		// Create edges
+		for(int i = 1; i < numPoints; i++) {
+			this.edges[i-1] = new Line(this.truePoints[i-1], this.truePoints[i]);
 		}
 
 		setPoly(this.viewPoints, this.numPoints);
