@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  *
  * @author L
  */
-public class Face {
+public class Face extends Shape {
 
 	/**
 	 * 
@@ -33,7 +33,7 @@ public class Face {
 	private Polygon seenFace;
 	private Position2D[] viewPoints;
 	private Position2D[] relPoints;
-	private Line[] edges;
+	private Line3D[] edges;
 	private Position2D anchor;
 	private Plane facePlane;
 	private int numPoints;
@@ -80,7 +80,7 @@ public class Face {
 		this.numPoints = numPoints;
 		truePoints = new Position3D[numPoints];
 		viewPoints = new Position2D[numPoints];
-		edges = new Line[numPoints - 1];
+		edges = new Line3D[numPoints - 1];
 		setPoints();
 
 	}
@@ -104,7 +104,7 @@ public class Face {
 		this.numPoints = other.numPoints;
 		this.truePoints = new Position3D[numPoints];
 		this.viewPoints = new Position2D[numPoints];
-		this.edges = new Line[numPoints - 1];
+		this.edges = new Line3D[numPoints - 1];
 		setPoints();
 	}
 	
@@ -245,7 +245,7 @@ public class Face {
 			this.viewPoints = new Position2D[numPoints];
 		}
 		if (this.edges == null) {
-			this.edges = new Line[numPoints -1];
+			this.edges = new Line3D[numPoints -1];
 		}
 		if (this.truePoints == null) {
 			this.truePoints = new Position3D[numPoints];
@@ -262,7 +262,7 @@ public class Face {
 		
 		// Create edges
 		for(int i = 1; i < numPoints; i++) {
-			this.edges[i-1] = new Line(this.truePoints[i-1], this.truePoints[i]);
+			this.edges[i-1] = new Line3D(this.truePoints[i-1], this.truePoints[i]);
 		}
 
 		setPoly(this.viewPoints, this.numPoints);

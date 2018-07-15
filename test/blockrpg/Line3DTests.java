@@ -4,27 +4,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class LineTests {
+class Line3DTests {
 
 	@Test
 	void testCloneConstructor() {
-		Line expected = new Line();
+		Line3D expected = new Line3D();
 		double dirCoords[] = { 2.0/3, 1.0/3, 2.0/3 };
 		double posCoords[] = { 1, 2, 3 };
 		expected.setDir(dirCoords);
 		expected.setPos(posCoords);
-		Line test = new Line(expected);
+		Line3D test = new Line3D(expected);
 		assertEquals(expected, test);
 	}
 	
 	@Test
 	void testCloneFunction() {
-		Line expected = new Line();
+		Line3D expected = new Line3D();
 		double dirCoords[] = { 2.0/3, 1.0/3, 2.0/3 };
 		double posCoords[] = { 1, 2, 3 };
 		expected.setDir(dirCoords);
 		expected.setPos(posCoords);
-		Line test = expected.clone();
+		Line3D test = expected.clone();
 		
 		assertEquals(expected, test);
 		assertFalse(expected == test);
@@ -34,7 +34,7 @@ class LineTests {
 	
 	@Test
 	void testSetAndGetDir() {
-		Line test = new Line();
+		Line3D test = new Line3D();
 		double dirCoords[] = { 1, 2, 3 };
 		Vector3D expected = new Vector3D(1, 2, 3);
 		test.setDir(dirCoords);
@@ -43,7 +43,7 @@ class LineTests {
 
 	@Test
 	void testSetAndGetPos() {
-		Line test = new Line();
+		Line3D test = new Line3D();
 		double posCoords[] = { 1, 2, 3 };
 		Position3D expected = new Position3D(1, 2, 3);
 		test.setPos(posCoords);
@@ -52,7 +52,7 @@ class LineTests {
 
 	@Test
 	void testGetLinePoint() {
-		Line test = new Line();
+		Line3D test = new Line3D();
 		double dirCoords[] = { 2.0/3, 1.0/3, 2.0/3 };
 		double posCoords[] = { 1, 2, 3 };
 		test.setDir(dirCoords);
@@ -63,7 +63,7 @@ class LineTests {
 
 	@Test
 	void testRotateDir() {
-		Line test = new Line();
+		Line3D test = new Line3D();
 		double dirCoords[] = {0, 2, 0};
 		test.setDir(dirCoords);
 		Vector3D axis = new Vector3D(1, 1, 0);
@@ -73,7 +73,7 @@ class LineTests {
 
 	@Test
 	void testRotatePos() {
-		Line test = new Line();
+		Line3D test = new Line3D();
 		double dirCoords[] = {0, 2, 0};
 		double posCoords[] = {0,3,0};
 		test.setDir(dirCoords);
@@ -87,8 +87,8 @@ class LineTests {
 
 	@Test
 	void testIsParallel() {
-		Line test1 = new Line();
-		Line test2 = new Line();
+		Line3D test1 = new Line3D();
+		Line3D test2 = new Line3D();
 		double dirCoords1[] = {1, 2, 4};
 		double dirCoords2[] = {-2,-4,-8};
 		test1.setDir(dirCoords1);
@@ -99,8 +99,8 @@ class LineTests {
 
 	@Test
 	void testIntersectsParallel() {
-		Line test1 = new Line();
-		Line test2 = new Line();
+		Line3D test1 = new Line3D();
+		Line3D test2 = new Line3D();
 		double dirCoords1[] = {1, 2, 4};
 		double dirCoords2[] = {-2,-4,-8};
 		
@@ -112,8 +112,8 @@ class LineTests {
 	
 	@Test
 	void testIntersectsTypical() {
-		Line test1 = new Line();
-		Line test2 = new Line();
+		Line3D test1 = new Line3D();
+		Line3D test2 = new Line3D();
 		double dirCoords1[] = {1, 2, 3};
 		double dirCoords2[] = {-1,5,-7};
 		
@@ -132,8 +132,8 @@ class LineTests {
 
 	@Test
 	void testIntersectsNotIntersectsNotParallel() {
-		Line test1 = new Line();
-		Line test2 = new Line();
+		Line3D test1 = new Line3D();
+		Line3D test2 = new Line3D();
 		double dirCoords1[] = {1, 2, 3};
 		double dirCoords2[] = {-1,5,-7};
 		
@@ -156,8 +156,8 @@ class LineTests {
 		Position3D pos = new Position3D(-1, 1, -1);
 		Plane testPlane = new Plane(x, y, pos);
 		
-		Line testLine1 = new Line(new Vector3D(1,3.0/5,4.0/5), new Position3D(0,1,-1));
-		Line testLine2 = new Line(new Vector3D(1,3.0/5,4.0/5), new Position3D(-1,1,-1));
+		Line3D testLine1 = new Line3D(new Vector3D(1,3.0/5,4.0/5), new Position3D(0,1,-1));
+		Line3D testLine2 = new Line3D(new Vector3D(1,3.0/5,4.0/5), new Position3D(-1,1,-1));
 		assertTrue(testLine1.isParallel(testPlane));
 		assertTrue(testLine2.isParallel(testPlane));
 	}
@@ -168,15 +168,15 @@ class LineTests {
 		Position3D pos = new Position3D(-1, 1, -1);
 		Plane testPlane = new Plane(x, y, pos);
 		
-		Line testLine1 = new Line(new Vector3D(1,0,4.0/5), new Position3D(0,1,-1));
-		Line testLine2 = new Line(new Vector3D(1,0,4.0/5), new Position3D(-1,1,-1));
+		Line3D testLine1 = new Line3D(new Vector3D(1,0,4.0/5), new Position3D(0,1,-1));
+		Line3D testLine2 = new Line3D(new Vector3D(1,0,4.0/5), new Position3D(-1,1,-1));
 		assertFalse(testLine1.isParallel(testPlane));
 		assertFalse(testLine2.isParallel(testPlane));
 	}
 	
 	@Test
 	void testOnLineTrue() {
-		Line test1 = new Line();
+		Line3D test1 = new Line3D();
 		double dirCoords1[] = {1, 2, 3};
 		
 		double posCoords1[] = {1,1,0};
@@ -191,7 +191,7 @@ class LineTests {
 	
 	@Test
 	void testOnLineFalse() {
-		Line test1 = new Line();
+		Line3D test1 = new Line3D();
 		double dirCoords1[] = {1, 2, 3};
 		
 		double posCoords1[] = {1,1,0};
@@ -206,8 +206,8 @@ class LineTests {
 	
 	@Test
 	void testSimilarTrue() {
-		Line test1 = new Line();
-		Line test2 = new Line();
+		Line3D test1 = new Line3D();
+		Line3D test2 = new Line3D();
 		double dirCoords1[] = {1, 2, 3};
 		double dirCoords2[] = {-2,-4,-6};
 		
@@ -225,8 +225,8 @@ class LineTests {
 	
 	@Test
 	void testSimilarFalseLine() {
-		Line test1 = new Line();
-		Line test2 = new Line();
+		Line3D test1 = new Line3D();
+		Line3D test2 = new Line3D();
 		double dirCoords1[] = {1, 1, 3};
 		double dirCoords2[] = {-2,-4,-6};
 		
@@ -244,8 +244,8 @@ class LineTests {
 	
 	@Test
 	void testSimilarFalsePoint() {
-		Line test1 = new Line();
-		Line test2 = new Line();
+		Line3D test1 = new Line3D();
+		Line3D test2 = new Line3D();
 		double dirCoords1[] = {1, 2, 3};
 		double dirCoords2[] = {-2,-4,-6};
 		
@@ -268,9 +268,9 @@ class LineTests {
 		Position3D pos = new Position3D(-1, 1, -1);
 		Plane plane1 = new Plane(x, y, pos);
 
-		Line line = new Line(new Vector3D(1,8, 6), new Position3D(-1, -7, -7));
+		Line3D line3D = new Line3D(new Vector3D(1,8, 6), new Position3D(-1, -7, -7));
 		Position3D expected = new Position3D(0, 1, -1);
-		assertEquals(expected, line.getIntersect(plane1)); 
+		assertEquals(expected, line3D.getIntersect(plane1)); 
 	}
 	
 	@Test
@@ -280,7 +280,7 @@ class LineTests {
 		Position3D pos = new Position3D(-1, 1, -1);
 		Plane plane1 = new Plane(x, y, pos);
 
-		Line line = new Line(new Vector3D(2,3, 4), new Position3D(-1, 1, -1));
-		assertEquals(null, line.getIntersect(plane1)); 
+		Line3D line3D = new Line3D(new Vector3D(2,3, 4), new Position3D(-1, 1, -1));
+		assertEquals(null, line3D.getIntersect(plane1)); 
 	}
 }

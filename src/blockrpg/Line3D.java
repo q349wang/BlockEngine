@@ -1,13 +1,13 @@
 package blockrpg;
 
-public class Line {
+public class Line3D {
 	private Position3D pos;
 	private Vector3D dir;
 
 	/**
 	 * Default constructor for line
 	 */
-	public Line() {
+	public Line3D() {
 		pos = new Position3D();
 		dir = new Vector3D();
 	}
@@ -18,18 +18,18 @@ public class Line {
 	 * @param dir Direction Vector3D
 	 * @param pos Position Position3D
 	 */
-	public Line(Vector3D dir, Position3D pos) {
+	public Line3D(Vector3D dir, Position3D pos) {
 		this.dir = new Vector3D(dir.getCoord());
 		dir = dir.normalize();
 		this.pos = new Position3D(pos.getCoord());
 	}
 
 	/**
-	 * Copies Line
+	 * Copies Line3D
 	 * 
 	 * @param other Other line to copy
 	 */
-	public Line(Line other) {
+	public Line3D(Line3D other) {
 		this.pos = other.pos.clone();
 		this.dir = other.dir.clone();
 	}
@@ -40,14 +40,14 @@ public class Line {
 	 * @param pos1 First point (set as pos)
 	 * @param pos2 Second point (dir is found using pos1.getDirection(pos2))
 	 */
-	public Line(Position3D pos1, Position3D pos2) {
+	public Line3D(Position3D pos1, Position3D pos2) {
 		this.pos = pos1.clone();
 		this.dir = pos1.getDirection(pos2).normalize();
 	}
 
 	@Override
-	public Line clone() {
-		return new Line(this);
+	public Line3D clone() {
+		return new Line3D(this);
 	}
 
 	/**
@@ -98,8 +98,8 @@ public class Line {
 	 * @param axis Axis to rotate line direction
 	 * @return Returns rotated line
 	 */
-	public Line rotateDir(double ang, Vector3D axis) {
-		Line rotatedDir = new Line(this.dir, this.pos);
+	public Line3D rotateDir(double ang, Vector3D axis) {
+		Line3D rotatedDir = new Line3D(this.dir, this.pos);
 		rotatedDir.setDir(dir.rotate(ang, axis).getCoord());
 		return rotatedDir;
 	}
@@ -110,8 +110,8 @@ public class Line {
 	 * @param axis Axis to rotate line position
 	 * @return Returns rotated line
 	 */
-	public Line rotatePos(double ang, Vector3D axis) {
-		Line rotatedDir = new Line(this.dir, this.pos);
+	public Line3D rotatePos(double ang, Vector3D axis) {
+		Line3D rotatedDir = new Line3D(this.dir, this.pos);
 		rotatedDir.setDir(dir.rotate(ang, axis).getCoord());
 		rotatedDir.pos = pos.rotate(ang, axis);
 		return rotatedDir;
@@ -122,7 +122,7 @@ public class Line {
 	 * @param other Other line to check
 	 * @return Returns true if lines are parallel
 	 */
-	public boolean isParallel(Line other) {
+	public boolean isParallel(Line3D other) {
 		Vector3D origin = new Vector3D();
 		return this.dir.cross(other.dir).equals(origin);
 
@@ -142,7 +142,7 @@ public class Line {
 	 * @param other Other line to check
 	 * @return Returns null if no intersection and Position3D if there is one
 	 */
-	public Position3D intersects(Line other) {
+	public Position3D intersects(Line3D other) {
 
 		if (this.isParallel(other)) {
 			return null;
@@ -165,7 +165,7 @@ public class Line {
 
 	}
 
-	// Overriding equals() to compare two Line objects
+	// Overriding equals() to compare two Line3D objects
 	@Override
 	public boolean equals(Object other) {
 
@@ -173,13 +173,13 @@ public class Line {
 			return true;
 		}
 
-		if (!(other instanceof Line)) {
+		if (!(other instanceof Line3D)) {
 			return false;
 		}
 
-		Line line = (Line) other;
+		Line3D line3D = (Line3D) other;
 
-		return this.dir.equals(line.dir) && this.pos.equals(line.pos);
+		return this.dir.equals(line3D.dir) && this.pos.equals(line3D.pos);
 
 	}
 
@@ -193,27 +193,27 @@ public class Line {
 			return true;
 		}
 
-		if (!(other instanceof Line)) {
+		if (!(other instanceof Line3D)) {
 			return false;
 		}
 
-		Line line = (Line) other;
+		Line3D line3D = (Line3D) other;
 
-		return this.dir.isParallel(line.dir) && this.onLine(line.pos);
+		return this.dir.isParallel(line3D.dir) && this.onLine(line3D.pos);
 	}
 
 	/**
-	 * Checks if Position3D is on the Line
+	 * Checks if Position3D is on the Line3D
 	 * 
 	 * @param pos Position3D to check
-	 * @return Returns true if on Line
+	 * @return Returns true if on Line3D
 	 */
 	public boolean onLine(Position3D pos) {
 		return pos.subtract(this.pos).toVec().isParallel(this.dir);
 	}
 
 	/**
-	 * Finds Position3D that a Line intersects a Plane on (returns null if Line is
+	 * Finds Position3D that a Line3D intersects a Plane on (returns null if Line3D is
 	 * parallel to Plane)
 	 * 
 	 * @param other

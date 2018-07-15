@@ -221,10 +221,10 @@ public class Plane {
 
 	/**
 	 * 
-	 * @param other Other Line to compare
+	 * @param other Other Line3D to compare
 	 * @return Returns whether a line and a plane are parallel
 	 */
-	public boolean isParallel(Line other) {
+	public boolean isParallel(Line3D other) {
 		return Math.abs(this.norm.dot(other.getDir())) < Coord3D.ERROR;
 	}
 
@@ -239,11 +239,11 @@ public class Plane {
 	}
 	
 	/**
-	 * Finds Position3D that a Line intersects a Plane on (returns null if Line is parallel to Plane)
+	 * Finds Position3D that a Line3D intersects a Plane on (returns null if Line3D is parallel to Plane)
 	 * @param other
 	 * @return Returns Position3D that is on line and plane
 	 */
-	public Position3D getIntersect(Line other) {
+	public Position3D getIntersect(Line3D other) {
 		if (this.isParallel(other)) {
 			return null;
 		}
