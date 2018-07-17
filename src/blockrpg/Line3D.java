@@ -51,6 +51,16 @@ public class Line3D {
 	}
 
 	/**
+	 * Sets line using two points
+	 * @param pos1 First point (set as pos)
+	 * @param pos2 Second point (dir is found using pos1.getDirection(pos2))
+	 */
+	public void setLineToPoints(Position3D pos1, Position3D pos2) {
+		this.pos = pos1.clone();
+		this.dir = pos1.getDirection(pos2).normalize();
+	}
+	
+	/**
 	 * 
 	 * @param dirCoords Sets direction vector to inputed coordinates
 	 */

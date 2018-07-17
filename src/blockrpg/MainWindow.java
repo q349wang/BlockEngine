@@ -5,11 +5,14 @@
  */
 package blockrpg;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JLabel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -102,7 +105,8 @@ public class MainWindow extends javax.swing.JFrame {
 		setSize(_width, _height);
 
 		gamePanel = new Drawer();
-
+		fps = new JLabel();
+		
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("BlockRPG");
 		setResizable(false);
@@ -131,7 +135,15 @@ public class MainWindow extends javax.swing.JFrame {
 		// layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(gamePanel,
 		// javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
 		// Short.MAX_VALUE));
+		
+		fps.setForeground(Color.BLACK);
+		fps.setFont(new Font ("Arial", Font.BOLD , 11));
+		fps.setBounds(20, 10, 50, 40);
+		
 		gamePanel.addKeyListener(new KeyInput());
+		gamePanel.add(fps);
+		gamePanel.setLayout(null);
+		
 		gamePanel.requestFocus();
 		pack();
 	}
@@ -210,7 +222,14 @@ public class MainWindow extends javax.swing.JFrame {
 		int xSign = -1;
 		int ySign = -1;
 		int zSign = -1;
+		Long prevTick = System.nanoTime();
+		Long currTick = System.nanoTime();
 		while (true) {
+		
+			fps.setText("FPS: " + Long.toString(1000000000/(currTick-prevTick)));
+			prevTick = currTick;
+			currTick = System.nanoTime();
+			
 			Vector3D axis = new Vector3D(0, 1, 1);
 			Vector3D axis2 = new Vector3D(1, 0, 0);
 			face1 = face1.rotate(0.01, axis);
@@ -234,7 +253,7 @@ public class MainWindow extends javax.swing.JFrame {
 			} else if (face1.getPlane().getPos().getCoord()[2] >= 1000){
 				zSign = -1;
 			}
-			//face1.addX(xSign * 10);
+			face1.addX(xSign * 10);
 			//face2.addX(xSign * 10);
 			//face1.addY(ySign * 10);
 			face2.addY(ySign * 10);
@@ -246,7 +265,7 @@ public class MainWindow extends javax.swing.JFrame {
 			gamePanel.addShape(face2);
 			gamePanel.repaint();
 			try {
-				Thread.sleep(10);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -254,4 +273,5 @@ public class MainWindow extends javax.swing.JFrame {
 		}
 	}
 	private Drawer gamePanel;
+	private JLabel fps;
 }

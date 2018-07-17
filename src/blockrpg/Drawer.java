@@ -41,16 +41,16 @@ public class Drawer extends JPanel {
 
 			g2.setColor(Color.YELLOW);
 			g2.fillArc(
-					(int) (faces.get(0).getPOV().getViewPoint(faces.get(0).getCenter()).getCoord()[0]
-							+ faces.get(0).xOffset),
-					(int) (-faces.get(0).getPOV().getViewPoint(faces.get(0).getCenter()).getCoord()[1]
-							+ faces.get(0).yOffset),
+					(int) (faces.get(0).getPOV().getViewPoint(faces.get(0).getCenter3D()).getCoord()[0]
+							+ Face.xOffset),
+					(int) (-faces.get(0).getPOV().getViewPoint(faces.get(0).getCenter3D()).getCoord()[1]
+							+ Face.yOffset),
 					20, 20, 0, 360);
 			g2.fillArc(
-					(int) (faces.get(1).getPOV().getViewPoint(faces.get(1).getCenter()).getCoord()[0]
-							+ faces.get(1).xOffset),
-					(int) (-faces.get(1).getPOV().getViewPoint(faces.get(1).getCenter()).getCoord()[1]
-							+ faces.get(1).yOffset),
+					(int) (faces.get(1).getPOV().getViewPoint(faces.get(1).getCenter3D()).getCoord()[0]
+							+ Face.xOffset),
+					(int) (-faces.get(1).getPOV().getViewPoint(faces.get(1).getCenter3D()).getCoord()[1]
+							+ Face.yOffset),
 					20, 20, 0, 360);
 		}
 

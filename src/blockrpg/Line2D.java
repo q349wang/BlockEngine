@@ -49,6 +49,16 @@ public class Line2D {
 	public Line2D clone() {
 		return new Line2D(this);
 	}
+	
+	/**
+	 * Sets line using two points
+	 * @param pos1 First point (set as pos)
+	 * @param pos2 Second point (dir is found using pos1.getDirection(pos2))
+	 */
+	public void setLineToPoints(Position2D pos1, Position2D pos2) {
+		this.pos = pos1.clone();
+		this.dir = pos1.getDirection(pos2).normalize();
+	}
 
 	/**
 	 * 

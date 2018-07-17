@@ -20,25 +20,30 @@ import org.xml.sax.SAXException;
  *
  * @author L
  */
-public class Face extends Shape {
+public class Face {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3860601078926040180L;
+	public static double xOffset;
+	public static double yOffset;
 
-	public double xOffset;
-	public double yOffset;
+	protected double bound2D;
+	protected double bound3D;
 
 	private Polygon seenFace;
+
 	private Position2D[] viewPoints;
 	private Position2D[] relPoints;
-	private Line3D[] edges;
-	private Position2D anchor;
+	private Position2D[] polyPoints;
+	private Position3D[] truePoints;
+
+	private Line2D[] edges2D;
+	private Line3D[] edges3D;
+
 	private Plane facePlane;
 	private int numPoints;
-	private Position3D[] truePoints;
-	private Position3D center;
+
+	private Position3D center3D;
+	private Position2D center2D;
+
 	private Perspective pov;
 
 	/**
@@ -47,15 +52,23 @@ public class Face extends Shape {
 	public Face() {
 
 		setOffset();
-		seenFace = new Polygon();
-		viewPoints = null;
-		numPoints = 0;
-		viewPoints = null;
-		relPoints = null;
-		edges = null;
-		facePlane = new Plane();
-		center = new Position3D();
-		pov = new Perspective();
+		this.seenFace = new Polygon();
+
+		this.viewPoints = null;
+		this.relPoints = null;
+		this.polyPoints = null;
+		this.truePoints = null;
+
+		this.edges2D = null;
+		this.edges3D = null;
+
+		this.facePlane = new Plane();
+		this.numPoints = 0;
+
+		this.center3D = new Position3D();
+		this.center2D = new Position2D();
+
+		this.pov = new Perspective();
 	}
 
 	/**
@@ -69,18 +82,28 @@ public class Face extends Shape {
 	public Face(Position2D[] relPoints, int numPoints, Plane facePlane, Perspective pov) {
 
 		setOffset();
-		seenFace = new Polygon();
-		this.facePlane = facePlane.clone();
+		this.seenFace = new Polygon();
+
+		this.viewPoints = null;
+		this.truePoints = null;
 		this.relPoints = new Position2D[numPoints];
-		for(int i = 0; i < numPoints;i++) {
+
+		for (int i = 0; i < numPoints; i++) {
 			this.relPoints[i] = relPoints[i].clone();
 		}
-		this.pov = pov; // You don't clone perspective
-		// this.anchor = anchor;
+		this.polyPoints = null;
+
+		this.facePlane = facePlane.clone();
 		this.numPoints = numPoints;
-		truePoints = new Position3D[numPoints];
-		viewPoints = new Position2D[numPoints];
-		edges = new Line3D[numPoints - 1];
+
+		this.edges2D = null;
+		this.edges3D = null;
+
+		this.center3D = new Position3D();
+		this.center2D = new Position2D();
+
+		this.pov = pov; // You don't clone perspective
+
 		setPoints();
 
 	}
@@ -93,21 +116,30 @@ public class Face extends Shape {
 	public Face(Face other) {
 
 		setOffset();
-		seenFace = new Polygon();
-		this.facePlane = other.facePlane.clone();
+		this.seenFace = new Polygon();
+
+		this.viewPoints = null;
+		this.truePoints = null;
 		this.relPoints = new Position2D[other.numPoints];
-		for(int i = 0; i < other.numPoints;i++) {
+		for (int i = 0; i < other.numPoints; i++) {
 			this.relPoints[i] = other.relPoints[i].clone();
 		}
-		this.pov = other.pov; // You don't clone perspective
-		// this.anchor = anchor;
+		this.polyPoints = null;
+
+		this.facePlane = other.facePlane.clone();
 		this.numPoints = other.numPoints;
-		this.truePoints = new Position3D[numPoints];
-		this.viewPoints = new Position2D[numPoints];
-		this.edges = new Line3D[numPoints - 1];
+
+		this.edges2D = null;
+		this.edges3D = null;
+
+		this.center3D = new Position3D();
+		this.center2D = new Position2D();
+
+		this.pov = other.pov; // You don't clone perspective
+
 		setPoints();
 	}
-	
+
 	@Override
 	public Face clone() {
 		return new Face(this);
@@ -118,7 +150,7 @@ public class Face extends Shape {
 	 * @param x Adds inputed value to the X coordinate
 	 */
 	public void addX(double x) {
-		this.center.addX(x);
+		this.center3D.addX(x);
 		this.facePlane.addX(x);
 		setPoints();
 	}
@@ -128,7 +160,7 @@ public class Face extends Shape {
 	 * @param y Adds inputed value to the Y coordinate
 	 */
 	public void addY(double y) {
-		this.center.addY(y);
+		this.center3D.addY(y);
 		this.facePlane.addY(y);
 		setPoints();
 	}
@@ -138,7 +170,7 @@ public class Face extends Shape {
 	 * @param z Adds inputed value to the Z coordinate
 	 */
 	public void addZ(double z) {
-		this.center.addZ(z);
+		this.center3D.addZ(z);
 		this.facePlane.addZ(z);
 		setPoints();
 	}
@@ -148,7 +180,7 @@ public class Face extends Shape {
 	 * @param x Sets X coordinate to the inputed value
 	 */
 	public void setX(double x) {
-		this.center.setX(x);
+		this.center3D.setX(x);
 		this.facePlane.setX(x);
 		setPoints();
 	}
@@ -158,7 +190,7 @@ public class Face extends Shape {
 	 * @param y Sets Y coordinate to the inputed value
 	 */
 	public void setY(double y) {
-		this.center.setY(y);
+		this.center3D.setY(y);
 		this.facePlane.setY(y);
 		setPoints();
 	}
@@ -168,17 +200,17 @@ public class Face extends Shape {
 	 * @param z Sets Z coordinate to the inputed value
 	 */
 	public void setZ(double z) {
-		this.center.setZ(z);
+		this.center3D.setZ(z);
 		this.facePlane.setZ(z);
 		setPoints();
 	}
-	
+
 	/**
 	 * 
-	 * @return Returns center of Face
+	 * @return Returns center3D of Face
 	 */
-	public Position3D getCenter() {
-		return this.center;
+	public Position3D getCenter3D() {
+		return this.center3D;
 	}
 
 	/**
@@ -188,6 +220,7 @@ public class Face extends Shape {
 	public Plane getPlane() {
 		return this.facePlane;
 	}
+
 	/**
 	 * Sets pov to set
 	 * 
@@ -197,7 +230,7 @@ public class Face extends Shape {
 		this.pov = pov;
 		setPoints();
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns POV
@@ -207,19 +240,49 @@ public class Face extends Shape {
 	}
 
 	/**
-	 * Sets polygon's points with consideration of x and y offset
+	 * Sets polygon's points with consideration of x and y offset and 2D center and edges
 	 * 
 	 * @param points Point position array
 	 * @param num    Number of points
 	 */
 	private void setPoly(Position2D[] points, int num) {
+		if (this.edges2D == null) {
+			this.edges2D = new Line2D[this.numPoints - 1];
+			for (int i = 0; i < this.edges2D.length; i++) {
+				this.edges2D[i] = new Line2D();
+			}
+		}
+
+		if (this.polyPoints == null) {
+			this.polyPoints = new Position2D[this.numPoints];
+			for (int i = 0; i < this.polyPoints.length; i++) {
+				this.polyPoints[i] = new Position2D();
+			}
+		}
+
+		double xCent = 0;
+		double yCent = 0;
 		int[] x = new int[num];
 		int[] y = new int[num];
 
 		for (int i = 0; i < num; i++) {
+			this.polyPoints[i].setCoord(new double[] { points[i].getX(), points[i].getY() });
+
+			xCent += points[i].getX();
+			yCent += points[i].getY();
+
 			x[i] = (int) (points[i].getX() + xOffset);
 			y[i] = (int) (-points[i].getY() + yOffset);
 		}
+
+		for (int i = 1; i < num; i++) {
+			this.edges2D[i - 1].setLineToPoints(this.polyPoints[i - 1], this.polyPoints[i]);
+		}
+
+		xCent /= num;
+		yCent /= num;
+
+		this.center2D.setCoord(new double[] { xCent, yCent });
 
 		seenFace.npoints = num;
 		seenFace.xpoints = x;
@@ -238,15 +301,18 @@ public class Face extends Shape {
 	 * Sets true, and view point arrays for face
 	 */
 	private void setPoints() {
-		
-		
+
 		// Sets arrays if they are null
 		if (this.viewPoints == null) {
 			this.viewPoints = new Position2D[numPoints];
 		}
-		if (this.edges == null) {
-			this.edges = new Line3D[numPoints -1];
+		if (this.edges3D == null) {
+			this.edges3D = new Line3D[numPoints - 1];
+			for (int i = 0; i < this.edges3D.length; i++) {
+				this.edges3D[i] = new Line3D();
+			}
 		}
+
 		if (this.truePoints == null) {
 			this.truePoints = new Position3D[numPoints];
 		}
@@ -259,10 +325,10 @@ public class Face extends Shape {
 				coords[j] += this.truePoints[i].getCoord()[j];
 			}
 		}
-		
-		// Create edges
-		for(int i = 1; i < numPoints; i++) {
-			this.edges[i-1] = new Line3D(this.truePoints[i-1], this.truePoints[i]);
+
+		// Create edges3D
+		for (int i = 1; i < numPoints; i++) {
+			this.edges3D[i - 1].setLineToPoints(this.truePoints[i - 1], this.truePoints[i]);
 		}
 
 		setPoly(this.viewPoints, this.numPoints);
@@ -271,7 +337,7 @@ public class Face extends Shape {
 			coords[i] /= this.numPoints;
 		}
 
-		this.center = new Position3D(coords);
+		this.center3D.setCoord(coords);
 	}
 
 	/**
