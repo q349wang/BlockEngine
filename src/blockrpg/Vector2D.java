@@ -15,10 +15,8 @@ public class Vector2D extends Coord2D {
 	 * Custom Vector2D Constructor. Creates a Vector2D of (x,y) using separate
 	 * values with calculated length
 	 * 
-	 * @param x
-	 *            x-Coordinate
-	 * @param y
-	 *            y-Coordinate
+	 * @param x x-Coordinate
+	 * @param y y-Coordinate
 	 */
 	public Vector2D(double x, double y) {
 		super(x, y);
@@ -29,8 +27,7 @@ public class Vector2D extends Coord2D {
 	 * Custom Vector2D Constructor. Creates a Vector2D of (x,y) using array with
 	 * calculated length
 	 * 
-	 * @param coords
-	 *            double array containing x, y information in that order
+	 * @param coords double array containing x, y information in that order
 	 * 
 	 */
 	public Vector2D(double[] coords) {
@@ -40,6 +37,7 @@ public class Vector2D extends Coord2D {
 
 	/**
 	 * Copys another Vector3D
+	 * 
 	 * @param other Other Vector3D to copy
 	 */
 	public Vector2D(Vector2D other) {
@@ -71,7 +69,7 @@ public class Vector2D extends Coord2D {
 	@Override
 	public void setCoord(double coords[]) {
 		super.setCoord(coords);
-		length = Math.sqrt(x * x + y * y);
+		this.length = Double.parseDouble(df.format(Math.sqrt(x * x + y * y)));
 	}
 
 	/**
@@ -84,24 +82,21 @@ public class Vector2D extends Coord2D {
 
 	/**
 	 * 
-	 * @param scalar
-	 *            multiplies vector by double scalar
+	 * @param scalar multiplies vector by double scalar
 	 * 
 	 * @return returns vector multiplied by scalar as Vector2D
 	 */
 	public Vector2D multiply(double scalar) {
 		Vector2D product = new Vector2D();
-		product.x = this.x * scalar;
-		product.y = this.y * scalar;
-		product.length = this.length * scalar;
-
+		product.setX(this.x * scalar);
+		product.setY(this.y * scalar);
+		this.length = Double.parseDouble(df.format(this.length * scalar));
 		return product;
 	}
 
 	/**
 	 * 
-	 * @param other
-	 *            other Vector2D to dot with
+	 * @param other other Vector2D to dot with
 	 * @return returns dot product as double
 	 */
 	public double dot(Vector2D other) {
@@ -110,8 +105,7 @@ public class Vector2D extends Coord2D {
 
 	/**
 	 * 
-	 * @param other
-	 *            other vector for projection
+	 * @param other other vector for projection
 	 * @return returns projection of other vector on this vector as Vector2D
 	 */
 	public Vector2D proj(Vector2D other) {
@@ -129,8 +123,7 @@ public class Vector2D extends Coord2D {
 
 	/**
 	 * 
-	 * @param other
-	 *            other vector for rejection
+	 * @param other other vector for rejection
 	 * @return returns rejection of other vector on this vector as Vector2D
 	 */
 	public Vector2D perp(Vector2D other) {
@@ -140,22 +133,22 @@ public class Vector2D extends Coord2D {
 
 		return rejection;
 	}
-	
+
 	/**
 	 * 
 	 * @param other Other Vector2D to compare
-	 * @return Returns smallest angle between two Vector2Ds (between 0 and pi radians) 
+	 * @return Returns smallest angle between two Vector2Ds (between 0 and pi
+	 *         radians)
 	 */
 	public double getAng(Vector2D other) {
 		double cosVal = this.dot(other) / this.length / other.length;
 		return Math.acos(cosVal);
-		
+
 	}
 
 	/**
 	 * 
-	 * @param ang
-	 *            Angle in radians to turn Vector2D counter clockwise
+	 * @param ang Angle in radians to turn Vector2D counter clockwise
 	 * @return Returns Vector2D rotated ang radians counter clockwise
 	 */
 	public Vector2D rotate(double ang) {
@@ -196,21 +189,20 @@ public class Vector2D extends Coord2D {
 
 	/**
 	 * 
-	 * @param other
-	 *            other vector to check
+	 * @param other other vector to check
 	 * @return Returns true if parallel to other vector
 	 */
 	public boolean isParallel(Vector2D other) {
 		if (!this.isOrigin() && !other.isOrigin()) {
-				if (this.x == 0 && other.x == 0) {
-					return true;
-				}else if (this.y == 0 && other.y == 0) {
-					return true;
-				} else if (this.x == 0 || other.x == 0 || this.y == 0 || other.y == 0){
-					return false;
-				} else {
-					return Math.abs(this.x / other.x - this.y / other.y) < ERROR;
-				}
+			if (this.x == 0 && other.x == 0) {
+				return true;
+			} else if (this.y == 0 && other.y == 0) {
+				return true;
+			} else if (this.x == 0 || other.x == 0 || this.y == 0 || other.y == 0) {
+				return false;
+			} else {
+				return Math.abs(this.x / other.x - this.y / other.y) < ERROR;
+			}
 
 		}
 
@@ -220,12 +212,11 @@ public class Vector2D extends Coord2D {
 
 	/**
 	 * 
-	 * @param other
-	 *            Other vector that is multiple of this vector
+	 * @param other Other vector that is multiple of this vector
 	 * @return Returns scalar multiple
 	 */
 	public double getMultiple(Vector2D other) {
-		if(other.isOrigin()) {
+		if (other.isOrigin()) {
 			return 0;
 		}
 		if (this.isParallel(other)) {

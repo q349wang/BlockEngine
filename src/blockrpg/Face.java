@@ -53,7 +53,7 @@ public class Face {
 
 		setOffset();
 		this.seenFace = new Polygon();
-
+		
 		this.viewPoints = null;
 		this.relPoints = null;
 		this.polyPoints = null;
@@ -246,6 +246,9 @@ public class Face {
 	 * @param num    Number of points
 	 */
 	private void setPoly(Position2D[] points, int num) {
+		
+		this.bound2D = 0;
+		
 		if (this.edges2D == null) {
 			this.edges2D = new Line2D[this.numPoints - 1];
 			for (int i = 0; i < this.edges2D.length; i++) {
@@ -267,7 +270,7 @@ public class Face {
 
 		for (int i = 0; i < num; i++) {
 			this.polyPoints[i].setCoord(new double[] { points[i].getX(), points[i].getY() });
-
+			
 			xCent += points[i].getX();
 			yCent += points[i].getY();
 
@@ -278,12 +281,15 @@ public class Face {
 		for (int i = 1; i < num; i++) {
 			this.edges2D[i - 1].setLineToPoints(this.polyPoints[i - 1], this.polyPoints[i]);
 		}
-
+		
 		xCent /= num;
 		yCent /= num;
 
 		this.center2D.setCoord(new double[] { xCent, yCent });
-
+		
+		for (int i = 0; i < num; i++) {
+			this.bound2D = Math.max(this.bound2D, this.center2D.totDistanceFrom(this.polyPoints[i]));
+		}
 		seenFace.npoints = num;
 		seenFace.xpoints = x;
 		seenFace.ypoints = y;
@@ -302,6 +308,8 @@ public class Face {
 	 */
 	private void setPoints() {
 
+		this.bound3D = 0;
+		
 		// Sets arrays if they are null
 		if (this.viewPoints == null) {
 			this.viewPoints = new Position2D[numPoints];
@@ -327,7 +335,7 @@ public class Face {
 		}
 
 		// Create edges3D
-		for (int i = 1; i < numPoints; i++) {
+		for (int i = 1; i < this.numPoints; i++) {
 			this.edges3D[i - 1].setLineToPoints(this.truePoints[i - 1], this.truePoints[i]);
 		}
 
@@ -338,6 +346,10 @@ public class Face {
 		}
 
 		this.center3D.setCoord(coords);
+		
+		for (int i = 0; i < this.numPoints; i++) {
+			this.bound3D = Math.max(this.bound3D, this.center3D.totDistanceFrom(this.truePoints[i]));
+		}
 	}
 
 	/**

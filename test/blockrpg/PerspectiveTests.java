@@ -233,5 +233,27 @@ class PerspectiveTests {
 		assertEquals(expected1, test.getViewPoint(point1));
 		assertEquals(expected2, test.getViewPoint(point2));
 	}
+	
+	@Test
+	void testGetRealPoint() {
+		Perspective pov = new Perspective();
+		Vector3D dir = new Vector3D(1, 0, 0);
+		Vector3D tilt = new Vector3D(0, 1, 0);
+		Position3D pos = new Position3D(1, 4, -4);
+		pov.setPos(pos.getCoord());
+		pov.setDir(dir.getCoord());
+		pov.setTilt(tilt.getCoord());
+		pov.setZoom(5);
+		
+		Position2D testPoint1 = new Position2D(4, 0);
+		Position2D testPoint2 = new Position2D(0,4);
+		Plane plane = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D(7, 12, 0));
+		
+		Position3D expected1 = new Position3D(7, -4, -4);
+		Position3D expected2 = new Position3D(7, 4, 4);
+		
+		assertEquals(expected1, pov.getRealPoint(testPoint1, plane));
+		assertEquals(expected2, pov.getRealPoint(testPoint2, plane));
+	}
 
 }

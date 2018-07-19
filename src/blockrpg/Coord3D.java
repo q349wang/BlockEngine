@@ -15,6 +15,7 @@ import java.util.Arrays;
 public class Coord3D {
 
 	protected final static double ERROR = 0.000000001;
+	protected final static DecimalFormat df = new DecimalFormat("#.##########");
 
 	protected double x;
 	protected double y;
@@ -37,9 +38,7 @@ public class Coord3D {
 	 * @param z z-Coordinate
 	 */
 	public Coord3D(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.setCoord(new double[] { x, y, z });
 	}
 
 	/**
@@ -49,9 +48,7 @@ public class Coord3D {
 	 * 
 	 */
 	public Coord3D(double[] coords) {
-		this.x = coords[0];
-		this.y = coords[1];
-		this.z = coords[2];
+		this.setCoord(coords);
 	}
 
 	/**
@@ -60,9 +57,7 @@ public class Coord3D {
 	 * @param other Other Coord3D to copy
 	 */
 	public Coord3D(Coord3D other) {
-		this.x = other.x;
-		this.y = other.y;
-		this.z = other.y;
+		this.setCoord(other.getCoord());
 		;
 	}
 
@@ -71,12 +66,9 @@ public class Coord3D {
 	 * @param coords Sets coordinate to given array (in x, y, z form)
 	 */
 	public void setCoord(double[] coords) {
-		DecimalFormat df = new DecimalFormat("#.##########");
 		// Rounds numbers that are very close to nearest billionth
 		for (int i = 0; i < 3; i++) {
-			if (Math.abs(coords[i] - Double.parseDouble(df.format(coords[i]))) < ERROR) {
-				coords[i] = Double.parseDouble(df.format(coords[i]));
-			}
+			coords[i] = Double.parseDouble(df.format(coords[i]));
 		}
 		this.x = coords[0];
 		this.y = coords[1];

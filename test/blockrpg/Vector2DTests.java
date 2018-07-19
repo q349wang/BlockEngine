@@ -47,10 +47,10 @@ class Vector2DTests {
 	@Test
 	void testMultiply() {
 		Vector2D testVec = new Vector2D(3.0 / 3, 4.0 / 3);
-		double expected[] = { 3.0, 4.0 };
+		Vector2D expected = new Vector2D(3.0, 4.0);
 		testVec = testVec.multiply(3.0);
-		assertEquals(5, testVec.getLength());
-		assertTrue(Arrays.equals(expected, testVec.getCoord()));
+		assertTrue(Math.abs(5 - testVec.getLength()) < Coord3D.ERROR);
+		assertEquals(expected, testVec);
 	}
 
 	@Test

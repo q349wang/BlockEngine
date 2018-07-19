@@ -62,6 +62,7 @@ public class Perspective {
 	public Perspective clone() {
 		return new Perspective(this);
 	}
+
 	/**
 	 * Procedure to set the view basis matrix and the inverse of said matrix
 	 */
@@ -281,12 +282,34 @@ public class Perspective {
 			// TODO on point
 		} else {
 			// Needs to translate like this
-			viewX = -posPoint.yDistancefrom(viewPoint3D) / dis * zoom;
-			viewY = posPoint.zDistancefrom(viewPoint3D) / dis * zoom;
+			viewX = -posPoint.yDistancefrom(viewPoint3D) / dis * this.zoom;
+			viewY = posPoint.zDistancefrom(viewPoint3D) / dis * this.zoom;
 		}
 		viewPoint2D.setX(viewX);
 		viewPoint2D.setY(viewY);
 		return viewPoint2D;
+	}
+
+	/**
+	 * Finds a point corresponding to a 2D view point on a plane. Assumes that all
+	 * view points are in front of pov
+	 * 
+	 * @param point 2D view point
+	 * @param plane Plane to look at
+	 * @return
+	 */
+	public Position3D getRealPoint(Position2D point, Plane plane) {
+
+		double xVal = Math.sqrt(this.zoom * this.zoom - point.getY() * point.getY() - point.getX() * point.getX());
+
+		Position3D viewPoint3D = this.toViewBasis(this.pos).add(new Position3D(xVal, -point.getX(), point.getY()));
+		Line3D ray = new Line3D(this.pos, this.toStdBasis(viewPoint3D));
+		Position3D stdPoint = plane.getIntersect(ray);
+		if (stdPoint == null) {
+			return null;
+		} else {
+			return stdPoint;
+		}
 	}
 
 	// Overriding equals() to compare two Perspective objects

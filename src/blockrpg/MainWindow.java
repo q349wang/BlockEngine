@@ -225,10 +225,8 @@ public class MainWindow extends javax.swing.JFrame {
 		Long prevTick = System.nanoTime();
 		Long currTick = System.nanoTime();
 		while (true) {
-		
-			fps.setText("FPS: " + Long.toString(1000000000/(currTick-prevTick)));
-			prevTick = currTick;
-			currTick = System.nanoTime();
+			
+			prevTick = System.nanoTime();
 			
 			Vector3D axis = new Vector3D(0, 1, 1);
 			Vector3D axis2 = new Vector3D(1, 0, 0);
@@ -270,6 +268,9 @@ public class MainWindow extends javax.swing.JFrame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			currTick = System.nanoTime();
+			fps.setText("FPS: " + Long.toString(1000000000/(currTick-prevTick)));
 		}
 	}
 	private Drawer gamePanel;

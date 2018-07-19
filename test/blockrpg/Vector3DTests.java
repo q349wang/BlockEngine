@@ -7,7 +7,6 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 class Vector3DTests {
-	
 
 	@Test
 	void testSetAndGetCoords() {
@@ -48,10 +47,10 @@ class Vector3DTests {
 	@Test
 	void testMultiply() {
 		Vector3D testVec = new Vector3D(1.0 / 3, 2.0 / 3, 2.0 / 3);
-		double expected[] = { 1.0, 2.0, 2.0 };
+		Vector3D expected = new Vector3D(1, 2, 2);
 		testVec = testVec.multiply(3.0);
-		assertEquals(3, testVec.getLength());
-		assertTrue(Arrays.equals(expected, testVec.getCoord()));
+		assertTrue(Math.abs(3 - testVec.getLength()) < Coord3D.ERROR);
+		assertEquals(expected, testVec);
 	}
 
 	@Test
@@ -179,12 +178,12 @@ class Vector3DTests {
 
 	@Test
 	void testGetAng() {
-		Vector3D vec1 = new Vector3D(2,-4,-1);
-		Vector3D vec2 = new Vector3D(0,5,2);
+		Vector3D vec1 = new Vector3D(2, -4, -1);
+		Vector3D vec2 = new Vector3D(0, 5, 2);
 		assertEquals(2.6714087557718225, vec1.getAng(vec2), Vector3D.ERROR);
 		assertEquals(2.6714087557718225, vec2.getAng(vec1), Vector3D.ERROR);
 	}
-	
+
 	@Test
 	void testRotateX() {
 		Vector3D vec1 = new Vector3D(1, 0, 3);
@@ -237,7 +236,7 @@ class Vector3DTests {
 		assertEquals(expected, vec2);
 		assertFalse(expected == vec2);
 	}
-	
+
 	@Test
 	void testCloneConstructor() {
 		Vector3D vec1 = new Vector3D(1, 2, 2);
@@ -289,7 +288,7 @@ class Vector3DTests {
 
 	@Test
 	void testGetMultipleNotParallel() {
-		Vector3D vec1 = new Vector3D(0,1,0);
+		Vector3D vec1 = new Vector3D(0, 1, 0);
 		Vector3D vec2 = new Vector3D(1, 0, 0);
 
 		assertThrows(IllegalArgumentException.class, () -> vec1.getMultiple(vec2));
@@ -297,10 +296,10 @@ class Vector3DTests {
 
 	@Test
 	void testGetMultipleParallel() {
-		Vector3D vec1 = new Vector3D(3,0,0);
+		Vector3D vec1 = new Vector3D(3, 0, 0);
 		Vector3D vec2 = new Vector3D(-6, 0, 0);
 
 		assertEquals(-2, vec1.getMultiple(vec2));
 	}
-	
+
 }

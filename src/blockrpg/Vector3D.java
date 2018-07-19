@@ -16,12 +16,9 @@ public class Vector3D extends Coord3D {
 	 * Custom Vector3D Constructor. Creates a Vector3D of (x,y,z) using separate
 	 * values with calculated length
 	 * 
-	 * @param x
-	 *            x-Coordinate
-	 * @param y
-	 *            y-Coordinate
-	 * @param z
-	 *            z-Coordinate
+	 * @param x x-Coordinate
+	 * @param y y-Coordinate
+	 * @param z z-Coordinate
 	 */
 	public Vector3D(double x, double y, double z) {
 		super(x, y, z);
@@ -32,17 +29,17 @@ public class Vector3D extends Coord3D {
 	 * Custom Vector3D Constructor. Creates a Vector3D of (x,y,z) using array with
 	 * calculated length
 	 * 
-	 * @param coords
-	 *            double array containing x, y, z information in that order
+	 * @param coords double array containing x, y, z information in that order
 	 * 
 	 */
 	public Vector3D(double[] coords) {
 		super(coords);
 		length = Math.sqrt(x * x + y * y + z * z);
 	}
-	
+
 	/**
 	 * Copys another Vector3D
+	 * 
 	 * @param other Other Vector3D to copy
 	 */
 	public Vector3D(Vector3D other) {
@@ -76,7 +73,7 @@ public class Vector3D extends Coord3D {
 	@Override
 	public void setCoord(double coords[]) {
 		super.setCoord(coords);
-		length = Math.sqrt(x * x + y * y + z * z);
+		this.length = Double.parseDouble(df.format(Math.sqrt(x * x + y * y + z * z)));
 	}
 
 	/**
@@ -101,8 +98,7 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
-	 * @param scalar
-	 *            multiplies vector by double scalar
+	 * @param scalar multiplies vector by double scalar
 	 * 
 	 * @return returns vector multiplied by scalar as Vector3D
 	 */
@@ -111,15 +107,14 @@ public class Vector3D extends Coord3D {
 		product.setX(this.x * scalar);
 		product.setY(this.y * scalar);
 		product.setZ(this.z * scalar);
-		product.length = this.length * scalar;
+		this.length = Double.parseDouble(df.format(this.length * scalar));
 
 		return product;
 	}
 
 	/**
 	 * 
-	 * @param other
-	 *            other Vector3D to dot with
+	 * @param other other Vector3D to dot with
 	 * @return returns dot product as double
 	 */
 	public double dot(Vector3D other) {
@@ -133,8 +128,7 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
-	 * @param other
-	 *            other Vector3D to cross with
+	 * @param other other Vector3D to cross with
 	 * @return returns cross product as Vector3D
 	 */
 	public Vector3D cross(Vector3D other) {
@@ -145,8 +139,7 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
-	 * @param other
-	 *            other vector for projection
+	 * @param other other vector for projection
 	 * @return returns projection of other vector on this vector as Vector3D
 	 */
 	public Vector3D proj(Vector3D other) {
@@ -164,8 +157,7 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
-	 * @param other
-	 *            other vector for rejection
+	 * @param other other vector for rejection
 	 * @return returns rejection of other vector on this vector as Vector3D
 	 */
 	public Vector3D perp(Vector3D other) {
@@ -179,18 +171,18 @@ public class Vector3D extends Coord3D {
 	/**
 	 * 
 	 * @param other Other Vector3D to compare
-	 * @return Returns smallest angle between two Vector2Ds (between 0 and pi radians) 
+	 * @return Returns smallest angle between two Vector2Ds (between 0 and pi
+	 *         radians)
 	 */
 	public double getAng(Vector3D other) {
 		double cosVal = this.dot(other) / this.length / other.length;
 		return Math.acos(cosVal);
-		
+
 	}
-	
+
 	/**
 	 * 
-	 * @param ang
-	 *            angle in radians
+	 * @param ang angle in radians
 	 * @return Returns Vector3D rotated ang radians counter clockwise about the X
 	 *         axis
 	 */
@@ -203,8 +195,7 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
-	 * @param ang
-	 *            angle in radians
+	 * @param ang angle in radians
 	 * @return Returns Vector3D rotated ang radians counter clockwise about the Y
 	 *         axis
 	 */
@@ -217,8 +208,7 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
-	 * @param ang
-	 *            angle in radians
+	 * @param ang angle in radians
 	 * @return Returns Vector3D rotated ang radians counter clockwise about the Y
 	 *         axis
 	 */
@@ -231,10 +221,8 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
-	 * @param ang
-	 *            angle in radians
-	 * @param axis
-	 *            axis to rotate about
+	 * @param ang  angle in radians
+	 * @param axis axis to rotate about
 	 * @return Returns Vector3D rotated ang radians counter clockwise about the
 	 *         specified axis
 	 */
@@ -261,36 +249,36 @@ public class Vector3D extends Coord3D {
 		Vector3D clone = new Vector3D(super.clone().getCoord());
 		return clone;
 	}
-	
+
 	/**
 	 * 
 	 * @param other other vector to check
 	 * @return Returns true if parallel to other vector
 	 */
 	public boolean isParallel(Vector3D other) {
-		if(!this.isOrigin() && !other.isOrigin()) {
+		if (!this.isOrigin() && !other.isOrigin()) {
 			Vector3D origin = new Vector3D();
 			return this.cross(other).equals(origin);
 		}
 
 		return false;
 	}
-	
+
 	/**
 	 * 
 	 * @param other Other vector that is multiple of this vector
 	 * @return
 	 */
 	public double getMultiple(Vector3D other) {
-		if(other.isOrigin()) {
+		if (other.isOrigin()) {
 			return 0;
 		}
-		if(this.isParallel(other)) {
+		if (this.isParallel(other)) {
 			double thisCoords[] = this.getCoord();
 			double otherCoords[] = other.getCoord();
-			for(int i = 0; i<3;i++) {
-				if(thisCoords[i] != 0) {
-					return otherCoords[i]/thisCoords[i];
+			for (int i = 0; i < 3; i++) {
+				if (thisCoords[i] != 0) {
+					return otherCoords[i] / thisCoords[i];
 				}
 			}
 		} else {

@@ -6,6 +6,7 @@ import java.util.Arrays;
 public class Coord2D {
 
 	protected final static double ERROR = Coord3D.ERROR;
+	protected final static DecimalFormat df = Coord3D.df;
 
 	protected double x;
 	protected double y;
@@ -21,55 +22,45 @@ public class Coord2D {
 	/**
 	 * Custom Coord2D Constructor. Creates a Coord3D at (x,y)
 	 * 
-	 * @param x
-	 *            x-Coordinate
-	 * @param y
-	 *            y-Coordinate
+	 * @param x x-Coordinate
+	 * @param y y-Coordinate
 	 */
 	public Coord2D(double x, double y) {
-		this.x = x;
-		this.y = y;
+		this.setCoord(new double[] { x, y });
 	}
 
 	/**
 	 * Custom Coord2D Constructor. Creates a Coord2D at (x,y)
 	 * 
-	 * @param coords
-	 *            double array containing x, y information in that order
+	 * @param coords double array containing x, y information in that order
 	 * 
 	 */
 	public Coord2D(double[] coords) {
-		this.x = coords[0];
-		this.y = coords[1];
+		this.setCoord(coords);
 	}
-	
+
 	/**
 	 * Copys another Coord2D
+	 * 
 	 * @param other Other Coord2D to copy
 	 */
 	public Coord2D(Coord2D other) {
-		this.x = other.x;
-		this.y= other.y;
+		this.setCoord(other.getCoord());
 	}
-
 
 	/**
 	 * 
-	 * @param coords
-	 *            Sets coordinate to given array (in x, y form)
+	 * @param coords Sets coordinate to given array (in x, y form)
 	 */
 	public void setCoord(double[] coords) {
-		DecimalFormat df = new DecimalFormat("#.##########");
 		// Rounds numbers that are very close to nearest billionth
 		for (int i = 0; i < 2; i++) {
-			if (Math.abs(coords[i] - Double.parseDouble(df.format(coords[i]))) < ERROR) {
-				coords[i] = Double.parseDouble(df.format(coords[i]));
-			}
+			coords[i] = Double.parseDouble(df.format(coords[i]));
 		}
 		this.x = coords[0];
 		this.y = coords[1];
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns X
@@ -77,7 +68,7 @@ public class Coord2D {
 	public double getX() {
 		return this.x;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns Y
@@ -88,8 +79,7 @@ public class Coord2D {
 
 	/**
 	 * 
-	 * @param x
-	 *            Adds inputed value to the X coordinate
+	 * @param x Adds inputed value to the X coordinate
 	 */
 	public void addX(double x) {
 		double[] coords = { this.x + x, this.y };
@@ -98,8 +88,7 @@ public class Coord2D {
 
 	/**
 	 * 
-	 * @param y
-	 *            Adds inputed value to the Y coordinate
+	 * @param y Adds inputed value to the Y coordinate
 	 */
 	public void addY(double y) {
 		double[] coords = { this.x, this.y + y };
@@ -108,8 +97,7 @@ public class Coord2D {
 
 	/**
 	 * 
-	 * @param x
-	 *            Sets X coordinate to the inputed value
+	 * @param x Sets X coordinate to the inputed value
 	 */
 	public void setX(double x) {
 		double[] coords = { x, this.y };
@@ -118,8 +106,7 @@ public class Coord2D {
 
 	/**
 	 * 
-	 * @param y
-	 *            Sets Y coordinate to the inputed value
+	 * @param y Sets Y coordinate to the inputed value
 	 */
 	public void setY(double y) {
 		double[] coords = { this.x, y };
@@ -137,38 +124,34 @@ public class Coord2D {
 
 		return coords;
 	}
-	
 
 	/**
 	 * 
-	 * @param other
-	 *            Other Coord2D to add
+	 * @param other Other Coord2D to add
 	 * @return returns Coord2D with other added to it
 	 */
 	public Coord2D add(Coord2D other) {
 		Coord2D sum = new Coord2D();
-		double coords[] = { this.x + other.x, this.y + other.y};
+		double coords[] = { this.x + other.x, this.y + other.y };
 		sum.setCoord(coords);
 		return sum;
 	}
 
 	/**
 	 * 
-	 * @param other
-	 *            Other Coord2D to subtract
+	 * @param other Other Coord2D to subtract
 	 * @return returns Coord2D with other subtracted from it
 	 */
 	public Coord2D subtract(Coord2D other) {
 		Coord2D diff = new Coord2D();
-		double coords[] = { this.x - other.x, this.y - other.y};
+		double coords[] = { this.x - other.x, this.y - other.y };
 		diff.setCoord(coords);
 		return diff;
 	}
-	
+
 	/**
 	 * 
-	 * @param ang
-	 *            Angle in radians to turn Coord2D counter clockwise
+	 * @param ang Angle in radians to turn Coord2D counter clockwise
 	 * @return Returns Coord2D rotated ang radians counter clockwise
 	 */
 	public Coord2D rotate(double ang) {
@@ -179,7 +162,7 @@ public class Coord2D {
 
 		return rotation;
 	}
-	
+
 	/**
 	 * @return Returns copy of this object
 	 */
@@ -188,38 +171,37 @@ public class Coord2D {
 		Coord2D clone = new Coord2D(this.getCoord());
 		return clone;
 	}
-	
-    // Overriding equals() to compare two Coord2D objects
-    @Override
-    public boolean equals(Object other) {
 
-        if (other == this) {
-            return true;
-        }
+	// Overriding equals() to compare two Coord2D objects
+	@Override
+	public boolean equals(Object other) {
 
-        if (!(other instanceof Coord2D)) {
-            return false;
-        }
+		if (other == this) {
+			return true;
+		}
 
-        Coord2D coord = (Coord2D) other;
+		if (!(other instanceof Coord2D)) {
+			return false;
+		}
+
+		Coord2D coord = (Coord2D) other;
 		boolean equals = true;
-		for(int i = 0;i <2;i++) {
-			if(Math.abs(this.getCoord()[i]- coord.getCoord()[i]) > ERROR) {
+		for (int i = 0; i < 2; i++) {
+			if (Math.abs(this.getCoord()[i] - coord.getCoord()[i]) > ERROR) {
 				equals = false;
 				break;
 			}
 		}
 		// Compare the data members and return accordingly
 		return equals;
-    }
-    
-	
+	}
+
 	/**
 	 * 
 	 * @return Returns true if origin
 	 */
 	public boolean isOrigin() {
-		double origin[] = {0.0,0.0};
+		double origin[] = { 0.0, 0.0 };
 		return Arrays.equals(this.getCoord(), origin);
 	}
 }
