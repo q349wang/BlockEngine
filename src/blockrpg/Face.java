@@ -32,7 +32,6 @@ public class Face {
 
 	private Position2D[] viewPoints;
 	private Position2D[] relPoints;
-	private Position2D[] polyPoints;
 	private Position3D[] truePoints;
 
 	private Line2D[] edges2D;
@@ -53,10 +52,9 @@ public class Face {
 
 		setOffset();
 		this.seenFace = new Polygon();
-		
+
 		this.viewPoints = null;
 		this.relPoints = null;
-		this.polyPoints = null;
 		this.truePoints = null;
 
 		this.edges2D = null;
@@ -91,7 +89,6 @@ public class Face {
 		for (int i = 0; i < numPoints; i++) {
 			this.relPoints[i] = relPoints[i].clone();
 		}
-		this.polyPoints = null;
 
 		this.facePlane = facePlane.clone();
 		this.numPoints = numPoints;
@@ -124,7 +121,6 @@ public class Face {
 		for (int i = 0; i < other.numPoints; i++) {
 			this.relPoints[i] = other.relPoints[i].clone();
 		}
-		this.polyPoints = null;
 
 		this.facePlane = other.facePlane.clone();
 		this.numPoints = other.numPoints;
@@ -215,6 +211,30 @@ public class Face {
 
 	/**
 	 * 
+	 * @return Returns center2D of Face
+	 */
+	public Position2D getCenter2D() {
+		return this.center2D;
+	}
+	
+	/**
+	 * 
+	 * @return Returns 2D boundary
+	 */
+	public double getBound2D() {
+		return this.bound2D;
+	}
+	
+	/**
+	 * 
+	 * @return Returns 3D boundary
+	 */
+	public double getBound3D() {
+		return this.bound3D;
+	}
+
+	/**
+	 * 
 	 * @return Returns plane of Face
 	 */
 	public Plane getPlane() {
@@ -240,26 +260,20 @@ public class Face {
 	}
 
 	/**
-	 * Sets polygon's points with consideration of x and y offset and 2D center and edges
+	 * Sets polygon's points with consideration of x and y offset and 2D center and
+	 * edges
 	 * 
 	 * @param points Point position array
 	 * @param num    Number of points
 	 */
 	private void setPoly(Position2D[] points, int num) {
-		
+
 		this.bound2D = 0;
-		
+
 		if (this.edges2D == null) {
 			this.edges2D = new Line2D[this.numPoints - 1];
 			for (int i = 0; i < this.edges2D.length; i++) {
 				this.edges2D[i] = new Line2D();
-			}
-		}
-
-		if (this.polyPoints == null) {
-			this.polyPoints = new Position2D[this.numPoints];
-			for (int i = 0; i < this.polyPoints.length; i++) {
-				this.polyPoints[i] = new Position2D();
 			}
 		}
 
@@ -269,8 +283,7 @@ public class Face {
 		int[] y = new int[num];
 
 		for (int i = 0; i < num; i++) {
-			this.polyPoints[i].setCoord(new double[] { points[i].getX(), points[i].getY() });
-			
+
 			xCent += points[i].getX();
 			yCent += points[i].getY();
 
@@ -279,16 +292,16 @@ public class Face {
 		}
 
 		for (int i = 1; i < num; i++) {
-			this.edges2D[i - 1].setLineToPoints(this.polyPoints[i - 1], this.polyPoints[i]);
+			this.edges2D[i - 1].setLineToPoints(points[i - 1], points[i]);
 		}
-		
+
 		xCent /= num;
 		yCent /= num;
 
 		this.center2D.setCoord(new double[] { xCent, yCent });
-		
+
 		for (int i = 0; i < num; i++) {
-			this.bound2D = Math.max(this.bound2D, this.center2D.totDistanceFrom(this.polyPoints[i]));
+			this.bound2D = Math.max(this.bound2D, this.center2D.totDistanceFrom(points[i]));
 		}
 		seenFace.npoints = num;
 		seenFace.xpoints = x;
@@ -309,7 +322,7 @@ public class Face {
 	private void setPoints() {
 
 		this.bound3D = 0;
-		
+
 		// Sets arrays if they are null
 		if (this.viewPoints == null) {
 			this.viewPoints = new Position2D[numPoints];
@@ -346,7 +359,7 @@ public class Face {
 		}
 
 		this.center3D.setCoord(coords);
-		
+
 		for (int i = 0; i < this.numPoints; i++) {
 			this.bound3D = Math.max(this.bound3D, this.center3D.totDistanceFrom(this.truePoints[i]));
 		}
@@ -385,6 +398,26 @@ public class Face {
 		face.facePlane = face.facePlane.rotatePlane(ang, axis);
 		face.setPoints();
 		return face;
+	}
+
+	/**
+	 * Checks if the 2D visual face may intersect with another
+	 * 
+	 * @param other Other face to check
+	 * @return Returns true if faces may intersect
+	 */
+	public boolean mayIntersect2D(Face other) {
+		return Math.abs(this.center2D.totDistanceFrom(other.center2D) - this.bound2D - other.bound2D) < Coord3D.ERROR;
+	}
+
+	/**
+	 * Checks if the 3D face may intersect with another
+	 * 
+	 * @param other Other face to check
+	 * @return Returns true if faces may intersect
+	 */
+	public boolean mayIntersect3D(Face other) {
+		return Math.abs(this.center3D.totDistanceFrom(other.center3D) - this.bound3D - other.bound3D) < Coord3D.ERROR;
 	}
 
 }

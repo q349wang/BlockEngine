@@ -205,6 +205,14 @@ public class Plane {
 		double xScale = xAxis.proj(dirOfPoint).getLength();
 		double yScale = yAxis.proj(dirOfPoint).getLength();
 
+		if(xAxis.dot(dirOfPoint) < 0) {
+			xScale = -xScale;
+		}
+		
+		if(yAxis.dot(dirOfPoint) < 0) {
+			yScale = -yScale;
+		}
+		
 		point3D.setCoord(this.vecX.multiply(xScale).add(this.vecY.multiply(yScale)).getCoord());
 		point3D = point3D.add(this.pos);
 		return point3D;

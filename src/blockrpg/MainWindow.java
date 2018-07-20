@@ -263,7 +263,7 @@ public class MainWindow extends javax.swing.JFrame {
 			gamePanel.addShape(face2);
 			gamePanel.repaint();
 			try {
-				Thread.sleep(1);
+				Thread.sleep(0);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

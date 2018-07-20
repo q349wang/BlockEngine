@@ -10,13 +10,13 @@ public class Perspective {
 	private double zoom;
 
 	/**
-	 * Default constructor for a perspective (Calls default constructors for
-	 * position, direciton and tilt
+	 * Default constructor for a perspective (Calls constructors for
+	 * position, direciton and tilt for std basis)
 	 */
 	public Perspective() {
 		pos = new Position3D();
-		dir = new Vector3D();
-		tilt = new Vector3D();
+		dir = new Vector3D(1,0,0);
+		tilt = new Vector3D(0,1,0);
 		setZoom(1);
 		viewBasis = new double[3][3];
 		viewBasisInverse = new double[3][3];
