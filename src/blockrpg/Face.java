@@ -319,7 +319,7 @@ public class Face {
 	/**
 	 * Sets true, and view point arrays for face
 	 */
-	private void setPoints() {
+	public void setPoints() {
 
 		this.bound3D = 0;
 
@@ -407,7 +407,7 @@ public class Face {
 	 * @return Returns true if faces may intersect
 	 */
 	public boolean mayIntersect2D(Face other) {
-		return Math.abs(this.center2D.totDistanceFrom(other.center2D) - this.bound2D - other.bound2D) < Coord3D.ERROR;
+		return this.center2D.totDistanceFrom(other.center2D) - this.bound2D - other.bound2D <= 0;
 	}
 
 	/**
@@ -417,7 +417,7 @@ public class Face {
 	 * @return Returns true if faces may intersect
 	 */
 	public boolean mayIntersect3D(Face other) {
-		return Math.abs(this.center3D.totDistanceFrom(other.center3D) - this.bound3D - other.bound3D) < Coord3D.ERROR;
+		return this.center3D.totDistanceFrom(other.center3D) - this.bound3D - other.bound3D <= 0;
 	}
 
 }
