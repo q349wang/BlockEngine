@@ -90,7 +90,7 @@ public class Vector2D extends Coord2D {
 		Vector2D product = new Vector2D();
 		product.setX(this.x * scalar);
 		product.setY(this.y * scalar);
-		this.length = Double.parseDouble(df.format(this.length * scalar));
+		this.length =this.length * scalar;
 		return product;
 	}
 

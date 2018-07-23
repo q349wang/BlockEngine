@@ -107,7 +107,7 @@ public class Vector3D extends Coord3D {
 		product.setX(this.x * scalar);
 		product.setY(this.y * scalar);
 		product.setZ(this.z * scalar);
-		this.length = Double.parseDouble(df.format(this.length * scalar));
+		this.length = this.length * scalar;
 
 		return product;
 	}

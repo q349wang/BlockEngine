@@ -8,6 +8,7 @@ package blockrpg;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,7 +21,7 @@ import org.xml.sax.SAXException;
  *
  * @author L
  */
-public class Face {
+public class Face implements Comparable<Face> {
 
 	public static double xOffset;
 	public static double yOffset;
@@ -45,6 +46,12 @@ public class Face {
 
 	private Perspective pov;
 
+	private boolean visible;
+	private boolean forceTransparent;
+	private boolean checkVisible;
+
+	private Color col;
+
 	/**
 	 * Default constructor for Face
 	 */
@@ -67,6 +74,12 @@ public class Face {
 		this.center2D = new Position2D();
 
 		this.pov = new Perspective();
+
+		this.visible = true;
+		this.setForceTransparent(false);
+		this.checkVisible = true;
+
+		this.col = new Color(0, 0, 0);
 	}
 
 	/**
@@ -101,6 +114,55 @@ public class Face {
 
 		this.pov = pov; // You don't clone perspective
 
+		this.visible = true;
+		this.setForceTransparent(false);
+		this.checkVisible = true;
+
+		this.col = new Color(0, 0, 0);
+
+		setPoints();
+
+	}
+
+	/**
+	 * Custom constructor for Face
+	 * 
+	 * @param relPoints Relative points of face on plane
+	 * @param numPoints Number of points
+	 * @param facePlane Plane that face lies on
+	 * @param pov       POV used
+	 * @param col       Color
+	 */
+	public Face(Position2D[] relPoints, int numPoints, Plane facePlane, Perspective pov, Color col) {
+
+		setOffset();
+		this.seenFace = new Polygon();
+
+		this.viewPoints = null;
+		this.truePoints = null;
+		this.relPoints = new Position2D[numPoints];
+
+		for (int i = 0; i < numPoints; i++) {
+			this.relPoints[i] = relPoints[i].clone();
+		}
+
+		this.facePlane = facePlane.clone();
+		this.numPoints = numPoints;
+
+		this.edges2D = null;
+		this.edges3D = null;
+
+		this.center3D = new Position3D();
+		this.center2D = new Position2D();
+
+		this.pov = pov; // You don't clone perspective
+
+		this.visible = true;
+		this.setForceTransparent(false);
+		this.checkVisible = true;
+
+		this.col = new Color(col.getRGB());
+
 		setPoints();
 
 	}
@@ -132,6 +194,12 @@ public class Face {
 		this.center2D = new Position2D();
 
 		this.pov = other.pov; // You don't clone perspective
+
+		this.visible = true;
+		this.setForceTransparent(false);
+		this.checkVisible = true;
+
+		this.col = new Color(other.col.getRGB());
 
 		setPoints();
 	}
@@ -216,7 +284,7 @@ public class Face {
 	public Position2D getCenter2D() {
 		return this.center2D;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns 2D boundary
@@ -224,7 +292,7 @@ public class Face {
 	public double getBound2D() {
 		return this.bound2D;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns 3D boundary
@@ -320,6 +388,8 @@ public class Face {
 	 * Sets true, and view point arrays for face
 	 */
 	public void setPoints() {
+
+		this.checkVisible = true;
 
 		this.bound3D = 0;
 
@@ -418,6 +488,115 @@ public class Face {
 	 */
 	public boolean mayIntersect3D(Face other) {
 		return this.center3D.totDistanceFrom(other.center3D) - this.bound3D - other.bound3D <= 0;
+	}
+
+	/**
+	 * 
+	 * @return Returns true if face is forced to be transparent
+	 */
+	public boolean isForceTransparent() {
+		return forceTransparent;
+	}
+
+	/**
+	 * 
+	 * @return Returns true if face is visible
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+
+	/**
+	 * 
+	 * @return Returns true if face needs to be checked for visibility
+	 */
+	public boolean checkVisible() {
+		return checkVisible;
+	}
+
+	/**
+	 * 
+	 * @param forceTransparent Sets forceTransparent
+	 */
+	public void setForceTransparent(boolean forceTransparent) {
+		this.forceTransparent = forceTransparent;
+	}
+
+	/**
+	 * 
+	 * @param visible Sets visible
+	 */
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
+	/**
+	 * 
+	 * @param checkVisible Sets check for visible
+	 */
+	public void setCheckVisible(boolean checkVisible) {
+		this.checkVisible = checkVisible;
+	}
+
+	@Override
+	public int compareTo(Face other) {
+		ArrayList<Position2D> intersects = new ArrayList<Position2D>();
+		for (int i = 0; i < this.edges2D.length; i++) {
+			for (int j = 0; j < other.edges2D.length; j++) {
+				Position2D poi = this.edges2D[i].intersects(other.edges2D[j]);
+				if (poi != null) { // Test for parallel
+					// Test for bounds
+					Position2D thisBound = poi.subtract(this.viewPoints[i]);
+					if (poi.toVec().dot(thisBound.toVec()) > 0 && poi.toVec().getLength() <= this.viewPoints[i + 1]
+							.subtract(this.viewPoints[i]).toVec().getLength()) {
+						Position2D otherBound = poi.subtract(other.viewPoints[j]);
+						if (poi.toVec().dot(otherBound.toVec()) > 0
+								&& poi.toVec().getLength() <= other.viewPoints[j + 1].subtract(other.viewPoints[j])
+										.toVec().getLength()) {
+
+							intersects.add(poi);
+						}
+					}
+				}
+			}
+		}
+
+		if (intersects.size() == 0) {
+			return 0;
+		}
+
+		Position3D thisCent = new Position3D();
+		Position3D otherCent = new Position3D();
+
+		for (int i = 0; i < intersects.size(); i++) {
+			Position3D thisPoint = this.pov.getRealPoint(intersects.get(i), this.facePlane);
+			Position3D otherPoint = other.pov.getRealPoint(intersects.get(i), other.facePlane);
+
+			thisCent.add(thisPoint);
+			otherCent.add(otherPoint);
+		}
+
+		thisCent = thisCent.toVec().multiply(1.0 / intersects.size()).toPos();
+		otherCent = otherCent.toVec().multiply(1.0 / intersects.size()).toPos();
+
+		double thisDis = this.pov.getPos().totDistanceFrom(thisCent);
+		double otherDis = other.pov.getPos().totDistanceFrom(otherCent);
+
+		if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
+			return 0;
+		} else if (thisDis > otherDis) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+
+	public Color getCol() {
+		return col;
+	}
+
+	public void setCol(Color col) {
+		this.col = new Color(col.getRGB());
 	}
 
 }

@@ -2,6 +2,8 @@ package blockrpg;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.awt.Color;
+
 import org.junit.jupiter.api.Test;
 
 class FaceTests {
@@ -144,6 +146,23 @@ class FaceTests {
 		Face test1 = new Face(points1, points1.length, plane1, pov);
 		
 		assertTrue(test1.mayIntersect3D(test1));
+	}
+	
+	@Test
+	void testCompareTypical() {
+		Color col1 = new Color(45, 84, 38);
+		Color col2 = new Color(72, 41, 124);
+		Perspective pov = new Perspective(new double[] {-8000,0,0}, new double[] {1, 0,0}, new double[] {0,-1,0});
+		Position2D[] points1 = {new Position2D(-1000,-500), new Position2D(-1000, 500), new Position2D(750, 500), new Position2D(750, -500)};
+		Position2D[] points2 = {new Position2D(-750,-500), new Position2D(-750, 500), new Position2D(1000, 500), new Position2D(1000, -500)};
+		Plane plane1 = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D(10,0,0));
+		Plane plane2 = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D(0,0,0));
+		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
+		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
+		
+		assertEquals(1, face2.compareTo(face1));
+		assertEquals(-1, face1.compareTo(face2));
+		assertEquals(0, face2.compareTo(face2));
 	}
 
 

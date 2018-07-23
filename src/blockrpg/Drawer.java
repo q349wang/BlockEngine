@@ -2,7 +2,8 @@ package blockrpg;
 
 import javax.swing.JPanel;
 import java.awt.*;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Drawer extends JPanel {
 
@@ -11,10 +12,10 @@ public class Drawer extends JPanel {
 	 */
 	private static final long serialVersionUID = -2810583553938140766L;
 
-	public Vector<Face> faces;
+	public ArrayList<Face> faces;
 
 	public Drawer() {
-		faces = new Vector<Face>();
+		faces = new ArrayList<Face>();
 	}
 
 	public void addShape(Face face) {
@@ -33,25 +34,12 @@ public class Drawer extends JPanel {
 		g2.setRenderingHints(rh);
 
 		if (faces.size() != 0) {
-			g2.setColor(new Color(45, 84, 38));
-			g2.fillPolygon(faces.get(0).getPoly());
-
-			g2.setColor(new Color(72, 41, 124));
-			g2.fillPolygon(faces.get(1).getPoly());
-
-			g2.setColor(Color.YELLOW);
-			g2.fillArc(
-					(int) (faces.get(0).getPOV().getViewPoint(faces.get(0).getCenter3D()).getCoord()[0]
-							+ Face.xOffset),
-					(int) (-faces.get(0).getPOV().getViewPoint(faces.get(0).getCenter3D()).getCoord()[1]
-							+ Face.yOffset),
-					20, 20, 0, 360);
-			g2.fillArc(
-					(int) (faces.get(1).getPOV().getViewPoint(faces.get(1).getCenter3D()).getCoord()[0]
-							+ Face.xOffset),
-					(int) (-faces.get(1).getPOV().getViewPoint(faces.get(1).getCenter3D()).getCoord()[1]
-							+ Face.yOffset),
-					20, 20, 0, 360);
+			ArrayList<Face> sortedFace = new ArrayList<Face>(faces);
+			Collections.sort(sortedFace);
+			for (Face face : sortedFace) {
+				g2.setColor(face.getCol());
+				g2.fillPolygon(face.getPoly());
+			}
 		}
 
 	}

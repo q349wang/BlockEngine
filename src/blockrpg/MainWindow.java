@@ -197,13 +197,16 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void testFunc(){
-		Perspective pov = new Perspective(new double[] {-8000,0,8000}, new double[] {1, 0,-1}, new double[] {0,-1,0});
-		Position2D[] points1 = {new Position2D(-1000,-500), new Position2D(-1000, 500), new Position2D(0, 500), new Position2D(0, -500)};
-		Position2D[] points2 = {new Position2D(0,-500), new Position2D(0, 500), new Position2D(1000, 500), new Position2D(1000, -500)};
-		Plane plane = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D());
+		Color col1 = new Color(45, 84, 38);
+		Color col2 = new Color(72, 41, 124);
+		Perspective pov = new Perspective(new double[] {-8000,0,0}, new double[] {1, 0,0}, new double[] {0,1,0});
 		pov.setZoom(zoom);
-		Face face1 = new Face(points1, points1.length, plane, pov);
-		Face face2 = new Face(points2, points2.length, plane, pov);
+		Position2D[] points1 = {new Position2D(-1000,-500), new Position2D(-1000, 500), new Position2D(750, 500), new Position2D(750, -500)};
+		Position2D[] points2 = {new Position2D(-750,-500), new Position2D(-750, 500), new Position2D(1000, 500), new Position2D(1000, -500)};
+		Plane plane1 = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D(10,0,0));
+		Plane plane2 = new Plane(new Vector3D(0,1,0), new Vector3D(0,0,1), new Position3D(0,0,0));
+		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
+		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
 		gamePanel.addShape(face1);
 		gamePanel.addShape(face2);
 		gamePanel.repaint();
@@ -230,10 +233,10 @@ public class MainWindow extends javax.swing.JFrame {
 			
 			Vector3D axis = new Vector3D(0, 1, 1);
 			Vector3D axis2 = new Vector3D(1, 0, 0);
-			face1 = face1.rotate(0.01, axis);
-			face2 = face2.rotate(0.01, axis);
+			//face1 = face1.rotate(0.01, axis);
+			//face2 = face2.rotate(0.01, axis);
 			
-			face1 = face1.rotate(0.01, axis2);
+			//face1 = face1.rotate(0.01, axis2);
 
 			
 			if (face1.getPlane().getPos().getCoord()[0] <= -2000) {
@@ -251,19 +254,19 @@ public class MainWindow extends javax.swing.JFrame {
 			} else if (face1.getPlane().getPos().getCoord()[2] >= 1000){
 				zSign = -1;
 			}
-			face1.addX(xSign * 10);
-			//face2.addX(xSign * 10);
+			//face1.addX(xSign * 10);
+			//face2.addX(-xSign * 10);
 			//face1.addY(ySign * 10);
-			face2.addY(ySign * 10);
-			face1.addZ(zSign * 10);
+			//face2.addY(ySign * 10);
+			//face1.addZ(zSign * 10);
 			//face2.addZ(zSign * 10);
 			
-			gamePanel.faces.clear();
-			gamePanel.addShape(face1);
-			gamePanel.addShape(face2);
+			//gamePanel.faces.clear();
+			//gamePanel.addShape(face1);
+			//gamePanel.addShape(face2);
 			gamePanel.repaint();
 			try {
-				Thread.sleep(0);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
