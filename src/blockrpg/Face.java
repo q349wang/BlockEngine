@@ -546,13 +546,13 @@ public class Face implements Comparable<Face> {
 				Position2D poi = this.edges2D[i].intersects(other.edges2D[j]);
 				if (poi != null) { // Test for parallel
 					// Test for bounds
-					Position2D thisBound = poi.subtract(this.viewPoints[i]);
-					if (poi.toVec().dot(thisBound.toVec()) > 0 && poi.toVec().getLength() <= this.viewPoints[i + 1]
-							.subtract(this.viewPoints[i]).toVec().getLength()) {
-						Position2D otherBound = poi.subtract(other.viewPoints[j]);
-						if (poi.toVec().dot(otherBound.toVec()) > 0
-								&& poi.toVec().getLength() <= other.viewPoints[j + 1].subtract(other.viewPoints[j])
-										.toVec().getLength()) {
+					Position2D thisPos = poi.subtract(this.viewPoints[i]);
+					Position2D thisUpBound = this.viewPoints[i + 1].subtract(this.viewPoints[i]);
+					if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisLowBound.toVec().getLength()) {
+						Position2D otherPos = poi.subtract(other.viewPoints[j]);
+						Position2D otherUpBound = other.viewPoints[j + 1].subtract(other.viewPoints[j]);
+						if (otherPos.toVec().dot(otherUpBound.toVec()) > 0
+								&& otherPos.toVec().getLength() <= otherUpBound.toVec().getLength()) {
 
 							intersects.add(poi);
 						}
