@@ -20,7 +20,7 @@ public class Vector2D extends Coord2D {
 	 */
 	public Vector2D(double x, double y) {
 		super(x, y);
-		length = Math.sqrt(x * x + y * y);
+		length = Double.parseDouble(df.format(Math.sqrt(x * x + y * y)));
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class Vector2D extends Coord2D {
 	 */
 	public Vector2D(double[] coords) {
 		super(coords);
-		length = Math.sqrt(x * x + y * y);
+		length = Double.parseDouble(df.format(Math.sqrt(x * x + y * y)));
 	}
 
 	/**
@@ -52,13 +52,14 @@ public class Vector2D extends Coord2D {
 	 */
 	public Vector2D normalize() {
 		Vector2D normalized = new Vector2D(this.getCoord());
-		if (Math.abs(normalized.length - 0.0) < ERROR) {
+		double oldLen = this.getLength();
+		if (Math.abs(normalized.length) < ERROR) {
 			return this;
 		}
-		// Don't normalize if length is already close to 1 or length is 0 tiny changes
-		if (Math.abs(normalized.length - 1.0) > ERROR && Math.abs(normalized.length - 0.0) > ERROR) {
-			normalized.x = this.x / normalized.length + 0.0;
-			normalized.y = this.y / normalized.length + 0.0;
+		// Don't normalize if length is already close to 1 or length is 0
+		if (Math.abs(normalized.length - 1.0) > ERROR && Math.abs(normalized.length) > ERROR) {
+			normalized.setX(this.x / oldLen);
+			normalized.setY(this.y / oldLen);
 		}
 		normalized.length = 1.0;
 
@@ -231,6 +232,11 @@ public class Vector2D extends Coord2D {
 			throw new IllegalArgumentException();
 		}
 		return 0;
+	}
+	
+	@Override
+	public String toString() {
+		return "[ " + this.x + ", " + this.y + " ]\n" + this.length;
 	}
 
 }

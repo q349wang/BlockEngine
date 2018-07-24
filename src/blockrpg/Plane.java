@@ -205,14 +205,14 @@ public class Plane {
 		double xScale = xAxis.proj(dirOfPoint).getLength();
 		double yScale = yAxis.proj(dirOfPoint).getLength();
 
-		if(xAxis.dot(dirOfPoint) < 0) {
+		if (xAxis.dot(dirOfPoint) < 0) {
 			xScale = -xScale;
 		}
-		
-		if(yAxis.dot(dirOfPoint) < 0) {
+
+		if (yAxis.dot(dirOfPoint) < 0) {
 			yScale = -yScale;
 		}
-		
+
 		point3D.setCoord(this.vecX.multiply(xScale).add(this.vecY.multiply(yScale)).getCoord());
 		point3D = point3D.add(this.pos);
 		return point3D;
@@ -245,9 +245,11 @@ public class Plane {
 		double result = norm.x * pos.x + norm.y * pos.y + norm.z * pos.z;
 		return Math.abs(result - d) < Coord3D.ERROR;
 	}
-	
+
 	/**
-	 * Finds Position3D that a Line3D intersects a Plane on (returns null if Line3D is parallel to Plane)
+	 * Finds Position3D that a Line3D intersects a Plane on (returns null if Line3D
+	 * is parallel to Plane)
+	 * 
 	 * @param other
 	 * @return Returns Position3D that is on line and plane
 	 */
@@ -255,8 +257,8 @@ public class Plane {
 		if (this.isParallel(other)) {
 			return null;
 		}
-		
-		double t = (this.d - this.norm.dot(other.getPos().toVec()))/this.norm.dot(other.getDir());
+
+		double t = (this.d - this.norm.dot(other.getPos().toVec())) / this.norm.dot(other.getDir());
 		return other.getLinePoint(t);
 	}
 
@@ -276,5 +278,11 @@ public class Plane {
 
 		return this.vecX.equals(p.vecX) && this.pos.equals(p.pos) && this.vecY.equals(p.vecY);
 
+	}
+
+	@Override
+	public String toString() {
+		return "X Direction: " + this.vecX.toString() + "\nY Direction" + this.vecY.toString() + "\nPosition: "
+				+ this.pos.toString();
 	}
 }

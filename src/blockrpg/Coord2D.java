@@ -204,4 +204,9 @@ public class Coord2D {
 		double origin[] = { 0.0, 0.0 };
 		return Arrays.equals(this.getCoord(), origin);
 	}
+	
+	@Override
+	public String toString() {
+		return "[ " + this.x + ", " + this.y + " ]";
+	}
 }

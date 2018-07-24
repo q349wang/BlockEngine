@@ -339,7 +339,7 @@ public class Face implements Comparable<Face> {
 		this.bound2D = 0;
 
 		if (this.edges2D == null) {
-			this.edges2D = new Line2D[this.numPoints - 1];
+			this.edges2D = new Line2D[this.numPoints];
 			for (int i = 0; i < this.edges2D.length; i++) {
 				this.edges2D[i] = new Line2D();
 			}
@@ -363,6 +363,7 @@ public class Face implements Comparable<Face> {
 			this.edges2D[i - 1].setLineToPoints(points[i - 1], points[i]);
 		}
 
+		this.edges2D[num-1].setLineToPoints(points[num-1], points[0]);
 		xCent /= num;
 		yCent /= num;
 
@@ -398,7 +399,7 @@ public class Face implements Comparable<Face> {
 			this.viewPoints = new Position2D[numPoints];
 		}
 		if (this.edges3D == null) {
-			this.edges3D = new Line3D[numPoints - 1];
+			this.edges3D = new Line3D[numPoints];
 			for (int i = 0; i < this.edges3D.length; i++) {
 				this.edges3D[i] = new Line3D();
 			}
@@ -421,6 +422,8 @@ public class Face implements Comparable<Face> {
 		for (int i = 1; i < this.numPoints; i++) {
 			this.edges3D[i - 1].setLineToPoints(this.truePoints[i - 1], this.truePoints[i]);
 		}
+		
+		this.edges3D[this.numPoints - 1].setLineToPoints(this.truePoints[this.numPoints-1], this.truePoints[0]);
 
 		setPoly(this.viewPoints, this.numPoints);
 
@@ -541,14 +544,14 @@ public class Face implements Comparable<Face> {
 	@Override
 	public int compareTo(Face other) {
 		ArrayList<Position2D> intersects = new ArrayList<Position2D>();
-		for (int i = 0; i < this.edges2D.length; i++) {
-			for (int j = 0; j < other.edges2D.length; j++) {
+		for (int i = 0; i < this.edges2D.length-1; i++) {
+			for (int j = 0; j < other.edges2D.length-1; j++) {
 				Position2D poi = this.edges2D[i].intersects(other.edges2D[j]);
 				if (poi != null) { // Test for parallel
 					// Test for bounds
 					Position2D thisPos = poi.subtract(this.viewPoints[i]);
 					Position2D thisUpBound = this.viewPoints[i + 1].subtract(this.viewPoints[i]);
-					if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisLowBound.toVec().getLength()) {
+					if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisUpBound.toVec().getLength()) {
 						Position2D otherPos = poi.subtract(other.viewPoints[j]);
 						Position2D otherUpBound = other.viewPoints[j + 1].subtract(other.viewPoints[j]);
 						if (otherPos.toVec().dot(otherUpBound.toVec()) > 0
@@ -557,6 +560,56 @@ public class Face implements Comparable<Face> {
 							intersects.add(poi);
 						}
 					}
+				}
+			}
+			
+			Position2D poi = this.edges2D[i].intersects(other.edges2D[other.numPoints-1]);
+			if (poi != null) { // Test for parallel
+				// Test for bounds
+				Position2D thisPos = poi.subtract(this.viewPoints[i]);
+				Position2D thisUpBound = this.viewPoints[i + 1].subtract(this.viewPoints[i]);
+				if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisUpBound.toVec().getLength()) {
+					Position2D otherPos = poi.subtract(other.viewPoints[other.numPoints-1]);
+					Position2D otherUpBound = other.viewPoints[0].subtract(other.viewPoints[other.numPoints-1]);
+					if (otherPos.toVec().dot(otherUpBound.toVec()) > 0
+							&& otherPos.toVec().getLength() <= otherUpBound.toVec().getLength()) {
+
+						intersects.add(poi);
+					}
+				}
+			}
+		}
+		
+		for (int j = 0; j < other.edges2D.length-1; j++) {
+			Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[j]);
+			if (poi != null) { // Test for parallel
+				// Test for bounds
+				Position2D thisPos = poi.subtract(this.viewPoints[this.numPoints - 1]);
+				Position2D thisUpBound = this.viewPoints[0].subtract(this.viewPoints[this.numPoints - 1]);
+				if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisUpBound.toVec().getLength()) {
+					Position2D otherPos = poi.subtract(other.viewPoints[j]);
+					Position2D otherUpBound = other.viewPoints[j + 1].subtract(other.viewPoints[j]);
+					if (otherPos.toVec().dot(otherUpBound.toVec()) > 0
+							&& otherPos.toVec().getLength() <= otherUpBound.toVec().getLength()) {
+
+						intersects.add(poi);
+					}
+				}
+			}
+		}
+		
+		Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[other.numPoints-1]);
+		if (poi != null) { // Test for parallel
+			// Test for bounds
+			Position2D thisPos = poi.subtract(this.viewPoints[this.numPoints - 1]);
+			Position2D thisUpBound = this.viewPoints[0].subtract(this.viewPoints[this.numPoints - 1]);
+			if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisUpBound.toVec().getLength()) {
+				Position2D otherPos = poi.subtract(other.viewPoints[other.numPoints-1]);
+				Position2D otherUpBound = other.viewPoints[0].subtract(other.viewPoints[other.numPoints-1]);
+				if (otherPos.toVec().dot(otherUpBound.toVec()) > 0
+						&& otherPos.toVec().getLength() <= otherUpBound.toVec().getLength()) {
+
+					intersects.add(poi);
 				}
 			}
 		}
@@ -572,8 +625,8 @@ public class Face implements Comparable<Face> {
 			Position3D thisPoint = this.pov.getRealPoint(intersects.get(i), this.facePlane);
 			Position3D otherPoint = other.pov.getRealPoint(intersects.get(i), other.facePlane);
 
-			thisCent.add(thisPoint);
-			otherCent.add(otherPoint);
+			thisCent = thisCent.add(thisPoint);
+			otherCent = otherCent.add(otherPoint);
 		}
 
 		thisCent = thisCent.toVec().multiply(1.0 / intersects.size()).toPos();
@@ -585,9 +638,9 @@ public class Face implements Comparable<Face> {
 		if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
 			return 0;
 		} else if (thisDis > otherDis) {
-			return -1;
-		} else {
 			return 1;
+		} else {
+			return -1;
 		}
 	}
 

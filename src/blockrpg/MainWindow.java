@@ -199,7 +199,7 @@ public class MainWindow extends javax.swing.JFrame {
 	private void testFunc(){
 		Color col1 = new Color(45, 84, 38);
 		Color col2 = new Color(72, 41, 124);
-		Perspective pov = new Perspective(new double[] {-8000,0,0}, new double[] {1, 0,0}, new double[] {0,1,0});
+		Perspective pov = new Perspective(new double[] {-8000,0,8000}, new double[] {1, 0,-1}, new double[] {0,1,0});
 		pov.setZoom(zoom);
 		Position2D[] points1 = {new Position2D(-1000,-500), new Position2D(-1000, 500), new Position2D(750, 500), new Position2D(750, -500)};
 		Position2D[] points2 = {new Position2D(-750,-500), new Position2D(-750, 500), new Position2D(1000, 500), new Position2D(1000, -500)};
@@ -254,8 +254,8 @@ public class MainWindow extends javax.swing.JFrame {
 			} else if (face1.getPlane().getPos().getCoord()[2] >= 1000){
 				zSign = -1;
 			}
-			//face1.addX(xSign * 10);
-			//face2.addX(-xSign * 10);
+			face1.addX(xSign * 10);
+			face2.addX(-xSign * 10);
 			//face1.addY(ySign * 10);
 			//face2.addY(ySign * 10);
 			//face1.addZ(zSign * 10);

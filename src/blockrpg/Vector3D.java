@@ -60,9 +60,9 @@ public class Vector3D extends Coord3D {
 		}
 		// Don't normalize if length is already close to 1 or length is 0
 		if (Math.abs(normalized.length - 1.0) > ERROR && Math.abs(normalized.length) > ERROR) {
-			normalized.setX(this.x / oldLen + 0.0);
-			normalized.setY(this.y / oldLen + 0.0);
-			normalized.setZ(this.z / oldLen + 0.0);
+			normalized.setX(this.x / oldLen);
+			normalized.setY(this.y / oldLen);
+			normalized.setZ(this.z / oldLen);
 		}
 		normalized.length = 1.0;
 
@@ -285,5 +285,10 @@ public class Vector3D extends Coord3D {
 			throw new IllegalArgumentException();
 		}
 		return 0;
+	}
+	
+	@Override
+	public String toString() {
+		return "[ " + this.x + ", " + this.y + ", " + this.z +" ]\n" + this.length;
 	}
 }

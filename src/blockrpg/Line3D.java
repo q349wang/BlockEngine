@@ -232,4 +232,9 @@ public class Line3D {
 	public Position3D getIntersect(Plane other) {
 		return other.getIntersect(this);
 	}
+	
+	@Override
+	public String toString() {
+		return "Direction: " + this.dir.toString() + "\nPosition: " + this.pos.toString();
+	}
 }

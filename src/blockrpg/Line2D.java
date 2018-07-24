@@ -213,4 +213,9 @@ public class Line2D {
 		return pos.subtract(this.pos).toVec().isParallel(this.dir);
 	}
 
+	@Override
+	public String toString() {
+		return "Direction: " + this.dir.toString() + "\nPosition: " + this.pos.toString();
+	}
+	
 }
