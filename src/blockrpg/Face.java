@@ -31,11 +31,11 @@ public class Face implements Comparable<Face> {
 
 	private Polygon seenFace;
 
-	private Position2D[] viewPoints;
+	public Position2D[] viewPoints;
 	private Position2D[] relPoints;
 	private Position3D[] truePoints;
 
-	private Line2D[] edges2D;
+	public Line2D[] edges2D;
 	private Line3D[] edges3D;
 
 	private Plane facePlane;
@@ -303,6 +303,14 @@ public class Face implements Comparable<Face> {
 
 	/**
 	 * 
+	 * @return Returns number of points
+	 */
+	public int getNumPoints() {
+		return this.numPoints;
+	}
+
+	/**
+	 * 
 	 * @return Returns plane of Face
 	 */
 	public Plane getPlane() {
@@ -363,7 +371,7 @@ public class Face implements Comparable<Face> {
 			this.edges2D[i - 1].setLineToPoints(points[i - 1], points[i]);
 		}
 
-		this.edges2D[num-1].setLineToPoints(points[num-1], points[0]);
+		this.edges2D[num - 1].setLineToPoints(points[num - 1], points[0]);
 		xCent /= num;
 		yCent /= num;
 
@@ -422,8 +430,8 @@ public class Face implements Comparable<Face> {
 		for (int i = 1; i < this.numPoints; i++) {
 			this.edges3D[i - 1].setLineToPoints(this.truePoints[i - 1], this.truePoints[i]);
 		}
-		
-		this.edges3D[this.numPoints - 1].setLineToPoints(this.truePoints[this.numPoints-1], this.truePoints[0]);
+
+		this.edges3D[this.numPoints - 1].setLineToPoints(this.truePoints[this.numPoints - 1], this.truePoints[0]);
 
 		setPoly(this.viewPoints, this.numPoints);
 
@@ -543,74 +551,171 @@ public class Face implements Comparable<Face> {
 
 	@Override
 	public int compareTo(Face other) {
+
 		ArrayList<Position2D> intersects = new ArrayList<Position2D>();
-		for (int i = 0; i < this.edges2D.length-1; i++) {
-			for (int j = 0; j < other.edges2D.length-1; j++) {
+		for (int i = 0; i < this.edges2D.length - 1; i++) {
+			for (int j = 0; j < other.edges2D.length - 1; j++) {
 				Position2D poi = this.edges2D[i].intersects(other.edges2D[j]);
 				if (poi != null) { // Test for parallel
 					// Test for bounds
-					Position2D thisPos = poi.subtract(this.viewPoints[i]);
-					Position2D thisUpBound = this.viewPoints[i + 1].subtract(this.viewPoints[i]);
-					if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisUpBound.toVec().getLength()) {
-						Position2D otherPos = poi.subtract(other.viewPoints[j]);
-						Position2D otherUpBound = other.viewPoints[j + 1].subtract(other.viewPoints[j]);
-						if (otherPos.toVec().dot(otherUpBound.toVec()) > 0
-								&& otherPos.toVec().getLength() <= otherUpBound.toVec().getLength()) {
-
+					if (this.inBounds(poi, this.viewPoints[i], this.viewPoints[i + 1])) {
+						if (other.inBounds(poi, other.viewPoints[j], other.viewPoints[j + 1])) {
 							intersects.add(poi);
+						}
+					}
+				} else if (this.edges2D[i].similar(other.edges2D[j])) {
+					if (this.inBounds(this.viewPoints[i], this.viewPoints[i], this.viewPoints[i + 1])) {
+						if (other.inBounds(this.viewPoints[i], other.viewPoints[j], other.viewPoints[j + 1])) {
+							intersects.add(this.viewPoints[i]);
+						}
+					}
+
+					if (this.inBounds(this.viewPoints[i + 1], this.viewPoints[i], this.viewPoints[i + 1])) {
+						if (other.inBounds(this.viewPoints[i + 1], other.viewPoints[j], other.viewPoints[j + 1])) {
+							intersects.add(this.viewPoints[i + 1]);
+						}
+					}
+
+					if (this.inBounds(other.viewPoints[j], this.viewPoints[i], this.viewPoints[i + 1])) {
+						if (other.inBounds(other.viewPoints[j], other.viewPoints[j], other.viewPoints[j + 1])) {
+							intersects.add(other.viewPoints[j]);
+						}
+					}
+
+					if (this.inBounds(other.viewPoints[j + 1], this.viewPoints[i], this.viewPoints[i + 1])) {
+						if (other.inBounds(other.viewPoints[j + 1], other.viewPoints[j], other.viewPoints[j + 1])) {
+							intersects.add(other.viewPoints[j + 1]);
 						}
 					}
 				}
 			}
-			
-			Position2D poi = this.edges2D[i].intersects(other.edges2D[other.numPoints-1]);
+
+			Position2D poi = this.edges2D[i].intersects(other.edges2D[other.numPoints - 1]);
 			if (poi != null) { // Test for parallel
 				// Test for bounds
-				Position2D thisPos = poi.subtract(this.viewPoints[i]);
-				Position2D thisUpBound = this.viewPoints[i + 1].subtract(this.viewPoints[i]);
-				if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisUpBound.toVec().getLength()) {
-					Position2D otherPos = poi.subtract(other.viewPoints[other.numPoints-1]);
-					Position2D otherUpBound = other.viewPoints[0].subtract(other.viewPoints[other.numPoints-1]);
-					if (otherPos.toVec().dot(otherUpBound.toVec()) > 0
-							&& otherPos.toVec().getLength() <= otherUpBound.toVec().getLength()) {
-
+				if (this.inBounds(poi, this.viewPoints[i], this.viewPoints[i + 1])) {
+					if (other.inBounds(poi, other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
 						intersects.add(poi);
+					}
+				}
+			} else if (this.edges2D[i].similar(other.edges2D[other.numPoints - 1])) {
+				if (this.inBounds(this.viewPoints[i], this.viewPoints[i], this.viewPoints[i + 1])) {
+					if (other.inBounds(this.viewPoints[i], other.viewPoints[other.numPoints - 1],
+							other.viewPoints[0])) {
+						intersects.add(this.viewPoints[i]);
+					}
+				}
+
+				if (this.inBounds(this.viewPoints[i + 1], this.viewPoints[i], this.viewPoints[i + 1])) {
+					if (other.inBounds(this.viewPoints[i + 1], other.viewPoints[other.numPoints - 1],
+							other.viewPoints[0])) {
+						intersects.add(this.viewPoints[i + 1]);
+					}
+				}
+
+				if (this.inBounds(other.viewPoints[other.numPoints - 1], this.viewPoints[i], this.viewPoints[i + 1])) {
+					if (other.inBounds(other.viewPoints[other.numPoints - 1], other.viewPoints[other.numPoints - 1],
+							other.viewPoints[0])) {
+						intersects.add(other.viewPoints[other.numPoints - 1]);
+					}
+				}
+
+				if (this.inBounds(other.viewPoints[0], this.viewPoints[i], this.viewPoints[i + 1])) {
+					if (other.inBounds(other.viewPoints[0], other.viewPoints[other.numPoints - 1],
+							other.viewPoints[0])) {
+						intersects.add(other.viewPoints[0]);
 					}
 				}
 			}
 		}
-		
-		for (int j = 0; j < other.edges2D.length-1; j++) {
+
+		for (int j = 0; j < other.edges2D.length - 1; j++) {
 			Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[j]);
 			if (poi != null) { // Test for parallel
 				// Test for bounds
-				Position2D thisPos = poi.subtract(this.viewPoints[this.numPoints - 1]);
-				Position2D thisUpBound = this.viewPoints[0].subtract(this.viewPoints[this.numPoints - 1]);
-				if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisUpBound.toVec().getLength()) {
-					Position2D otherPos = poi.subtract(other.viewPoints[j]);
-					Position2D otherUpBound = other.viewPoints[j + 1].subtract(other.viewPoints[j]);
-					if (otherPos.toVec().dot(otherUpBound.toVec()) > 0
-							&& otherPos.toVec().getLength() <= otherUpBound.toVec().getLength()) {
+				if (this.inBounds(poi, this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+					if (other.inBounds(poi, other.viewPoints[j], other.viewPoints[j + 1])) {
 
 						intersects.add(poi);
 					}
 				}
+			} else if (this.edges2D[this.numPoints - 1].similar(other.edges2D[j])) {
+				if (this.inBounds(this.viewPoints[this.numPoints - 1], this.viewPoints[this.numPoints - 1],
+						this.viewPoints[0])) {
+					if (other.inBounds(this.viewPoints[this.numPoints - 1], other.viewPoints[j],
+							other.viewPoints[j + 1])) {
+						intersects.add(this.viewPoints[this.numPoints - 1]);
+					}
+				}
+
+				if (this.inBounds(this.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+					if (other.inBounds(this.viewPoints[0], other.viewPoints[j], other.viewPoints[j + 1])) {
+						intersects.add(this.viewPoints[0]);
+					}
+				}
+
+				if (this.inBounds(other.viewPoints[j], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+					if (other.inBounds(other.viewPoints[j], other.viewPoints[j + 1], other.viewPoints[j + 1])) {
+						intersects.add(other.viewPoints[j]);
+					}
+				}
+
+				if (this.inBounds(other.viewPoints[j + 1], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+					if (other.inBounds(other.viewPoints[j + 1], other.viewPoints[j], other.viewPoints[j + 1])) {
+						intersects.add(other.viewPoints[j + 1]);
+					}
+				}
 			}
 		}
-		
-		Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[other.numPoints-1]);
+
+		Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[other.numPoints - 1]);
 		if (poi != null) { // Test for parallel
 			// Test for bounds
-			Position2D thisPos = poi.subtract(this.viewPoints[this.numPoints - 1]);
-			Position2D thisUpBound = this.viewPoints[0].subtract(this.viewPoints[this.numPoints - 1]);
-			if (thisPos.toVec().dot(thisUpBound.toVec()) > 0 && thisPos.toVec().getLength() <= thisUpBound.toVec().getLength()) {
-				Position2D otherPos = poi.subtract(other.viewPoints[other.numPoints-1]);
-				Position2D otherUpBound = other.viewPoints[0].subtract(other.viewPoints[other.numPoints-1]);
-				if (otherPos.toVec().dot(otherUpBound.toVec()) > 0
-						&& otherPos.toVec().getLength() <= otherUpBound.toVec().getLength()) {
+			if (this.inBounds(poi, this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+				if (other.inBounds(poi, other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
 
 					intersects.add(poi);
 				}
+			}
+		} else if (this.edges2D[this.numPoints - 1].similar(other.edges2D[other.numPoints - 1])) {
+			if (this.inBounds(this.viewPoints[this.numPoints - 1], this.viewPoints[this.numPoints - 1],
+					this.viewPoints[0])) {
+				if (other.inBounds(this.viewPoints[this.numPoints - 1], other.viewPoints[other.numPoints - 1],
+						other.viewPoints[0])) {
+					intersects.add(this.viewPoints[this.numPoints - 1]);
+				}
+			}
+
+			if (this.inBounds(this.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+				if (other.inBounds(this.viewPoints[0], other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
+					intersects.add(this.viewPoints[0]);
+				}
+			}
+
+			if (this.inBounds(other.viewPoints[other.numPoints - 1], this.viewPoints[this.numPoints - 1],
+					this.viewPoints[0])) {
+				if (other.inBounds(other.viewPoints[other.numPoints - 1], other.viewPoints[other.numPoints - 1],
+						other.viewPoints[0])) {
+					intersects.add(other.viewPoints[other.numPoints - 1]);
+				}
+			}
+
+			if (this.inBounds(other.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+				if (other.inBounds(other.viewPoints[0], other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
+					intersects.add(other.viewPoints[0]);
+				}
+			}
+		}
+		
+		for (Position2D vertex : this.viewPoints) {
+			if(other.inShape(vertex)) {
+				intersects.add(vertex);
+			}
+		}
+		
+		for (Position2D vertex : other.viewPoints) {
+			if(this.inShape(vertex)) {
+				intersects.add(vertex);
 			}
 		}
 
@@ -618,38 +723,145 @@ public class Face implements Comparable<Face> {
 			return 0;
 		}
 
-		Position3D thisCent = new Position3D();
-		Position3D otherCent = new Position3D();
+		Position2D center = new Position2D();
 
 		for (int i = 0; i < intersects.size(); i++) {
-			Position3D thisPoint = this.pov.getRealPoint(intersects.get(i), this.facePlane);
-			Position3D otherPoint = other.pov.getRealPoint(intersects.get(i), other.facePlane);
-
-			thisCent = thisCent.add(thisPoint);
-			otherCent = otherCent.add(otherPoint);
+			center.setCoord(center.add(intersects.get(i)).getCoord());
 		}
 
-		thisCent = thisCent.toVec().multiply(1.0 / intersects.size()).toPos();
-		otherCent = otherCent.toVec().multiply(1.0 / intersects.size()).toPos();
+		center = center.toVec().multiply(1.0 / intersects.size()).toPos();
 
-		double thisDis = this.pov.getPos().totDistanceFrom(thisCent);
-		double otherDis = other.pov.getPos().totDistanceFrom(otherCent);
+		double thisDis = this.pov.getPos().totDistanceFrom(this.pov.getRealPoint(center, this.facePlane));
+		double otherDis = other.pov.getPos().totDistanceFrom(other.pov.getRealPoint(center, other.facePlane));
 
 		if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
 			return 0;
 		} else if (thisDis > otherDis) {
-			return 1;
-		} else {
 			return -1;
+		} else {
+			return 1;
 		}
+
 	}
 
+	/**
+	 * 
+	 * @return Returns colour of shape
+	 */
 	public Color getCol() {
 		return col;
 	}
 
+	/**
+	 * 
+	 * @param col Sets colour of shape to col
+	 */
 	public void setCol(Color col) {
 		this.col = new Color(col.getRGB());
+	}
+
+	/**
+	 * Checks if a position is in between two other points
+	 * 
+	 * @param pos      Point to check
+	 * @param lowBound Lower point
+	 * @param upBound  Upper point
+	 * @return Returns true if in between points
+	 */
+	public boolean inBounds(Position2D pos, Position2D lowBound, Position2D upBound) {
+		Position2D testPoint = pos.subtract(lowBound);
+		Position2D topPoint = upBound.subtract(lowBound);
+		return testPoint.toVec().dot(topPoint.toVec()) > 0
+				&& testPoint.toVec().getLength() <= topPoint.toVec().getLength();
+	}
+
+	/**
+	 * 
+	 * @param point Point to consider
+	 * @return Returns true if point is in 2D shape or on shape border
+	 */
+	public boolean inShape(Position2D point) {
+		if (point.equals(this.center2D)) {
+			return true;
+		} else {
+			
+			Line2D edgeTest;
+			for (int i = 0; i < this.edges2D.length - 1; i++) {
+				edgeTest = new Line2D(this.viewPoints[i], point);
+				if (edgeTest.isParallel(this.edges2D[i])) {
+					if (this.inBounds(point, this.viewPoints[i], this.viewPoints[i + 1])) {
+						return true;
+					}
+				}
+
+			}
+			edgeTest = new Line2D(this.viewPoints[this.numPoints -1], point);
+			if (edgeTest.isParallel(this.edges2D[this.numPoints -1])) {
+				if (this.inBounds(point, this.viewPoints[this.numPoints -1], this.viewPoints[0])) {
+					return true;
+				}
+			}
+			
+			Line2D ray = new Line2D(this.center2D, point);
+			//TODO Ignore rays double dipping
+			int cn = 0;
+			for (int i = 0; i < this.edges2D.length - 2; i++) {
+				Position2D poi = ray.intersects(this.edges2D[i]);
+				if (poi != null) {
+					if (this.inBounds(poi, this.viewPoints[i], this.viewPoints[i + 1])) {
+						if (poi.equals(this.viewPoints[i + 1])) {
+							if (poi.yDistancefrom(this.viewPoints[i]) > 0 && poi.yDistancefrom(this.viewPoints[i+2])  > 0) {
+								cn++;
+							} else if (poi.yDistancefrom(this.viewPoints[i]) < 0 && poi.yDistancefrom(this.viewPoints[i+2]) < 0){
+								cn++;
+							}
+
+						} else {
+							cn++;
+						}
+					}
+				}
+
+			}
+			
+			Position2D poi = ray.intersects(this.edges2D[this.numPoints - 2]);
+			if (poi != null) {
+				if (this.inBounds(poi, this.viewPoints[this.numPoints - 2], this.viewPoints[this.numPoints - 1])) {
+					if (poi.equals(this.viewPoints[this.numPoints - 1])) {
+						if (poi.yDistancefrom(this.viewPoints[this.numPoints - 2]) > 0 && poi.yDistancefrom(this.viewPoints[0])  > 0) {
+							cn++;
+						} else if (poi.yDistancefrom(this.viewPoints[this.numPoints - 2]) < 0 && poi.yDistancefrom(this.viewPoints[0]) < 0){
+							cn++;
+						}
+
+					} else {
+						cn++;
+					}
+				}
+			}
+			
+			poi = ray.intersects(this.edges2D[this.numPoints - 1]);
+			if (poi != null) {
+				if (this.inBounds(poi, this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+					if (poi.equals(this.viewPoints[0])) {
+						if (poi.yDistancefrom(this.viewPoints[this.numPoints - 1]) > 0 && poi.yDistancefrom(this.viewPoints[1])  > 0) {
+							cn++;
+						} else if (poi.yDistancefrom(this.viewPoints[this.numPoints - 1]) < 0 && poi.yDistancefrom(this.viewPoints[1]) < 0){
+							cn++;
+						}
+
+					} else {
+						cn++;
+					}
+				}
+			}
+
+			if (cn % 2 == 0) {
+				return false;
+			} else {
+				return true;
+			}
+		}
 	}
 
 }

@@ -68,7 +68,7 @@ public class Coord3D {
 	public void setCoord(double[] coords) {
 		// Rounds numbers that are very close to nearest billionth
 		for (int i = 0; i < 3; i++) {
-			coords[i] = Double.parseDouble(df.format(coords[i]));
+			coords[i] = Double.parseDouble(df.format(coords[i]))  + 0.0;
 		}
 		this.x = coords[0];
 		this.y = coords[1];
