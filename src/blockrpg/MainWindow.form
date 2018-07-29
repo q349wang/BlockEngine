@@ -4,5 +4,8 @@
 		<height>1080</height>
 		<width>1920</width>
 		<zoom>4000</zoom>
+		<fps>true</fps>
+		<debug>false</debug>
+		<wire>false</wire>
 	</size>
 </properties>

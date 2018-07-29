@@ -31,11 +31,11 @@ public class Face implements Comparable<Face> {
 
 	private Polygon seenFace;
 
-	public Position2D[] viewPoints;
+	private Position2D[] viewPoints;
 	private Position2D[] relPoints;
 	private Position3D[] truePoints;
 
-	public Line2D[] edges2D;
+	private Line2D[] edges2D;
 	private Line3D[] edges3D;
 
 	private Plane facePlane;
@@ -208,6 +208,47 @@ public class Face implements Comparable<Face> {
 	public Face clone() {
 		return new Face(this);
 	}
+	
+	/**
+	 * Sets this face to match other face
+	 * @param other Other face to match
+	 */
+	public void setTo(Face other) {
+		setOffset();
+
+		this.viewPoints = new Position2D[other.numPoints];
+		this.truePoints = new Position3D[other.numPoints];
+		this.relPoints = new Position2D[other.numPoints];
+		for (int i = 0; i < other.numPoints; i++) {
+			this.viewPoints[i] = other.viewPoints[i].clone();
+			this.truePoints[i] = other.truePoints[i].clone();
+			this.relPoints[i] = other.relPoints[i].clone();
+		}
+
+		this.facePlane = other.facePlane.clone();
+		this.numPoints = other.numPoints;
+
+		this.edges2D = new Line2D[other.numPoints];
+		this.edges3D =  new Line3D[other.numPoints];
+		for (int i = 0; i < other.numPoints; i++) {
+			this.edges2D[i] = other.edges2D[i].clone();
+			this.edges3D[i] = other.edges3D[i].clone();
+		}
+		
+
+		this.center3D = new Position3D();
+		this.center2D = new Position2D();
+
+		this.pov = other.pov; // You don't clone perspective
+
+		this.visible = true;
+		this.setForceTransparent(false);
+		this.checkVisible = true;
+
+		this.col = new Color(other.col.getRGB());
+
+		setPoints();
+	}
 
 	/**
 	 * 
@@ -333,6 +374,22 @@ public class Face implements Comparable<Face> {
 	 */
 	public Perspective getPOV() {
 		return this.pov;
+	}
+
+	/**
+	 * 
+	 * @return Returns view points
+	 */
+	public Position2D[] getViewPoints() {
+		return this.viewPoints;
+	}
+
+	/**
+	 * 
+	 * @return Returns 2D edges
+	 */
+	public Line2D[] getEdges2D() {
+		return this.edges2D;
 	}
 
 	/**
@@ -553,6 +610,7 @@ public class Face implements Comparable<Face> {
 	public int compareTo(Face other) {
 
 		ArrayList<Position2D> intersects = new ArrayList<Position2D>();
+		intersects.clear();
 		for (int i = 0; i < this.edges2D.length - 1; i++) {
 			for (int j = 0; j < other.edges2D.length - 1; j++) {
 				Position2D poi = this.edges2D[i].intersects(other.edges2D[j]);
@@ -706,15 +764,15 @@ public class Face implements Comparable<Face> {
 				}
 			}
 		}
-		
+
 		for (Position2D vertex : this.viewPoints) {
-			if(other.inShape(vertex)) {
+			if (other.inShape(vertex)) {
 				intersects.add(vertex);
 			}
 		}
-		
+
 		for (Position2D vertex : other.viewPoints) {
-			if(this.inShape(vertex)) {
+			if (this.inShape(vertex)) {
 				intersects.add(vertex);
 			}
 		}
@@ -729,7 +787,7 @@ public class Face implements Comparable<Face> {
 			center.setCoord(center.add(intersects.get(i)).getCoord());
 		}
 
-		center = center.toVec().multiply(1.0 / intersects.size()).toPos();
+		center.setCoord(center.toVec().multiply(1.0 / intersects.size()).toPos().getCoord());
 
 		double thisDis = this.pov.getPos().totDistanceFrom(this.pov.getRealPoint(center, this.facePlane));
 		double otherDis = other.pov.getPos().totDistanceFrom(other.pov.getRealPoint(center, other.facePlane));
@@ -770,6 +828,9 @@ public class Face implements Comparable<Face> {
 	 */
 	public boolean inBounds(Position2D pos, Position2D lowBound, Position2D upBound) {
 		Position2D testPoint = pos.subtract(lowBound);
+		if (testPoint.toVec().isOrigin()) {
+			return true;
+		}
 		Position2D topPoint = upBound.subtract(lowBound);
 		return testPoint.toVec().dot(topPoint.toVec()) > 0
 				&& testPoint.toVec().getLength() <= topPoint.toVec().getLength();
@@ -781,10 +842,13 @@ public class Face implements Comparable<Face> {
 	 * @return Returns true if point is in 2D shape or on shape border
 	 */
 	public boolean inShape(Position2D point) {
+		if (point.totDistanceFrom(this.center2D) > this.bound2D) {
+			return false;
+		}
 		if (point.equals(this.center2D)) {
 			return true;
 		} else {
-			
+
 			Line2D edgeTest;
 			for (int i = 0; i < this.edges2D.length - 1; i++) {
 				edgeTest = new Line2D(this.viewPoints[i], point);
@@ -795,24 +859,27 @@ public class Face implements Comparable<Face> {
 				}
 
 			}
-			edgeTest = new Line2D(this.viewPoints[this.numPoints -1], point);
-			if (edgeTest.isParallel(this.edges2D[this.numPoints -1])) {
-				if (this.inBounds(point, this.viewPoints[this.numPoints -1], this.viewPoints[0])) {
+			edgeTest = new Line2D(this.viewPoints[this.numPoints - 1], point);
+			if (edgeTest.isParallel(this.edges2D[this.numPoints - 1])) {
+				if (this.inBounds(point, this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
 					return true;
 				}
 			}
-			
-			Line2D ray = new Line2D(this.center2D, point);
-			//TODO Ignore rays double dipping
+
+			Line2D ray = new Line2D(point, this.center2D);
+			Position2D outBound = ray.getLinePoint(this.bound2D + point.totDistanceFrom(this.center2D));
+
 			int cn = 0;
 			for (int i = 0; i < this.edges2D.length - 2; i++) {
 				Position2D poi = ray.intersects(this.edges2D[i]);
-				if (poi != null) {
+				if (poi != null && (this.inBounds(poi, point, outBound) || this.inBounds(poi, outBound, point))) {
 					if (this.inBounds(poi, this.viewPoints[i], this.viewPoints[i + 1])) {
 						if (poi.equals(this.viewPoints[i + 1])) {
-							if (poi.yDistancefrom(this.viewPoints[i]) > 0 && poi.yDistancefrom(this.viewPoints[i+2])  > 0) {
+							if (poi.yDistancefrom(this.viewPoints[i]) > 0
+									&& poi.yDistancefrom(this.viewPoints[i + 2]) > 0) {
 								cn++;
-							} else if (poi.yDistancefrom(this.viewPoints[i]) < 0 && poi.yDistancefrom(this.viewPoints[i+2]) < 0){
+							} else if (poi.yDistancefrom(this.viewPoints[i]) < 0
+									&& poi.yDistancefrom(this.viewPoints[i + 2]) < 0) {
 								cn++;
 							}
 
@@ -823,14 +890,16 @@ public class Face implements Comparable<Face> {
 				}
 
 			}
-			
+
 			Position2D poi = ray.intersects(this.edges2D[this.numPoints - 2]);
-			if (poi != null) {
+			if (poi != null && (this.inBounds(poi, point, outBound) || this.inBounds(poi, outBound, point))) {
 				if (this.inBounds(poi, this.viewPoints[this.numPoints - 2], this.viewPoints[this.numPoints - 1])) {
 					if (poi.equals(this.viewPoints[this.numPoints - 1])) {
-						if (poi.yDistancefrom(this.viewPoints[this.numPoints - 2]) > 0 && poi.yDistancefrom(this.viewPoints[0])  > 0) {
+						if (poi.yDistancefrom(this.viewPoints[this.numPoints - 2]) > 0
+								&& poi.yDistancefrom(this.viewPoints[0]) > 0) {
 							cn++;
-						} else if (poi.yDistancefrom(this.viewPoints[this.numPoints - 2]) < 0 && poi.yDistancefrom(this.viewPoints[0]) < 0){
+						} else if (poi.yDistancefrom(this.viewPoints[this.numPoints - 2]) < 0
+								&& poi.yDistancefrom(this.viewPoints[0]) < 0) {
 							cn++;
 						}
 
@@ -839,14 +908,16 @@ public class Face implements Comparable<Face> {
 					}
 				}
 			}
-			
+
 			poi = ray.intersects(this.edges2D[this.numPoints - 1]);
-			if (poi != null) {
+			if (poi != null && (this.inBounds(poi, point, outBound) || this.inBounds(poi, outBound, point))) {
 				if (this.inBounds(poi, this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
 					if (poi.equals(this.viewPoints[0])) {
-						if (poi.yDistancefrom(this.viewPoints[this.numPoints - 1]) > 0 && poi.yDistancefrom(this.viewPoints[1])  > 0) {
+						if (poi.yDistancefrom(this.viewPoints[this.numPoints - 1]) > 0
+								&& poi.yDistancefrom(this.viewPoints[1]) > 0) {
 							cn++;
-						} else if (poi.yDistancefrom(this.viewPoints[this.numPoints - 1]) < 0 && poi.yDistancefrom(this.viewPoints[1]) < 0){
+						} else if (poi.yDistancefrom(this.viewPoints[this.numPoints - 1]) < 0
+								&& poi.yDistancefrom(this.viewPoints[1]) < 0) {
 							cn++;
 						}
 

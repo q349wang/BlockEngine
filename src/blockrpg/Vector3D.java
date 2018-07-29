@@ -22,7 +22,7 @@ public class Vector3D extends Coord3D {
 	 */
 	public Vector3D(double x, double y, double z) {
 		super(x, y, z);
-		length = Math.sqrt(x * x + y * y + z * z);
+		length = x * x + y * y + z * z;
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class Vector3D extends Coord3D {
 	 */
 	public Vector3D(double[] coords) {
 		super(coords);
-		length = Math.sqrt(x * x + y * y + z * z);
+		length = x * x + y * y + z * z;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class Vector3D extends Coord3D {
 	@Override
 	public void setCoord(double coords[]) {
 		super.setCoord(coords);
-		this.length = Double.parseDouble(df.format(Math.sqrt(x * x + y * y + z * z)));
+		this.length = x * x + y * y + z * z;
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class Vector3D extends Coord3D {
 	 * @return length of Vector3D as double
 	 */
 	public double getLength() {
-		return length;
+		return Double.parseDouble(df.format(Math.sqrt(length)));
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class Vector3D extends Coord3D {
 		product.setX(this.x * scalar);
 		product.setY(this.y * scalar);
 		product.setZ(this.z * scalar);
-		this.length = this.length * scalar;
+		this.length = this.length * scalar * scalar;
 
 		return product;
 	}
@@ -175,7 +175,7 @@ public class Vector3D extends Coord3D {
 	 *         radians)
 	 */
 	public double getAng(Vector3D other) {
-		double cosVal = this.dot(other) / this.length / other.length;
+		double cosVal = this.dot(other) / this.getLength() / other.getLength();
 		return Math.acos(cosVal);
 
 	}
@@ -289,6 +289,6 @@ public class Vector3D extends Coord3D {
 	
 	@Override
 	public String toString() {
-		return "[ " + this.x + ", " + this.y + ", " + this.z +" ]\n" + this.length;
+		return "[ " + this.x + ", " + this.y + ", " + this.z +" ]\n" + this.getLength();
 	}
 }

@@ -123,6 +123,7 @@ public class Plane {
 	 */
 	public void addX(double x) {
 		this.pos.addX(x);
+		setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -131,6 +132,7 @@ public class Plane {
 	 */
 	public void addY(double y) {
 		this.pos.addY(y);
+		setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -139,6 +141,7 @@ public class Plane {
 	 */
 	public void addZ(double z) {
 		this.pos.addZ(z);
+		setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -147,6 +150,7 @@ public class Plane {
 	 */
 	public void setX(double x) {
 		this.pos.setX(x);
+		setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -155,6 +159,7 @@ public class Plane {
 	 */
 	public void setY(double y) {
 		this.pos.setY(y);
+		setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -163,6 +168,7 @@ public class Plane {
 	 */
 	public void setZ(double z) {
 		this.pos.setZ(z);
+		setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**

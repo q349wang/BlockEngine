@@ -20,7 +20,7 @@ public class Vector2D extends Coord2D {
 	 */
 	public Vector2D(double x, double y) {
 		super(x, y);
-		length = Double.parseDouble(df.format(Math.sqrt(x * x + y * y)));
+		length = x * x + y * y;
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class Vector2D extends Coord2D {
 	 */
 	public Vector2D(double[] coords) {
 		super(coords);
-		length = Double.parseDouble(df.format(Math.sqrt(x * x + y * y)));
+		length = x * x + y * y;
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class Vector2D extends Coord2D {
 	@Override
 	public void setCoord(double coords[]) {
 		super.setCoord(coords);
-		this.length = Double.parseDouble(df.format(Math.sqrt(x * x + y * y)));
+		this.length = x * x + y * y;
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class Vector2D extends Coord2D {
 	 * @return length of Vector2D as double
 	 */
 	public double getLength() {
-		return length;
+		return Double.parseDouble(df.format(Math.sqrt(length)));
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class Vector2D extends Coord2D {
 		Vector2D product = new Vector2D();
 		product.setX(this.x * scalar);
 		product.setY(this.y * scalar);
-		this.length =this.length * scalar;
+		this.length =this.length * scalar * scalar;
 		return product;
 	}
 
@@ -142,7 +142,7 @@ public class Vector2D extends Coord2D {
 	 *         radians)
 	 */
 	public double getAng(Vector2D other) {
-		double cosVal = this.dot(other) / this.length / other.length;
+		double cosVal = this.dot(other) / this.getLength() / other.getLength();
 		return Math.acos(cosVal);
 
 	}
