@@ -11,6 +11,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JLabel;
 import javax.xml.parsers.DocumentBuilder;
@@ -43,6 +45,8 @@ public class MainWindow extends javax.swing.JFrame {
 	public static boolean FPS;
 	public static boolean DEBUG;
 	public static boolean WIRE;
+	
+	private ArrayList<Face> faces;
 
 	/**
 	 * Creates new form MainWindow
@@ -105,6 +109,8 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void initComponents() {
+		
+		faces = new ArrayList<Face>();
 
 		setExtendedState(MainWindow.MAXIMIZED_BOTH);
 		setUndecorated(true);
@@ -224,9 +230,14 @@ public class MainWindow extends javax.swing.JFrame {
 		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
 		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
 		Face face3 = new Face(points3, points3.length, plane3, pov, col3);
-		gamePanel.addShape(face1);
-		gamePanel.addShape(face2);
-		gamePanel.addShape(face3);
+		faces.add(face1);
+		faces.add(face2);
+		faces.add(face3);
+	//	gamePanel.addShape(face1);
+		//gamePanel.addShape(face2);
+	//	gamePanel.addShape(face3);
+		Collections.sort(faces);
+		gamePanel.setList(faces);
 		java.awt.EventQueue.invokeLater(() -> {
 			gamePanel.repaint();
 			
@@ -234,6 +245,8 @@ public class MainWindow extends javax.swing.JFrame {
 		//Thread.sleep(1000);
 		face1.setX(1000);
 		face2.setX(-1000);
+		Collections.sort(faces);
+		gamePanel.setList(faces);
 		java.awt.EventQueue.invokeLater(() -> {
 			gamePanel.repaint();
 			
@@ -293,6 +306,8 @@ public class MainWindow extends javax.swing.JFrame {
 			// gamePanel.faces.clear();
 			// gamePanel.addShape(face1);
 			// gamePanel.addShape(face2);
+			Collections.sort(faces);
+			gamePanel.setList(faces);
 			java.awt.EventQueue.invokeLater(() -> {
 				gamePanel.repaint();
 				

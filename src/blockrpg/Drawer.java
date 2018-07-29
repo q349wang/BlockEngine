@@ -13,17 +13,14 @@ public class Drawer extends JPanel {
 	 */
 	private static final long serialVersionUID = -2810583553938140766L;
 
-	public List<Face> faces;
 	private List<Face> sortedFace;
 
 	public Drawer() {
-		faces = new ArrayList<Face>();
 		sortedFace = new ArrayList<Face>();
 	}
 
-	public void addShape(Face face) {
-		faces.add(face);
-		sortedFace.add(face);
+	public void setList(ArrayList<Face> faces) {
+		sortedFace = faces;
 	}
 
 	@Override
@@ -39,9 +36,8 @@ public class Drawer extends JPanel {
 		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHints(rh);
 
-		Collections.sort(sortedFace);
 		for (int i = 0; i < sortedFace.size(); i++) {
-			if (faces.get(i).isVisible()) {
+			if (sortedFace.get(i).isVisible()) {
 				g2.setColor(sortedFace.get(i).getCol());
 				if (MainWindow.WIRE) {
 					g2.drawPolygon(sortedFace.get(i).getPoly());
@@ -52,10 +48,11 @@ public class Drawer extends JPanel {
 			}
 
 			if (MainWindow.DEBUG) {
-				for(int j = 0; j < sortedFace.size(); j++) {
-					g2.drawString(Integer.toString(sortedFace.get(i).compareTo(sortedFace.get(j))), 100+ 10* j, 100 + 10 * i);
+				for (int j = 0; j < sortedFace.size(); j++) {
+					g2.drawString(Integer.toString(sortedFace.get(i).compareTo(sortedFace.get(j))), 100 + 10 * j,
+							100 + 10 * i);
 				}
-				
+
 			}
 		}
 
@@ -71,7 +68,7 @@ public class Drawer extends JPanel {
 						if (face2.inShape(vertex)) {
 							g2.setColor(face1.getCol());
 							g2.fillArc((int) (vertex.getX() + Face.xOffset - 5),
-									(int) (vertex.getY() + Face.yOffset - 5), 10, 10, 0, 360);
+									(int) (-vertex.getY() + Face.yOffset - 5), 10, 10, 0, 360);
 						}
 					}
 
@@ -79,7 +76,7 @@ public class Drawer extends JPanel {
 						if (face1.inShape(vertex)) {
 							g2.setColor(face1.getCol());
 							g2.fillArc((int) (vertex.getX() + Face.xOffset - 5),
-									(int) (vertex.getY() + Face.yOffset - 5), 10, 10, 0, 360);
+									(int) (-vertex.getY() + Face.yOffset - 5), 10, 10, 0, 360);
 						}
 					}
 
@@ -91,7 +88,7 @@ public class Drawer extends JPanel {
 									if (face2.inBounds(poi, face2.getViewPoints()[j], face2.getViewPoints()[j + 1])) {
 										g2.setColor(face1.getCol());
 										g2.fillArc((int) (poi.getX() + Face.xOffset - 5),
-												(int) (poi.getY() + Face.yOffset - 5), 10, 10, 0, 360);
+												(int) (-poi.getY() + Face.yOffset - 5), 10, 10, 0, 360);
 									}
 								}
 
@@ -105,7 +102,7 @@ public class Drawer extends JPanel {
 										face2.getViewPoints()[0])) {
 									g2.setColor(face1.getCol());
 									g2.fillArc((int) (poi.getX() + Face.xOffset - 5),
-											(int) (poi.getY() + Face.yOffset - 5), 10, 10, 0, 360);
+											(int) (-poi.getY() + Face.yOffset - 5), 10, 10, 0, 360);
 								}
 							}
 						}
@@ -119,7 +116,7 @@ public class Drawer extends JPanel {
 								if (face2.inBounds(poi, face2.getViewPoints()[j], face2.getViewPoints()[j + 1])) {
 									g2.setColor(face1.getCol());
 									g2.fillArc((int) (poi.getX() + Face.xOffset - 5),
-											(int) (poi.getY() + Face.yOffset - 5), 10, 10, 0, 360);
+											(int) (-poi.getY() + Face.yOffset - 5), 10, 10, 0, 360);
 								}
 							}
 						}
@@ -133,8 +130,8 @@ public class Drawer extends JPanel {
 							if (face2.inBounds(poi, face2.getViewPoints()[face2.getNumPoints() - 1],
 									face2.getViewPoints()[0])) {
 								g2.setColor(face1.getCol());
-								g2.fillArc((int) (poi.getX() + Face.xOffset - 5), (int) (poi.getY() + Face.yOffset - 5),
-										10, 10, 0, 360);
+								g2.fillArc((int) (poi.getX() + Face.xOffset - 5),
+										(int) (-poi.getY() + Face.yOffset - 5), 10, 10, 0, 360);
 							}
 						}
 					}
