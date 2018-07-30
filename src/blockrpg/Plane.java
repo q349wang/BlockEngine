@@ -188,11 +188,33 @@ public class Plane {
 		this.d = d;
 	}
 
+	/**
+	 * Rotates plane about axis and angle counter clockwise
+	 * @param ang Angle to rotate
+	 * @param axis Axis to rotate about
+	 * @return Returns rotated plane
+	 */
 	public Plane rotatePlane(double ang, Vector3D axis) {
 		Plane rotatedPlane = new Plane(this);
 		rotatedPlane.vecX = vecX.rotate(ang, axis);
 		rotatedPlane.vecY = vecY.rotate(ang, axis);
 		rotatedPlane.norm = norm.rotate(ang, axis);
+		return rotatedPlane;
+	}
+	
+	/**
+	 * Rotates plane about axis and angle counter clockwise including position
+	 * @param ang Angle to rotate
+	 * @param axis Axis to rotate about
+	 * @return Returns rotated plane
+	 */
+	public Plane rotatePos(double ang, Vector3D axis) {
+		Plane rotatedPlane = new Plane(this);
+		rotatedPlane.vecX = vecX.rotate(ang, axis);
+		rotatedPlane.vecY = vecY.rotate(ang, axis);
+		rotatedPlane.norm = norm.rotate(ang, axis);
+		rotatedPlane.pos = pos.rotate(ang, axis);
+		setD(norm.dot(this.pos.toVec()));
 		return rotatedPlane;
 	}
 
@@ -222,6 +244,40 @@ public class Plane {
 		point3D.setCoord(this.vecX.multiply(xScale).add(this.vecY.multiply(yScale)).getCoord());
 		point3D = point3D.add(this.pos);
 		return point3D;
+	}
+	
+	/**
+	 * Finds 2D relative point of 3D point on a plane
+	 * @param point3D Point to look at
+	 * @return Returns 2D point
+	 */
+	public Position2D get2DPoint(Position3D point3D) {
+		if(this.onPlane(point3D)) {
+			
+			Vector3D dirOfPoint = this.pos.getDirection(point3D);
+			Vector3D xDir = this.vecX.proj(dirOfPoint);
+			Vector3D yDir = this.vecY.proj(dirOfPoint);
+			
+			Position2D point2D = new Position2D();
+			
+			if (xDir.dot(this.vecX) > 0) {
+				point2D.setX(xDir.getLength());
+			} else {
+				point2D.setX(-xDir.getLength());
+			}
+			
+			
+			if (yDir.dot(this.vecY) > 0) {
+				point2D.setY(yDir.getLength());
+			} else {
+				point2D.setY(-yDir.getLength());
+			}
+			
+			return point2D;
+			
+		} else {
+			return null;
+		}
 	}
 
 	/**

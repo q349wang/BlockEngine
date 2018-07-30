@@ -99,11 +99,20 @@ public class Face implements Comparable<Face> {
 		this.truePoints = null;
 		this.relPoints = new Position2D[numPoints];
 
+		Position2D planeCenter = new Position2D();
 		for (int i = 0; i < numPoints; i++) {
 			this.relPoints[i] = relPoints[i].clone();
+			planeCenter.add(this.relPoints[i]);
 		}
-
+		
+		planeCenter.setCoord(planeCenter.toVec().multiply(1.0/numPoints).getCoord());
+		
+		for (int i = 0; i < numPoints; i++) {
+			this.relPoints[i] = this.relPoints[i].subtract(planeCenter);
+		}
+		
 		this.facePlane = facePlane.clone();
+		this.facePlane.setPos(facePlane.placeOnPlane(planeCenter).getCoord());
 		this.numPoints = numPoints;
 
 		this.edges2D = null;
@@ -142,11 +151,20 @@ public class Face implements Comparable<Face> {
 		this.truePoints = null;
 		this.relPoints = new Position2D[numPoints];
 
+		Position2D planeCenter = new Position2D();
 		for (int i = 0; i < numPoints; i++) {
 			this.relPoints[i] = relPoints[i].clone();
+			planeCenter.add(this.relPoints[i]);
 		}
-
+		
+		planeCenter.setCoord(planeCenter.toVec().multiply(1.0/numPoints).getCoord());
+		
+		for (int i = 0; i < numPoints; i++) {
+			this.relPoints[i] = this.relPoints[i].subtract(planeCenter);
+		}
+		
 		this.facePlane = facePlane.clone();
+		this.facePlane.setPos(facePlane.placeOnPlane(planeCenter).getCoord());
 		this.numPoints = numPoints;
 
 		this.edges2D = null;
@@ -382,6 +400,22 @@ public class Face implements Comparable<Face> {
 	 */
 	public Position2D[] getViewPoints() {
 		return this.viewPoints;
+	}
+	
+	/**
+	 * 
+	 * @return Returns relative points
+	 */
+	public Position2D[] getRelPoints() {
+		return this.relPoints;
+	}
+	
+	/**
+	 * 
+	 * @return Returns true points
+	 */
+	public Position3D[] getTruePoints() {
+		return this.truePoints;
 	}
 
 	/**
