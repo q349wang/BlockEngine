@@ -238,4 +238,13 @@ class PlaneTests {
 		assertEquals(null, plane1.getIntersect(line3D)); 
 	}
 
+	@Test
+	void testGet2DPoint() {
+		Plane testPlane = new Plane (new Vector3D(1,0,0), new Vector3D(0,1,0), new Position3D(1,3,4));
+		Position3D testPoint = new Position3D(2,1,4);
+		
+		Position2D expected = new Position2D(1, -2);
+		
+		assertEquals(expected, testPlane.get2DPoint(testPoint));
+	}
 }
