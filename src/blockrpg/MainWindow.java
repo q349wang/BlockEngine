@@ -45,7 +45,7 @@ public class MainWindow extends javax.swing.JFrame {
 	public static boolean FPS;
 	public static boolean DEBUG;
 	public static boolean WIRE;
-	
+
 	private ArrayList<Face> faces;
 
 	/**
@@ -109,7 +109,7 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 
 	private void initComponents() {
-		
+
 		faces = new ArrayList<Face>();
 
 		setExtendedState(MainWindow.MAXIMIZED_BOTH);
@@ -192,13 +192,11 @@ public class MainWindow extends javax.swing.JFrame {
 		/* Create and display the form */
 		MainWindow window = new MainWindow();
 
-
 		java.awt.EventQueue.invokeLater(() -> {
 			window.setVisible(true);
-			
-			
+
 		});
-		
+
 		Thread thread = new Thread(new Runnable() {
 
 			@Override
@@ -224,8 +222,8 @@ public class MainWindow extends javax.swing.JFrame {
 				new Position2D(1000, -500) };
 		Plane plane1 = new Plane(new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), new Position3D(0, 0, 0));
 		Plane plane2 = new Plane(new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), new Position3D(0, 0, 0));
-		Position2D[] points3 = { new Position2D(-1000, -1000), new Position2D(-1000, 1000),
-				new Position2D(1000, 1000), new Position2D(1000, -1000) };
+		Position2D[] points3 = { new Position2D(-1000, -1000), new Position2D(-1000, 1000), new Position2D(1000, 1000),
+				new Position2D(1000, -1000) };
 		Plane plane3 = new Plane(new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), new Position3D(1500, 0, 0));
 		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
 		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
@@ -233,25 +231,25 @@ public class MainWindow extends javax.swing.JFrame {
 		faces.add(face1);
 		faces.add(face2);
 		faces.add(face3);
-	//	gamePanel.addShape(face1);
-		//gamePanel.addShape(face2);
-	//	gamePanel.addShape(face3);
+		// gamePanel.addShape(face1);
+		// gamePanel.addShape(face2);
+		// gamePanel.addShape(face3);
 		Collections.sort(faces);
 		gamePanel.setList(faces);
 		java.awt.EventQueue.invokeLater(() -> {
 			gamePanel.repaint();
-			
+
 		});
-		//Thread.sleep(1000);
+		// Thread.sleep(1000);
 		face1.setX(1000);
 		face2.setX(-1000);
 		Collections.sort(faces);
 		gamePanel.setList(faces);
 		java.awt.EventQueue.invokeLater(() -> {
 			gamePanel.repaint();
-			
+
 		});
-		//Thread.sleep(1000);
+		// Thread.sleep(1000);
 
 //		try {
 //			Thread.sleep(1000);
@@ -266,8 +264,8 @@ public class MainWindow extends javax.swing.JFrame {
 //		gamePanel.repaint();
 		int xSign = -1;
 		int ySign = 1;
-		int zSign = -1;
-		
+		// int zSign = -1;
+
 		Long prevTick = System.nanoTime();
 		Long currTick = System.nanoTime();
 		while (true) {
@@ -275,7 +273,7 @@ public class MainWindow extends javax.swing.JFrame {
 			prevTick = System.nanoTime();
 
 			Vector3D axis = new Vector3D(0, 1, 1);
-			Vector3D axis2 = new Vector3D(1, 0, 0);
+			// Vector3D axis2 = new Vector3D(1, 0, 0);
 			face1.setTo(face1.rotate(0.01, axis));
 			// face2 = face2.rotate(0.01, axis);
 
@@ -292,9 +290,9 @@ public class MainWindow extends javax.swing.JFrame {
 				ySign = -1;
 			}
 			if (face1.getPlane().getPos().getCoord()[2] <= -1000) {
-				zSign = 1;
+				// zSign = 1;
 			} else if (face1.getPlane().getPos().getCoord()[2] >= 1000) {
-				zSign = -1;
+				// zSign = -1;
 			}
 			face1.addX(xSign * 1);
 			face2.addX(ySign * 1);
@@ -310,15 +308,14 @@ public class MainWindow extends javax.swing.JFrame {
 			gamePanel.setList(faces);
 			java.awt.EventQueue.invokeLater(() -> {
 				gamePanel.repaint();
-				
+
 			});
-			//Thread.sleep(1);
+			// Thread.sleep(1);
 
 			currTick = System.nanoTime();
 			fps.setText("FPS: " + Long.toString(1000000000 / (currTick - prevTick)));
 		}
 	}
-	
 
 	private Drawer gamePanel;
 	private JLabel fps;
