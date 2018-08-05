@@ -201,12 +201,36 @@ public class MainWindow extends javax.swing.JFrame {
 
 			@Override
 			public void run() {
-				window.testFunc();
+				 window.testFunc2();
 			}
 
 		});
 
 		thread.start();
+	}
+
+	private void testFunc2() {
+		Color col1 = new Color(45, 84, 38);
+		Perspective pov = new Perspective(new double[] { -8000, -8000, 0 }, new double[] { 1, 1, 0 },
+				new double[] { 0, 1, 0 });
+		pov.setZoom(zoom);
+		Position2D[] points1 = { new Position2D(-1000, -500), new Position2D(-1000, 500), new Position2D(750, 500),
+				new Position2D(750, -500) };
+		Plane plane1 = new Plane(new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), new Position3D(0, 0, 0));
+		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
+
+		Prism prism = new Prism(1000.0, new Position3D(0, 0, 0), pov, face1);
+		prism.setCol(col1);
+		for (Face face : prism.getFaces()) {
+			faces.add(face);
+		}
+
+		Collections.sort(faces);
+		gamePanel.setList(faces);
+		java.awt.EventQueue.invokeLater(() -> {
+			gamePanel.repaint();
+
+		});
 	}
 
 	private void testFunc() {
