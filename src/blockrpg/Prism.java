@@ -228,6 +228,17 @@ public class Prism {
 	}
 	
 	/**
+	 * Rotates Prism about inputted axis
+	 * @param ang Angle in radians to rotate counter clockwise
+	 * @param axis Axis of rotation
+	 */
+	public void rotate(double ang, Vector3D axis) {
+		for(Face face : faces) {
+			face.setTo(face.orbit(ang, axis, this.center));
+		}
+	}
+	
+	/**
 	 * 
 	 * @return Returns array of faces
 	 */

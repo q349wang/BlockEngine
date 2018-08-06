@@ -211,7 +211,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void testFunc2() {
 		Color col1 = new Color(45, 84, 38);
-		Perspective pov = new Perspective(new double[] { -8000, -8000, -8000 }, new double[] { 1, 1, 1 },
+		Perspective pov = new Perspective(new double[] { -8000, 0, -8000 }, new double[] { 1, 0, 1 },
 				new double[] { 0, 1, 0 });
 		pov.setZoom(zoom);
 		Position2D[] points1 = { new Position2D(-1000, -500), new Position2D(-1000, 500), new Position2D(0, 500) };
@@ -224,16 +224,22 @@ public class MainWindow extends javax.swing.JFrame {
 			prism.setCol(new Color(40, 10, 20*i), i);
 			faces.add(prism.getFaces()[i]);
 		}
-
+		Vector3D axis = new Vector3D(1, 0, 0);
+		Long prevTick = System.nanoTime();
+		Long currTick = System.nanoTime();
 		while(true) {
-			
-		prism.addX(1);
+			prevTick = System.nanoTime();
+		//prism.addX(1);
+		prism.rotate(0.01, axis);
 		Collections.sort(faces);
 		gamePanel.setList(faces);
 		java.awt.EventQueue.invokeLater(() -> {
 			gamePanel.repaint();
 
 		});
+		
+		currTick = System.nanoTime();
+		fps.setText("FPS: " + Long.toString(1000000000 / (currTick - prevTick)));
 		}
 	}
 

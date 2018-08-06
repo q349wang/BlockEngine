@@ -269,6 +269,16 @@ public class Face implements Comparable<Face> {
 	}
 
 	/**
+	 * Sets 3D coordinates to inputted array
+	 * @param coords array of double coordinates
+	 */
+	public void setCoords(double[] coords) {
+		this.center3D.setCoord(coords);
+		this.facePlane.setPos(coords);
+		setPoints();
+	}
+	
+	/**
 	 * 
 	 * @param x Adds inputed value to the X coordinate
 	 */
@@ -973,6 +983,23 @@ public class Face implements Comparable<Face> {
 				return true;
 			}
 		}
+	}
+	
+	/**
+	 * Rotates a Face around an inputted point
+	 * @param ang Angle in radians to rotate counter clockwise
+	 * @param axis Axis of rotation
+	 * @param pivot Pivot point
+	 * @return Returns rotated Face
+	 */
+	public Face orbit(double ang, Vector3D axis, Position3D pivot) {
+		Vector3D dir = pivot.getDirection(this.center3D);
+		
+		Face orbitedFace = this.rotate(ang, axis);
+		dir = dir.rotate(ang, axis);
+		
+		orbitedFace.setCoords(pivot.add(dir).getCoord());
+		return orbitedFace;
 	}
 
 }
