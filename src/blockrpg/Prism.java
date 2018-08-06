@@ -9,6 +9,9 @@ public class Prism {
 	private Position3D center;
 
 	@SuppressWarnings("unused")
+	/**
+	 * Default Prism of empty faces
+	 */
 	public Prism() {
 		center = new Position3D();
 		faces = new Face[4];
@@ -19,7 +22,14 @@ public class Prism {
 		setPov(new Perspective());
 		set(new Position3D());
 	}
-
+	
+	/**
+	 * Creates a custom prism with an inputted face as the sides
+	 * @param length Length from face to face
+	 * @param center Center of prism
+	 * @param pov Perspective prism is seen from
+	 * @param sideFace Face inputted
+	 */
 	public Prism(double length, Position3D center, Perspective pov, Face sideFace) {
 		this.center = center.clone();
 		faces = new Face[2 + sideFace.getNumPoints()];
@@ -42,15 +52,15 @@ public class Prism {
 
 			truePoints[0] = faces[0].getTruePoints()[i-2];
 			truePoints[1] = faces[0].getTruePoints()[i -1];
-			truePoints[2] = faces[1].getTruePoints()[i-2];
-			truePoints[3] = faces[1].getTruePoints()[i -1];
+			truePoints[2] = faces[1].getTruePoints()[i-1];
+			truePoints[3] = faces[1].getTruePoints()[i -2];
 
 			Position3D centerPos = new Position3D();
 			for (Position3D point : truePoints) {
 				centerPos = centerPos.add(point);
 			}
 			centerPos = centerPos.toVec().multiply(0.25).toPos();
-			plane = new Plane(truePoints[0].getDirection(truePoints[2]), truePoints[0].getDirection(truePoints[1]),
+			plane = new Plane(truePoints[0].getDirection(truePoints[3]), truePoints[0].getDirection(truePoints[1]),
 					centerPos);
 
 			for (int j = 0; j < 4; j++) {
@@ -66,15 +76,15 @@ public class Prism {
 
 		truePoints[0] = faces[0].getTruePoints()[faces.length - 3];
 		truePoints[1] = faces[0].getTruePoints()[0];
-		truePoints[2] = faces[1].getTruePoints()[faces.length - 3];
-		truePoints[3] = faces[1].getTruePoints()[0];
+		truePoints[3] = faces[1].getTruePoints()[faces.length - 3];
+		truePoints[2] = faces[1].getTruePoints()[0];
 
 		Position3D centerPos = new Position3D();
 		for (Position3D point : truePoints) {
 			centerPos = centerPos.add(point);
 		}
 		centerPos = centerPos.toVec().multiply(0.25).toPos();
-		plane = new Plane(truePoints[0].getDirection(truePoints[2]), truePoints[0].getDirection(truePoints[1]),
+		plane = new Plane(truePoints[0].getDirection(truePoints[3]), truePoints[0].getDirection(truePoints[1]),
 				centerPos);
 
 		for (int j = 0; j < 4; j++) {

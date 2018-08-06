@@ -823,8 +823,14 @@ public class Face implements Comparable<Face> {
 
 		center.setCoord(center.toVec().multiply(1.0 / intersects.size()).toPos().getCoord());
 
-		double thisDis = this.pov.getPos().totDistanceFrom(this.pov.getRealPoint(center, this.facePlane));
-		double otherDis = other.pov.getPos().totDistanceFrom(other.pov.getRealPoint(center, other.facePlane));
+		Position3D thisReal = this.pov.getRealPoint(center, this.facePlane);
+		Position3D otherReal = other.pov.getRealPoint(center, other.facePlane);
+		
+		if(thisReal ==  null || otherReal == null) {
+			return 0;
+		}
+		double thisDis = this.pov.getPos().totDistanceFrom(thisReal);
+		double otherDis = other.pov.getPos().totDistanceFrom(otherReal);
 
 		if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
 			return 0;
