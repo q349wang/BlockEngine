@@ -221,7 +221,7 @@ public class MainWindow extends javax.swing.JFrame {
 		Prism prism = new Prism(1000.0, new Position3D(0, 0, 0), pov, face1);
 		prism.setCol(col1);
 		for (int i = 0; i < 5; i++) {
-			prism.setCol(new Color(40, 10, 20*i), i);
+			prism.setCol(new Color(40*i, 200-15*i, 30*i), i);
 			faces.add(prism.getFaces()[i]);
 		}
 		Vector3D axis = new Vector3D(1, 0, 0);
@@ -229,8 +229,8 @@ public class MainWindow extends javax.swing.JFrame {
 		Long currTick = System.nanoTime();
 		while(true) {
 			prevTick = System.nanoTime();
-		prism.addX(1);
-		//prism.rotate(0.01, axis);
+		//prism.addX(1);
+		prism.rotate(0.01, axis);
 		Collections.sort(faces);
 		gamePanel.setList(faces);
 		java.awt.EventQueue.invokeLater(() -> {

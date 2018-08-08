@@ -44,7 +44,10 @@ public class Prism {
 		faces[0] = new Face(points, points.length, plane, pov);
 		
 		plane.setPos(center.subtract(plane.getNorm().multiply(length / 2).toPos()).getCoord());
-
+		for (Position2D point : points) {
+			point.setCoord(point.toVec().multiply(-1).getCoord());
+		}
+		plane.rotatePlane(Math.PI, new Vector3D(0,0,1));
 		faces[1] = new Face(points, points.length, plane, pov);
 		for (int i = 2; i < faces.length - 1; i++) {
 			points = new Position2D[4];
@@ -233,8 +236,8 @@ public class Prism {
 	 * @param axis Axis of rotation
 	 */
 	public void rotate(double ang, Vector3D axis) {
-		for(Face face : faces) {
-			face.orbit(ang, axis, this.center);
+		for(int i = 2; i < faces.length;i++) {
+			faces[i].orbit(ang, axis, this.center);
 		}
 	}
 	
