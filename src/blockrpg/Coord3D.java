@@ -68,7 +68,7 @@ public class Coord3D {
 	public void setCoord(double[] coords) {
 		// Rounds numbers that are very close to nearest billionth
 		for (int i = 0; i < 3; i++) {
-			coords[i] = Double.parseDouble(df.format(coords[i]))  + 0.0;
+			coords[i] = Double.parseDouble(df.format(coords[i])) + 0.0;
 		}
 		this.x = coords[0];
 		this.y = coords[1];
@@ -191,59 +191,45 @@ public class Coord3D {
 	}
 
 	/**
+	 * Rotates Coord3D ang radians counter clockwise about X axis
 	 * 
 	 * @param ang angle in radians
-	 * @return Returns Coord3D rotated ang radians counter clockwise about the X
-	 *         axis
 	 */
-	public Coord3D rotateX(double ang) {
-		Coord3D rotation = new Vector3D();
+	public void rotateX(double ang) {
 		double coords[] = { this.x, this.y * Math.cos(ang) - this.z * Math.sin(ang),
 				this.y * Math.sin(ang) + this.z * Math.cos(ang) };
-		rotation.setCoord(coords);
-
-		return rotation;
+		this.setCoord(coords);
 	}
 
 	/**
+	 * Rotates Coord3D ang radians counter clockwise about Y axis
 	 * 
 	 * @param ang angle in radians
-	 * @return Returns Coord3D rotated ang radians counter clockwise about the Y
-	 *         axis
 	 */
-	public Coord3D rotateY(double ang) {
-		Coord3D rotation = new Coord3D();
+	public void rotateY(double ang) {
 		double coords[] = { this.x * Math.cos(ang) + this.z * Math.sin(ang), this.y,
 				-this.x * Math.sin(ang) + this.z * Math.cos(ang) };
-		rotation.setCoord(coords);
-
-		return rotation;
+		this.setCoord(coords);
 	}
 
 	/**
+	 * Rotates Coord3D ang radians counter clockwise about Z axis
 	 * 
 	 * @param ang angle in radians
-	 * @return Returns Coord3D rotated ang radians counter clockwise about the Y
-	 *         axis
 	 */
-	public Coord3D rotateZ(double ang) {
-		Coord3D rotation = new Coord3D();
+	public void rotateZ(double ang) {
 		double coords[] = { this.x * Math.cos(ang) - this.y * Math.sin(ang),
 				this.x * Math.sin(ang) + this.y * Math.cos(ang), this.z };
-		rotation.setCoord(coords);
-
-		return rotation;
+		this.setCoord(coords);
 	}
 
 	/**
+	 * Rotates Coord3D ang radians counter clockwise about the specified axis
 	 * 
 	 * @param ang  angle in radians
 	 * @param axis axis to rotate about
-	 * @return Returns Coord3D rotated ang radians counter clockwise about the
-	 *         specified axis
 	 */
-	public Coord3D rotate(double ang, Vector3D axis) {
-		Coord3D rotation = new Coord3D();
+	public void rotate(double ang, Vector3D axis) {
 		double[] oldCoords = this.getCoord();
 		double[] axisCoords = axis.normalize().getCoord();
 		double[] newCoords = new double[3];
@@ -280,9 +266,8 @@ public class Coord3D {
 				newCoords[j] += rotMatrix[i][j] * oldCoords[i] + 0.0;
 			}
 		}
-		rotation.setCoord(newCoords);
+		this.setCoord(newCoords);
 
-		return rotation;
 	}
 
 	/**
@@ -326,7 +311,7 @@ public class Coord3D {
 		double origin[] = { 0.0, 0.0, 0.0 };
 		return Arrays.equals(this.getCoord(), origin);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "[ " + this.x + ", " + this.y + ", " + this.z + " ]";

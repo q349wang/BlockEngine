@@ -147,18 +147,6 @@ public class Vector2D extends Coord2D {
 
 	}
 
-	/**
-	 * 
-	 * @param ang Angle in radians to turn Vector2D counter clockwise
-	 * @return Returns Vector2D rotated ang radians counter clockwise
-	 */
-	public Vector2D rotate(double ang) {
-		Vector2D rotation = new Vector2D();
-		rotation.setCoord(super.rotate(ang).getCoord());
-
-		return rotation;
-	}
-
 	@Override
 	public Vector2D add(Coord2D other) {
 		Vector2D sum = new Vector2D(super.add(other).getCoord());

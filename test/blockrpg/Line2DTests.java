@@ -67,7 +67,8 @@ class Line2DTests {
 		double dirCoords[] = {0, 2};
 		test.setDir(dirCoords);
 		Vector2D expected = new Vector2D(0, -2);
-		assertEquals(expected.normalize(), test.rotateDir(Math.PI).getDir());
+		test.rotateDir(Math.PI);
+		assertEquals(expected.normalize(), test.getDir());
 	}
 
 	@Test
@@ -79,8 +80,9 @@ class Line2DTests {
 		test.setPos(posCoords);
 		Vector2D expectedVec = new Vector2D(0,-2);
 		Position2D expectedPos = new Position2D(0,-3);
-		assertEquals(expectedVec.normalize(), test.rotateDir(Math.PI).getDir());
-		assertEquals(expectedPos, test.rotatePos(Math.PI).getPos());
+		test.rotatePos(Math.PI);
+		assertEquals(expectedVec.normalize(), test.getDir());
+		assertEquals(expectedPos, test.getPos());
 	}
 
 	@Test

@@ -68,7 +68,8 @@ class Line3DTests {
 		test.setDir(dirCoords);
 		Vector3D axis = new Vector3D(1, 1, 0);
 		Vector3D expected = new Vector3D(2, 0, 0);
-		assertEquals(expected.normalize(), test.rotateDir(Math.PI, axis).getDir());
+		test.rotateDir(Math.PI, axis);
+		assertEquals(expected.normalize(), test.getDir());
 	}
 
 	@Test
@@ -81,8 +82,9 @@ class Line3DTests {
 		Vector3D axis = new Vector3D(1, 1, 0);
 		Vector3D expectedVec = new Vector3D(2, 0, 0);
 		Position3D expectedPos = new Position3D(3,0,0);
-		assertEquals(expectedVec.normalize(), test.rotateDir(Math.PI, axis).getDir());
-		assertEquals(expectedPos, test.rotatePos(Math.PI, axis).getPos());
+		test.rotatePos(Math.PI, axis);
+		assertEquals(expectedVec.normalize(), test.getDir());
+		assertEquals(expectedPos, test.getPos());
 	}
 
 	@Test

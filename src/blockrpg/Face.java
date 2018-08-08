@@ -573,13 +573,10 @@ public class Face implements Comparable<Face> {
 	 * 
 	 * @param ang  Angle to rotate
 	 * @param axis Axis to rotate about
-	 * @return Returns Face
 	 */
-	public Face rotate(double ang, Vector3D axis) {
-		Face face = new Face(this);
-		face.facePlane = face.facePlane.rotatePlane(ang, axis);
-		face.setPoints();
-		return face;
+	public void rotate(double ang, Vector3D axis) {
+		this.facePlane.rotatePlane(ang, axis);
+		this.setPoints();
 	}
 
 	/**
@@ -990,16 +987,14 @@ public class Face implements Comparable<Face> {
 	 * @param ang Angle in radians to rotate counter clockwise
 	 * @param axis Axis of rotation
 	 * @param pivot Pivot point
-	 * @return Returns rotated Face
 	 */
-	public Face orbit(double ang, Vector3D axis, Position3D pivot) {
+	public void orbit(double ang, Vector3D axis, Position3D pivot) {
 		Vector3D dir = pivot.getDirection(this.center3D);
 		
-		Face orbitedFace = this.rotate(ang, axis);
-		dir = dir.rotate(ang, axis);
+		this.rotate(ang, axis);
+		dir.rotate(ang, axis);
 		
-		orbitedFace.setCoords(pivot.add(dir).getCoord());
-		return orbitedFace;
+		this.setCoords(pivot.add(dir).getCoord());
 	}
 
 }

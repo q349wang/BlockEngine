@@ -74,8 +74,9 @@ class Position2DTests {
 	@Test
 	void testRotate() {
 		Position2D pos1 = new Position2D(1, 1);
+		pos1.rotate(Math.PI / 2);
 		Position2D expected = new Position2D(-1, 1);
-		assertEquals(expected, pos1.rotate(Math.PI / 2));
+		assertEquals(expected, pos1);
 	}
 	
 	@Test

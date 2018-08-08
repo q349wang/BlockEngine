@@ -182,59 +182,6 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
-	 * @param ang angle in radians
-	 * @return Returns Vector3D rotated ang radians counter clockwise about the X
-	 *         axis
-	 */
-	public Vector3D rotateX(double ang) {
-		Vector3D rotation = new Vector3D();
-		rotation.setCoord(super.rotateX(ang).getCoord());
-
-		return rotation;
-	}
-
-	/**
-	 * 
-	 * @param ang angle in radians
-	 * @return Returns Vector3D rotated ang radians counter clockwise about the Y
-	 *         axis
-	 */
-	public Vector3D rotateY(double ang) {
-		Vector3D rotation = new Vector3D();
-		rotation.setCoord(super.rotateY(ang).getCoord());
-
-		return rotation;
-	}
-
-	/**
-	 * 
-	 * @param ang angle in radians
-	 * @return Returns Vector3D rotated ang radians counter clockwise about the Y
-	 *         axis
-	 */
-	public Vector3D rotateZ(double ang) {
-		Vector3D rotation = new Vector3D();
-		rotation.setCoord(super.rotateZ(ang).getCoord());
-
-		return rotation;
-	}
-
-	/**
-	 * 
-	 * @param ang  angle in radians
-	 * @param axis axis to rotate about
-	 * @return Returns Vector3D rotated ang radians counter clockwise about the
-	 *         specified axis
-	 */
-	public Vector3D rotate(double ang, Vector3D axis) {
-		Vector3D rotation = new Vector3D();
-		rotation.setCoord(super.rotate(ang, axis).getCoord());
-
-		return rotation;
-	}
-
-	/**
-	 * 
 	 * @return Returns position with same coordinates
 	 */
 	public Position3D toPos() {
@@ -286,9 +233,9 @@ public class Vector3D extends Coord3D {
 		}
 		return 0;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "[ " + this.x + ", " + this.y + ", " + this.z +" ]\n" + this.getLength();
+		return "[ " + this.x + ", " + this.y + ", " + this.z + " ]\n" + this.getLength();
 	}
 }

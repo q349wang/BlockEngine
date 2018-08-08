@@ -150,17 +150,15 @@ public class Coord2D {
 	}
 
 	/**
-	 * 
+	 * Rotates Coord2D ang radians counter clockwise
 	 * @param ang Angle in radians to turn Coord2D counter clockwise
-	 * @return Returns Coord2D rotated ang radians counter clockwise
+	 * 
 	 */
-	public Coord2D rotate(double ang) {
-		Coord2D rotation = new Coord2D();
+	public void rotate(double ang) {
 		double coords[] = { this.x * Math.cos(ang) - this.y * Math.sin(ang),
 				this.x * Math.sin(ang) + this.y * Math.cos(ang) };
-		rotation.setCoord(coords);
+		this.setCoord(coords);
 
-		return rotation;
 	}
 
 	/**

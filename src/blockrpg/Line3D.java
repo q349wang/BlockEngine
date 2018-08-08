@@ -52,6 +52,7 @@ public class Line3D {
 
 	/**
 	 * Sets line using two points
+	 * 
 	 * @param pos1 First point (set as pos)
 	 * @param pos2 Second point (dir is found using pos1.getDirection(pos2))
 	 */
@@ -59,7 +60,7 @@ public class Line3D {
 		this.pos = pos1.clone();
 		this.dir = pos1.getDirection(pos2).normalize();
 	}
-	
+
 	/**
 	 * 
 	 * @param dirCoords Sets direction vector to inputed coordinates
@@ -103,28 +104,24 @@ public class Line3D {
 	}
 
 	/**
+	 * Rotates line ang radians about axis
 	 * 
 	 * @param ang  Angle to rotate line direction
 	 * @param axis Axis to rotate line direction
-	 * @return Returns rotated line
 	 */
-	public Line3D rotateDir(double ang, Vector3D axis) {
-		Line3D rotatedDir = new Line3D(this.dir, this.pos);
-		rotatedDir.setDir(dir.rotate(ang, axis).getCoord());
-		return rotatedDir;
+	public void rotateDir(double ang, Vector3D axis) {
+		this.dir.rotate(ang, axis);
 	}
 
 	/**
+	 * Rotates line ang radians about axis at the origin
 	 * 
 	 * @param ang  Angle to rotate line position
 	 * @param axis Axis to rotate line position
-	 * @return Returns rotated line
 	 */
-	public Line3D rotatePos(double ang, Vector3D axis) {
-		Line3D rotatedDir = new Line3D(this.dir, this.pos);
-		rotatedDir.setDir(dir.rotate(ang, axis).getCoord());
-		rotatedDir.pos = pos.rotate(ang, axis);
-		return rotatedDir;
+	public void rotatePos(double ang, Vector3D axis) {
+		this.dir.rotate(ang, axis);
+		this.pos.rotate(ang, axis);
 	}
 
 	/**
@@ -223,8 +220,8 @@ public class Line3D {
 	}
 
 	/**
-	 * Finds Position3D that a Line3D intersects a Plane on (returns null if Line3D is
-	 * parallel to Plane)
+	 * Finds Position3D that a Line3D intersects a Plane on (returns null if Line3D
+	 * is parallel to Plane)
 	 * 
 	 * @param other
 	 * @return Returns Position3D that is on line and plane
@@ -232,7 +229,7 @@ public class Line3D {
 	public Position3D getIntersect(Plane other) {
 		return other.getIntersect(this);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Direction: " + this.dir.toString() + "\nPosition: " + this.pos.toString();

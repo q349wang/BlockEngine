@@ -113,28 +113,32 @@ class Position3DTests {
 	void testRotateX() {
 		Position3D pos1 = new Position3D(1, 0, 3);
 		Position3D expected = new Position3D(1, -3, 0);
-		assertEquals(expected, pos1.rotateX(Math.PI / 2));
+		pos1.rotateX(Math.PI / 2);
+		assertEquals(expected, pos1);
 	}
 
 	@Test
 	void testRotateY() {
 		Position3D pos1 = new Position3D(1, 0, 3);
 		Position3D expected = new Position3D(3, 0, -1);
-		assertEquals(expected, pos1.rotateY(Math.PI / 2));
+		pos1.rotateY(Math.PI / 2);
+		assertEquals(expected, pos1);
 	}
 
 	@Test
 	void testRotateZ() {
 		Position3D pos1 = new Position3D(1, 0, 3);
 		Position3D expected = new Position3D(0, 1, 3);
-		assertEquals(expected, pos1.rotateZ(Math.PI / 2));
+		pos1.rotateZ(Math.PI / 2);
+		assertEquals(expected, pos1);
 	}
 
 	@Test
 	void testRotateAboutSameVector() {
 		Position3D pos1 = new Position3D(1, 0, 0);
 		Position3D expected = new Position3D(1, 0, 0);
-		assertEquals(expected, pos1.rotate(Math.PI / 2, pos1.toVec()));
+		pos1.rotate(Math.PI / 2, pos1.toVec());
+		assertEquals(expected, pos1);
 	}
 
 	@Test
@@ -142,7 +146,8 @@ class Position3DTests {
 		Position3D pos1 = new Position3D(-4, 4, 0);
 		Vector3D axis = new Vector3D(1, 1, 0);
 		Position3D expected = new Position3D(4, -4, 0);
-		assertEquals(expected, pos1.rotate(Math.PI, axis));
+		pos1.rotate(Math.PI, axis);
+		assertEquals(expected, pos1);
 	}
 	
 	@Test

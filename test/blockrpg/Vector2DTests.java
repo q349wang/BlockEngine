@@ -153,8 +153,9 @@ class Vector2DTests {
 	@Test
 	void testRotate() {
 		Vector2D vec1 = new Vector2D(1, 1);
+		vec1.rotate(Math.PI / 2);
 		Vector2D expected = new Vector2D(-1, 1);
-		assertEquals(expected, vec1.rotate(Math.PI / 2));
+		assertEquals(expected, vec1);
 	}
 
 	@Test

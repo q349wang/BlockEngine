@@ -111,64 +111,6 @@ public class Position3D extends Coord3D {
 	
 	/**
 	 * 
-	 * @param ang
-	 *            angle in radians
-	 * @return Returns Position3D rotated ang radians counter clockwise about the X
-	 *         axis
-	 */
-	public Position3D rotateX(double ang) {
-		Position3D rotation = new Position3D();
-		rotation.setCoord(super.rotateX(ang).getCoord());
-
-		return rotation;
-	}
-
-	/**
-	 * 
-	 * @param ang
-	 *            angle in radians
-	 * @return Returns Position3D rotated ang radians counter clockwise about the Y
-	 *         axis
-	 */
-	public Position3D rotateY(double ang) {
-		Position3D rotation = new Position3D();
-		rotation.setCoord(super.rotateY(ang).getCoord());
-
-		return rotation;
-	}
-
-	/**
-	 * 
-	 * @param ang
-	 *            angle in radians
-	 * @return Returns Position3D rotated ang radians counter clockwise about the Y
-	 *         axis
-	 */
-	public Position3D rotateZ(double ang) {
-		Position3D rotation = new Position3D();
-		rotation.setCoord(super.rotateZ(ang).getCoord());
-
-		return rotation;
-	}
-
-	/**
-	 * 
-	 * @param ang
-	 *            angle in radians
-	 * @param axis
-	 *            axis to rotate about
-	 * @return Returns Position3D rotated ang radians counter clockwise about the
-	 *         specified axis
-	 */
-	public Position3D rotate(double ang, Vector3D axis) {
-		Position3D rotation = new Position3D();
-		rotation.setCoord(super.rotate(ang, axis).getCoord());
-
-		return rotation;
-	}
-	
-	/**
-	 * 
 	 * @return Returns vector with same coordinates
 	 */
 	public Vector3D toVec() {

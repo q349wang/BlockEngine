@@ -192,30 +192,25 @@ public class Plane {
 	 * Rotates plane about axis and angle counter clockwise
 	 * @param ang Angle to rotate
 	 * @param axis Axis to rotate about
-	 * @return Returns rotated plane
 	 */
-	public Plane rotatePlane(double ang, Vector3D axis) {
-		Plane rotatedPlane = new Plane(this);
-		rotatedPlane.vecX = vecX.rotate(ang, axis);
-		rotatedPlane.vecY = vecY.rotate(ang, axis);
-		rotatedPlane.norm = norm.rotate(ang, axis);
-		return rotatedPlane;
+	public void rotatePlane(double ang, Vector3D axis) {
+		this.vecX.rotate(ang, axis);
+		this.vecY.rotate(ang, axis);
+		this.norm.rotate(ang, axis);
+		this.setD(norm.dot(this.pos.toVec()));
 	}
 	
 	/**
 	 * Rotates plane about axis and angle counter clockwise including position
 	 * @param ang Angle to rotate
 	 * @param axis Axis to rotate about
-	 * @return Returns rotated plane
 	 */
-	public Plane rotatePos(double ang, Vector3D axis) {
-		Plane rotatedPlane = new Plane(this);
-		rotatedPlane.vecX = vecX.rotate(ang, axis);
-		rotatedPlane.vecY = vecY.rotate(ang, axis);
-		rotatedPlane.norm = norm.rotate(ang, axis);
-		rotatedPlane.pos = pos.rotate(ang, axis);
-		setD(norm.dot(this.pos.toVec()));
-		return rotatedPlane;
+	public void rotatePos(double ang, Vector3D axis) {
+		this.vecX.rotate(ang, axis);
+		this.vecY.rotate(ang, axis);
+		this.norm.rotate(ang, axis);
+		this.pos.rotate(ang, axis);
+		this.setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**

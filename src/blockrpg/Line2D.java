@@ -103,28 +103,24 @@ public class Line2D {
 	}
 
 	/**
-	 * 
+	 * Rotates direction of line
 	 * @param ang  Angle to rotate line direction
 	 * @param axis Axis to rotate line direction
-	 * @return Returns rotated line
+	 * 
 	 */
-	public Line2D rotateDir(double ang) {
-		Line2D rotatedDir = new Line2D(this.dir, this.pos);
-		rotatedDir.setDir(dir.rotate(ang).getCoord());
-		return rotatedDir;
+	public void rotateDir(double ang) {
+		this.dir.rotate(ang);
 	}
 
 	/**
-	 * 
+	 * Rotates direction and position of line
 	 * @param ang  Angle to rotate line position
 	 * @param axis Axis to rotate line position
-	 * @return Returns rotated line
+	 * 
 	 */
-	public Line2D rotatePos(double ang) {
-		Line2D rotatedDir = new Line2D(this.dir, this.pos);
-		rotatedDir.setDir(dir.rotate(ang).getCoord());
-		rotatedDir.pos = pos.rotate(ang);
-		return rotatedDir;
+	public void rotatePos(double ang) {
+		this.dir.rotate(ang);
+		this.pos.rotate(ang);
 	}
 
 	/**
