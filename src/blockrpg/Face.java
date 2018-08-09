@@ -49,6 +49,8 @@ public class Face implements Comparable<Face> {
 	private boolean visible;
 	private boolean forceTransparent;
 	private boolean checkVisible;
+	
+	private ArrayList<Position2D> intersects;
 
 	private Color col;
 
@@ -78,6 +80,8 @@ public class Face implements Comparable<Face> {
 		this.visible = true;
 		this.setForceTransparent(false);
 		this.checkVisible = true;
+		
+		this.intersects = new ArrayList<Position2D>();
 
 		this.col = new Color(0, 0, 0);
 	}
@@ -104,13 +108,13 @@ public class Face implements Comparable<Face> {
 			this.relPoints[i] = relPoints[i].clone();
 			planeCenter.add(this.relPoints[i]);
 		}
-		
-		planeCenter.setCoord(planeCenter.toVec().multiply(1.0/numPoints).getCoord());
-		
+
+		planeCenter.setCoord(planeCenter.toVec().multiply(1.0 / numPoints).getCoord());
+
 		for (int i = 0; i < numPoints; i++) {
 			this.relPoints[i] = this.relPoints[i].subtract(planeCenter);
 		}
-		
+
 		this.facePlane = facePlane.clone();
 		this.facePlane.setPos(facePlane.placeOnPlane(planeCenter).getCoord());
 		this.numPoints = numPoints;
@@ -127,6 +131,8 @@ public class Face implements Comparable<Face> {
 		this.setForceTransparent(false);
 		this.checkVisible = true;
 
+		this.intersects = new ArrayList<Position2D>();
+		
 		this.col = new Color(0, 0, 0);
 
 		setPoints();
@@ -156,13 +162,13 @@ public class Face implements Comparable<Face> {
 			this.relPoints[i] = relPoints[i].clone();
 			planeCenter.add(this.relPoints[i]);
 		}
-		
-		planeCenter.setCoord(planeCenter.toVec().multiply(1.0/numPoints).getCoord());
-		
+
+		planeCenter.setCoord(planeCenter.toVec().multiply(1.0 / numPoints).getCoord());
+
 		for (int i = 0; i < numPoints; i++) {
 			this.relPoints[i] = this.relPoints[i].subtract(planeCenter);
 		}
-		
+
 		this.facePlane = facePlane.clone();
 		this.facePlane.setPos(facePlane.placeOnPlane(planeCenter).getCoord());
 		this.numPoints = numPoints;
@@ -178,7 +184,9 @@ public class Face implements Comparable<Face> {
 		this.visible = true;
 		this.setForceTransparent(false);
 		this.checkVisible = true;
-
+		
+		this.intersects = new ArrayList<Position2D>();
+		
 		this.col = new Color(col.getRGB());
 
 		setPoints();
@@ -216,6 +224,8 @@ public class Face implements Comparable<Face> {
 		this.visible = true;
 		this.setForceTransparent(false);
 		this.checkVisible = true;
+		
+		this.intersects = other.intersects;
 
 		this.col = new Color(other.col.getRGB());
 
@@ -226,9 +236,10 @@ public class Face implements Comparable<Face> {
 	public Face clone() {
 		return new Face(this);
 	}
-	
+
 	/**
 	 * Sets this face to match other face
+	 * 
 	 * @param other Other face to match
 	 */
 	public void setTo(Face other) {
@@ -247,21 +258,20 @@ public class Face implements Comparable<Face> {
 		this.numPoints = other.numPoints;
 
 		this.edges2D = new Line2D[other.numPoints];
-		this.edges3D =  new Line3D[other.numPoints];
+		this.edges3D = new Line3D[other.numPoints];
 		for (int i = 0; i < other.numPoints; i++) {
 			this.edges2D[i] = other.edges2D[i].clone();
 			this.edges3D[i] = other.edges3D[i].clone();
 		}
-		
 
 		this.center3D = new Position3D();
 		this.center2D = new Position2D();
 
 		this.pov = other.pov; // You don't clone perspective
 
-		this.visible = true;
-		this.setForceTransparent(false);
-		this.checkVisible = true;
+		this.visible = other.visible;
+		this.setForceTransparent(other.forceTransparent);
+		this.checkVisible = other.checkVisible;
 
 		this.col = new Color(other.col.getRGB());
 
@@ -270,6 +280,7 @@ public class Face implements Comparable<Face> {
 
 	/**
 	 * Sets 3D coordinates to inputted array
+	 * 
 	 * @param coords array of double coordinates
 	 */
 	public void setCoords(double[] coords) {
@@ -277,7 +288,7 @@ public class Face implements Comparable<Face> {
 		this.facePlane.setPos(coords);
 		setPoints();
 	}
-	
+
 	/**
 	 * 
 	 * @param x Adds inputed value to the X coordinate
@@ -411,7 +422,7 @@ public class Face implements Comparable<Face> {
 	public Position2D[] getViewPoints() {
 		return this.viewPoints;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns relative points
@@ -419,7 +430,7 @@ public class Face implements Comparable<Face> {
 	public Position2D[] getRelPoints() {
 		return this.relPoints;
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns true points
@@ -650,10 +661,42 @@ public class Face implements Comparable<Face> {
 	@Override
 	public int compareTo(Face other) {
 
-		ArrayList<Position2D> intersects = new ArrayList<Position2D>();
+		int threshold = 2;
+		
+		if (!this.checkVisible || !other.checkVisible) {
+			return 0;
+		}
+
+		if (this.center2D.totDistanceFrom(other.center2D) - this.getBound2D() - other.getBound2D() > 0) {
+			return 0;
+		}
+
 		intersects.clear();
+
+		int thisInShape = 0;
+		for (Position2D vertex : this.viewPoints) {
+			if (other.inShape(vertex)) {
+				intersects.add(vertex);
+				thisInShape++;
+			}
+		}
+
+		int otherInShape = 0;
+		for (Position2D vertex : other.viewPoints) {
+			if (this.inShape(vertex)) {
+				intersects.add(vertex);
+				otherInShape++;
+			}
+		}
+
 		for (int i = 0; i < this.edges2D.length - 1; i++) {
+			if (intersects.size() >= threshold) {
+				break;
+			}
 			for (int j = 0; j < other.edges2D.length - 1; j++) {
+				if (intersects.size() >= threshold) {
+					break;
+				}
 				Position2D poi = this.edges2D[i].intersects(other.edges2D[j]);
 				if (poi != null) { // Test for parallel
 					// Test for bounds
@@ -687,6 +730,10 @@ public class Face implements Comparable<Face> {
 						}
 					}
 				}
+			}
+
+			if (intersects.size() >= threshold) {
+				break;
 			}
 
 			Position2D poi = this.edges2D[i].intersects(other.edges2D[other.numPoints - 1]);
@@ -729,6 +776,9 @@ public class Face implements Comparable<Face> {
 		}
 
 		for (int j = 0; j < other.edges2D.length - 1; j++) {
+			if (intersects.size() >= threshold) {
+				break;
+			}
 			Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[j]);
 			if (poi != null) { // Test for parallel
 				// Test for bounds
@@ -767,57 +817,48 @@ public class Face implements Comparable<Face> {
 			}
 		}
 
-		Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[other.numPoints - 1]);
-		if (poi != null) { // Test for parallel
-			// Test for bounds
-			if (this.inBounds(poi, this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
-				if (other.inBounds(poi, other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
+		if (intersects.size() < threshold) {
+			Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[other.numPoints - 1]);
+			if (poi != null) { // Test for parallel
+				// Test for bounds
+				if (this.inBounds(poi, this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+					if (other.inBounds(poi, other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
 
-					intersects.add(poi);
+						intersects.add(poi);
+					}
 				}
-			}
-		} else if (this.edges2D[this.numPoints - 1].similar(other.edges2D[other.numPoints - 1])) {
-			if (this.inBounds(this.viewPoints[this.numPoints - 1], this.viewPoints[this.numPoints - 1],
-					this.viewPoints[0])) {
-				if (other.inBounds(this.viewPoints[this.numPoints - 1], other.viewPoints[other.numPoints - 1],
-						other.viewPoints[0])) {
-					intersects.add(this.viewPoints[this.numPoints - 1]);
+			} else if (this.edges2D[this.numPoints - 1].similar(other.edges2D[other.numPoints - 1])) {
+				if (this.inBounds(this.viewPoints[this.numPoints - 1], this.viewPoints[this.numPoints - 1],
+						this.viewPoints[0])) {
+					if (other.inBounds(this.viewPoints[this.numPoints - 1], other.viewPoints[other.numPoints - 1],
+							other.viewPoints[0])) {
+						intersects.add(this.viewPoints[this.numPoints - 1]);
+					}
 				}
-			}
 
-			if (this.inBounds(this.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
-				if (other.inBounds(this.viewPoints[0], other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
-					intersects.add(this.viewPoints[0]);
+				if (this.inBounds(this.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+					if (other.inBounds(this.viewPoints[0], other.viewPoints[other.numPoints - 1],
+							other.viewPoints[0])) {
+						intersects.add(this.viewPoints[0]);
+					}
 				}
-			}
 
-			if (this.inBounds(other.viewPoints[other.numPoints - 1], this.viewPoints[this.numPoints - 1],
-					this.viewPoints[0])) {
-				if (other.inBounds(other.viewPoints[other.numPoints - 1], other.viewPoints[other.numPoints - 1],
-						other.viewPoints[0])) {
-					intersects.add(other.viewPoints[other.numPoints - 1]);
+				if (this.inBounds(other.viewPoints[other.numPoints - 1], this.viewPoints[this.numPoints - 1],
+						this.viewPoints[0])) {
+					if (other.inBounds(other.viewPoints[other.numPoints - 1], other.viewPoints[other.numPoints - 1],
+							other.viewPoints[0])) {
+						intersects.add(other.viewPoints[other.numPoints - 1]);
+					}
 				}
-			}
 
-			if (this.inBounds(other.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
-				if (other.inBounds(other.viewPoints[0], other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
-					intersects.add(other.viewPoints[0]);
+				if (this.inBounds(other.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+					if (other.inBounds(other.viewPoints[0], other.viewPoints[other.numPoints - 1],
+							other.viewPoints[0])) {
+						intersects.add(other.viewPoints[0]);
+					}
 				}
 			}
 		}
-
-		for (Position2D vertex : this.viewPoints) {
-			if (other.inShape(vertex)) {
-				intersects.add(vertex);
-			}
-		}
-
-		for (Position2D vertex : other.viewPoints) {
-			if (this.inShape(vertex)) {
-				intersects.add(vertex);
-			}
-		}
-
 		if (intersects.size() == 0) {
 			return 0;
 		}
@@ -832,8 +873,8 @@ public class Face implements Comparable<Face> {
 
 		Position3D thisReal = this.pov.getRealPoint(center, this.facePlane);
 		Position3D otherReal = other.pov.getRealPoint(center, other.facePlane);
-		
-		if(thisReal ==  null || otherReal == null) {
+
+		if (thisReal == null || otherReal == null) {
 			return 0;
 		}
 		double thisDis = this.pov.getPos().totDistanceFrom(thisReal);
@@ -842,8 +883,20 @@ public class Face implements Comparable<Face> {
 		if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
 			return 0;
 		} else if (thisDis > otherDis) {
+			if (thisInShape == this.viewPoints.length) {
+				this.checkVisible = false;
+				this.visible = false;
+			} else {
+				this.visible = true;
+			}
 			return -1;
 		} else {
+			if (otherInShape == other.viewPoints.length) {
+				other.checkVisible = false;
+				other.visible = false;
+			} else {
+				this.visible = true;
+			}
 			return 1;
 		}
 
@@ -981,19 +1034,20 @@ public class Face implements Comparable<Face> {
 			}
 		}
 	}
-	
+
 	/**
 	 * Rotates a Face around an inputted point
-	 * @param ang Angle in radians to rotate counter clockwise
-	 * @param axis Axis of rotation
+	 * 
+	 * @param ang   Angle in radians to rotate counter clockwise
+	 * @param axis  Axis of rotation
 	 * @param pivot Pivot point
 	 */
 	public void orbit(double ang, Vector3D axis, Position3D pivot) {
 		Vector3D dir = pivot.getDirection(this.center3D);
-		
+
 		this.rotate(ang, axis);
 		dir.rotate(ang, axis);
-		
+
 		this.setCoords(pivot.add(dir).getCoord());
 	}
 

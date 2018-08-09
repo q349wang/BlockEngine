@@ -42,6 +42,14 @@ public class Drawer extends JPanel {
 					g2.drawPolygon(sortedFace.get(i).getPoly());
 				} else {
 					g2.fillPolygon(sortedFace.get(i).getPoly());
+
+				}
+
+				if (MainWindow.SHOWCENT) {
+					Position2D center = sortedFace.get(i).getPOV().getViewPoint(sortedFace.get(i).getCenter3D());
+					g2.setColor(Color.BLACK);
+					g2.fillArc((int) (center.getX() + Face.xOffset - 5), (int) (-center.getY() + Face.yOffset - 5), 10,
+							10, 0, 360);
 				}
 
 			}

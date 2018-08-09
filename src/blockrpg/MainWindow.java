@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JLabel;
 import javax.xml.parsers.DocumentBuilder;
@@ -45,6 +47,7 @@ public class MainWindow extends javax.swing.JFrame {
 	public static boolean FPS;
 	public static boolean DEBUG;
 	public static boolean WIRE;
+	public static boolean SHOWCENT;
 
 	private ArrayList<Face> faces;
 
@@ -74,6 +77,7 @@ public class MainWindow extends javax.swing.JFrame {
 			FPS = Boolean.parseBoolean(document.getElementsByTagName("fps").item(0).getTextContent());
 			DEBUG = Boolean.parseBoolean(document.getElementsByTagName("debug").item(0).getTextContent());
 			WIRE = Boolean.parseBoolean(document.getElementsByTagName("wire").item(0).getTextContent());
+			SHOWCENT = Boolean.parseBoolean(document.getElementsByTagName("center").item(0).getTextContent());
 			if (_width != Toolkit.getDefaultToolkit().getScreenSize().getWidth()
 					|| _height != Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
 
@@ -158,7 +162,7 @@ public class MainWindow extends javax.swing.JFrame {
 			gamePanel.add(fps);
 		}
 		gamePanel.setLayout(null);
-
+		gamePanel.setList(faces);
 		gamePanel.requestFocus();
 		pack();
 	}
@@ -201,17 +205,46 @@ public class MainWindow extends javax.swing.JFrame {
 
 			@Override
 			public void run() {
-				 window.testFunc2();
+				window.testFunc2();
 			}
 
 		});
 
+		Timer paintingThread = new Timer();
+		paintingThread.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+
+				// prism.addY(-3000);
+				// prism.rotate(Math.PI, axis);
+
+				// prevTick = System.nanoTime();
+
+				window.gamePanel.repaint();
+
+				// currTick = System.nanoTime();
+				// window.fps.setText("FPS: " + Long.toString(1000000000 / (currTick -
+				// prevTick)));
+			}
+
+		}, 0, 1);
+
 		thread.start();
+	}
+
+	private void paint() {
+		if (faces != null) {
+			java.awt.EventQueue.invokeLater(() -> {
+				gamePanel.repaint();
+
+			});
+		}
 	}
 
 	private void testFunc2() {
 		Color col1 = new Color(45, 84, 38);
-		Perspective pov = new Perspective(new double[] { -8000, 0, -8000 }, new double[] { 1, 0, 1 },
+		Perspective pov = new Perspective(new double[] { -8000, -8000, -8000 }, new double[] { 1, 1, 1 },
 				new double[] { 0, 1, 0 });
 		pov.setZoom(zoom);
 		Position2D[] points1 = { new Position2D(-1000, -500), new Position2D(-1000, 500), new Position2D(0, 500) };
@@ -219,27 +252,43 @@ public class MainWindow extends javax.swing.JFrame {
 		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
 
 		Prism prism = new Prism(1000.0, new Position3D(0, 0, 0), pov, face1);
+		Prism prism2 = new Prism(prism);
+		Prism prism3 = new Prism(prism);
+		Prism prism4 = new Prism(prism);
+		Prism prism5 = new Prism(prism);
+		Prism prism6 = new Prism(prism);
+		Prism prism7 = new Prism(prism);
 		prism.setCol(col1);
 		for (int i = 0; i < 5; i++) {
-			prism.setCol(new Color(40*i, 200-15*i, 30*i), i);
+			prism.setCol(new Color(40 * i, 200 - 15 * i, 30 * i), i);
 			faces.add(prism.getFaces()[i]);
+//			faces.add(prism2.getFaces()[i]);
+//			faces.add(prism3.getFaces()[i]);
+//			faces.add(prism4.getFaces()[i]);
+//			faces.add(prism5.getFaces()[i]);
+//			faces.add(prism6.getFaces()[i]);
+//			faces.add(prism7.getFaces()[i]);
+
 		}
 		Vector3D axis = new Vector3D(1, 0, 0);
+
+		// prism.addY(-3000);
+		//prism.rotate(Math.PI, axis);
+
+		prism.addY(1);
+
 		Long prevTick = System.nanoTime();
 		Long currTick = System.nanoTime();
-		while(true) {
+		while (true) {
 			prevTick = System.nanoTime();
-		//prism.addX(1);
-		prism.rotate(0.01, axis);
-		Collections.sort(faces);
-		gamePanel.setList(faces);
-		java.awt.EventQueue.invokeLater(() -> {
-			gamePanel.repaint();
+			 prism.addY(1);
+			//prism.rotate(0.01, axis);
+			Collections.sort(faces);
 
-		});
-		
-		currTick = System.nanoTime();
-		fps.setText("FPS: " + Long.toString(1000000000 / (currTick - prevTick)));
+			
+
+			currTick = System.nanoTime();
+			fps.setText("FPS: " + Long.toString(1000000000 / (currTick - prevTick)));
 		}
 	}
 
@@ -308,19 +357,19 @@ public class MainWindow extends javax.swing.JFrame {
 
 			Vector3D axis = new Vector3D(0, 1, 1);
 			// Vector3D axis2 = new Vector3D(1, 0, 0);
-			face1.rotate(0.01, axis);
+			// face1.rotate(0.01, axis);
 			// face2 = face2.rotate(0.01, axis);
 
 			// face1 = face1.rotate(0.01, axis2);
 
-			if (face1.getPlane().getPos().getCoord()[0] <= -1000) {
+			if (face1.getPlane().getPos().getCoord()[0] <= -2000) {
 				xSign = 1;
-			} else if (face1.getPlane().getPos().getCoord()[0] >= 1000) {
+			} else if (face1.getPlane().getPos().getCoord()[0] >= 2000) {
 				xSign = -1;
 			}
-			if (face2.getPlane().getPos().getCoord()[0] <= -1000) {
+			if (face2.getPlane().getPos().getCoord()[0] <= -2000) {
 				ySign = 1;
-			} else if (face2.getPlane().getPos().getCoord()[0] >= 1000) {
+			} else if (face2.getPlane().getPos().getCoord()[0] >= 2000) {
 				ySign = -1;
 			}
 			if (face1.getPlane().getPos().getCoord()[2] <= -1000) {

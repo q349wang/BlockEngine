@@ -22,12 +22,13 @@ public class Prism {
 		setPov(new Perspective());
 		set(new Position3D());
 	}
-	
+
 	/**
 	 * Creates a custom prism with an inputted face as the sides
-	 * @param length Length from face to face
-	 * @param center Center of prism
-	 * @param pov Perspective prism is seen from
+	 * 
+	 * @param length   Length from face to face
+	 * @param center   Center of prism
+	 * @param pov      Perspective prism is seen from
 	 * @param sideFace Face inputted
 	 */
 	public Prism(double length, Position3D center, Perspective pov, Face sideFace) {
@@ -42,21 +43,21 @@ public class Prism {
 		plane.setPos(center.add(plane.getNorm().multiply(length / 2).toPos()).getCoord());
 
 		faces[0] = new Face(points, points.length, plane, pov);
-		
+
 		plane.setPos(center.subtract(plane.getNorm().multiply(length / 2).toPos()).getCoord());
 		for (Position2D point : points) {
 			point.setCoord(point.toVec().multiply(-1).getCoord());
 		}
-		plane.rotatePlane(Math.PI, new Vector3D(0,0,1));
+		plane.rotatePlane(Math.PI, new Vector3D(0, 0, 1));
 		faces[1] = new Face(points, points.length, plane, pov);
 		for (int i = 2; i < faces.length - 1; i++) {
 			points = new Position2D[4];
 			Position3D[] truePoints = new Position3D[4];
 
-			truePoints[0] = faces[0].getTruePoints()[i-2];
-			truePoints[1] = faces[0].getTruePoints()[i -1];
-			truePoints[2] = faces[1].getTruePoints()[i-1];
-			truePoints[3] = faces[1].getTruePoints()[i -2];
+			truePoints[0] = faces[0].getTruePoints()[i - 2];
+			truePoints[1] = faces[0].getTruePoints()[i - 1];
+			truePoints[2] = faces[1].getTruePoints()[i - 1];
+			truePoints[3] = faces[1].getTruePoints()[i - 2];
 
 			Position3D centerPos = new Position3D();
 			for (Position3D point : truePoints) {
@@ -101,6 +102,21 @@ public class Prism {
 	}
 
 	/**
+	 * Copies another prism
+	 * 
+	 * @param other Other prism to copy
+	 */
+	public Prism(Prism other) {
+		this.pov = other.pov;
+		this.center = other.center.clone();
+
+		this.faces = new Face[other.faces.length];
+		for (int i = 0; i < other.faces.length; i++) {
+			this.faces[i] = other.faces[i].clone();
+		}
+	}
+
+	/**
 	 * 
 	 * @return Returns center of prism
 	 */
@@ -110,25 +126,27 @@ public class Prism {
 
 	/**
 	 * Sets prism to have center at pos
+	 * 
 	 * @param pos Position3D to set center to
 	 */
 	public void set(Position3D pos) {
-		
+
 		double xDiff = this.center.xDistancefrom(pos);
 		double yDiff = this.center.yDistancefrom(pos);
 		double zDiff = this.center.zDistancefrom(pos);
-		
+
 		for (Face face : faces) {
 			face.addX(xDiff);
 			face.addY(yDiff);
 			face.addZ(zDiff);
 		}
-		
+
 		this.center = pos.clone();
 	}
-	
+
 	/**
 	 * Sets prism to have center at inputted x
+	 * 
 	 * @param x value to change x coordinate to
 	 */
 	public void setX(double x) {
@@ -136,9 +154,10 @@ public class Prism {
 		pos.setX(x);
 		this.set(pos);
 	}
-	
+
 	/**
 	 * Sets prism to have center at inputted y
+	 * 
 	 * @param y value to change y coordinate to
 	 */
 	public void setY(double y) {
@@ -146,9 +165,10 @@ public class Prism {
 		pos.setY(y);
 		this.set(pos);
 	}
-	
+
 	/**
 	 * Sets prism to have center at inputted z
+	 * 
 	 * @param z value to change z coordinate to
 	 */
 	public void setZ(double z) {
@@ -156,9 +176,10 @@ public class Prism {
 		pos.setZ(z);
 		this.set(pos);
 	}
-	
+
 	/**
 	 * Adds to x prism center
+	 * 
 	 * @param x value to add to x coordinate
 	 */
 	public void addX(double x) {
@@ -166,9 +187,10 @@ public class Prism {
 		pos.addX(x);
 		this.set(pos);
 	}
-	
+
 	/**
 	 * Adds to y prism center
+	 * 
 	 * @param y value to add to y coordinate
 	 */
 	public void addY(double y) {
@@ -176,9 +198,10 @@ public class Prism {
 		pos.addY(y);
 		this.set(pos);
 	}
-	
+
 	/**
 	 * Adds to z prism center
+	 * 
 	 * @param z value to add to z coordinate
 	 */
 	public void addZ(double z) {
@@ -197,18 +220,20 @@ public class Prism {
 
 	/**
 	 * Sets perspective
+	 * 
 	 * @param pov Perspective to set to
 	 */
 	public void setPov(Perspective pov) {
 		this.pov = pov;
-		
-		for (Face face :faces) {
+
+		for (Face face : faces) {
 			face.setPOV(pov);
 		}
 	}
-	
+
 	/**
 	 * Sets Colour of the whole prism
+	 * 
 	 * @param col Colour to set it to
 	 */
 	public void setCol(Color col) {
@@ -219,28 +244,30 @@ public class Prism {
 
 	/**
 	 * Sets Colour of face at specific index
-	 * @param col Colour to set it to
+	 * 
+	 * @param col   Colour to set it to
 	 * @param index Index of face
 	 */
 	public void setCol(Color col, int index) {
-		if(index >= faces.length) {
+		if (index >= faces.length) {
 			throw new IndexOutOfBoundsException();
 		}
-		
+
 		faces[index].setCol(col);
 	}
-	
+
 	/**
 	 * Rotates Prism about inputted axis
-	 * @param ang Angle in radians to rotate counter clockwise
+	 * 
+	 * @param ang  Angle in radians to rotate counter clockwise
 	 * @param axis Axis of rotation
 	 */
 	public void rotate(double ang, Vector3D axis) {
-		for(int i = 2; i < faces.length;i++) {
-			faces[i].orbit(ang, axis, this.center);
+		for (int i = 0; i < faces.length; i++) {
+			faces[i].rotate(ang, axis);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns array of faces
