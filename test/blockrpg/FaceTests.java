@@ -188,12 +188,9 @@ class FaceTests {
 		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
 
 		assertEquals(1, face2.compareTo(face1));
-		assertEquals(0, face1.compareTo(face2)); // 0 as face 1 is no longer visible
-
-		face1.addX(0); // Resets check Visible
 
 		assertEquals(-1, face1.compareTo(face2));
-		assertEquals(0, face2.compareTo(face1)); // 0 as face 1 is no longer visible
+
 	}
 
 	@Test
@@ -213,27 +210,12 @@ class FaceTests {
 		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
 
 		assertEquals(1, face2.compareTo(face1));
-		assertEquals(0, face1.compareTo(face2)); // 0 as face 1 is no longer visible
-
-		face1.addX(0); // Resets check Visible
-
 		assertEquals(-1, face1.compareTo(face2));
-		assertEquals(0, face2.compareTo(face1)); // 0 as face 1 is no longer visible
 
-		face1.setX(0);
-
-		assertEquals(0, face2.compareTo(face1));
-		assertEquals(0, face1.compareTo(face2));
-
-		face2.setX(100);
+		face2.setX(1000);
 
 		assertEquals(-1, face2.compareTo(face1));
-		assertEquals(0, face1.compareTo(face2)); // 0 as face 2 is no longer visible
-
-		face2.addX(0); // Resets check Visible
-
 		assertEquals(1, face1.compareTo(face2));
-		assertEquals(0, face2.compareTo(face1)); // 0 as face 2 is no longer visible
 	}
 
 	@Test
@@ -251,12 +233,7 @@ class FaceTests {
 		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
 
 		assertEquals(1, face2.compareTo(face1));
-		assertEquals(0, face2.compareTo(face1)); // 0 Since face 1 is invisible
-
-		face1.addX(0); // Resets check Visible
-
 		assertEquals(-1, face1.compareTo(face2));
-		assertEquals(0, face1.compareTo(face2)); // 0 as face 1 is invisible
 	}
 
 	@Test
@@ -287,12 +264,7 @@ class FaceTests {
 		assertEquals(-1, face1.compareTo(face3));
 
 		assertEquals(-1, face3.compareTo(face2));
-		assertEquals(0, face3.compareTo(face1)); // 0 Since face 1 is invisible
-
-		face1.addX(0); // Resets check Visible
-
 		assertEquals(-1, face1.compareTo(face3));
-		assertEquals(0, face1.compareTo(face3)); // 0 as face 1 is invisible
 
 		assertEquals(0, face1.compareTo(face1));
 		assertEquals(0, face3.compareTo(face3));

@@ -6,7 +6,7 @@
 		<zoom>4000</zoom>
 		<fps>true</fps>
 		<debug>false</debug>
-		<wire>true</wire>
+		<wire>false</wire>
 		<center>true</center>
 	</size>
 </properties>

@@ -262,12 +262,12 @@ public class MainWindow extends javax.swing.JFrame {
 		for (int i = 0; i < 5; i++) {
 			prism.setCol(new Color(40 * i, 200 - 15 * i, 30 * i), i);
 			faces.add(prism.getFaces()[i]);
-//			faces.add(prism2.getFaces()[i]);
-//			faces.add(prism3.getFaces()[i]);
-//			faces.add(prism4.getFaces()[i]);
-//			faces.add(prism5.getFaces()[i]);
-//			faces.add(prism6.getFaces()[i]);
-//			faces.add(prism7.getFaces()[i]);
+			faces.add(prism2.getFaces()[i]);
+			faces.add(prism3.getFaces()[i]);
+			faces.add(prism4.getFaces()[i]);
+			faces.add(prism5.getFaces()[i]);
+			faces.add(prism6.getFaces()[i]);
+			faces.add(prism7.getFaces()[i]);
 
 		}
 		Vector3D axis = new Vector3D(1, 0, 0);

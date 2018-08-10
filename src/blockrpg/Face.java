@@ -9,6 +9,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,8 +51,9 @@ public class Face implements Comparable<Face> {
 	private boolean visible;
 	private boolean forceTransparent;
 	private boolean checkVisible;
-	
+
 	private ArrayList<Position2D> intersects;
+	private Map<Face, Integer> comps;
 
 	private Color col;
 
@@ -80,8 +83,9 @@ public class Face implements Comparable<Face> {
 		this.visible = true;
 		this.setForceTransparent(false);
 		this.checkVisible = true;
-		
+
 		this.intersects = new ArrayList<Position2D>();
+		this.comps = new HashMap<Face, Integer>();
 
 		this.col = new Color(0, 0, 0);
 	}
@@ -132,7 +136,8 @@ public class Face implements Comparable<Face> {
 		this.checkVisible = true;
 
 		this.intersects = new ArrayList<Position2D>();
-		
+		this.comps = new HashMap<Face, Integer>();
+
 		this.col = new Color(0, 0, 0);
 
 		setPoints();
@@ -184,9 +189,10 @@ public class Face implements Comparable<Face> {
 		this.visible = true;
 		this.setForceTransparent(false);
 		this.checkVisible = true;
-		
+
 		this.intersects = new ArrayList<Position2D>();
-		
+		this.comps = new HashMap<Face, Integer>();
+
 		this.col = new Color(col.getRGB());
 
 		setPoints();
@@ -224,9 +230,10 @@ public class Face implements Comparable<Face> {
 		this.visible = true;
 		this.setForceTransparent(false);
 		this.checkVisible = true;
-		
-		this.intersects = other.intersects;
 
+		this.intersects = new ArrayList<Position2D>();
+		this.comps = new HashMap<Face, Integer>();
+		
 		this.col = new Color(other.col.getRGB());
 
 		setPoints();
@@ -272,6 +279,9 @@ public class Face implements Comparable<Face> {
 		this.visible = other.visible;
 		this.setForceTransparent(other.forceTransparent);
 		this.checkVisible = other.checkVisible;
+		
+		this.intersects = new ArrayList<Position2D>();
+		this.comps = new HashMap<Face, Integer>();
 
 		this.col = new Color(other.col.getRGB());
 
@@ -662,32 +672,17 @@ public class Face implements Comparable<Face> {
 	public int compareTo(Face other) {
 
 		int threshold = 2;
-		
-		if (!this.checkVisible || !other.checkVisible) {
-			return 0;
+
+		if ((!this.visible && !other.visible) && this.comps.containsKey(other)) {
+			return this.comps.get(other);
 		}
 
-		if (this.center2D.totDistanceFrom(other.center2D) - this.getBound2D() - other.getBound2D() > 0) {
-			return 0;
+		if ((this.center2D.totDistanceFrom(other.center2D) - this.getBound2D() - other.getBound2D() > 0)
+				&& this.comps.containsKey(other)) {
+			return this.comps.get(other);
 		}
 
 		intersects.clear();
-
-		int thisInShape = 0;
-		for (Position2D vertex : this.viewPoints) {
-			if (other.inShape(vertex)) {
-				intersects.add(vertex);
-				thisInShape++;
-			}
-		}
-
-		int otherInShape = 0;
-		for (Position2D vertex : other.viewPoints) {
-			if (this.inShape(vertex)) {
-				intersects.add(vertex);
-				otherInShape++;
-			}
-		}
 
 		for (int i = 0; i < this.edges2D.length - 1; i++) {
 			if (intersects.size() >= threshold) {
@@ -859,7 +854,27 @@ public class Face implements Comparable<Face> {
 				}
 			}
 		}
+		
+
+		int thisInShape = 0;
+		for (Position2D vertex : this.viewPoints) {
+			if (other.inShape(vertex)) {
+				intersects.add(vertex);
+				thisInShape++;
+			}
+		}
+
+		int otherInShape = 0;
+		for (Position2D vertex : other.viewPoints) {
+			if (this.inShape(vertex)) {
+				intersects.add(vertex);
+				otherInShape++;
+			}
+		}
 		if (intersects.size() == 0) {
+			if(!this.comps.containsKey(other)) {
+				this.comps.put(other, 0);
+			}
 			return 0;
 		}
 
@@ -875,12 +890,18 @@ public class Face implements Comparable<Face> {
 		Position3D otherReal = other.pov.getRealPoint(center, other.facePlane);
 
 		if (thisReal == null || otherReal == null) {
+			if(!this.comps.containsKey(other)) {
+				this.comps.put(other, 0);
+			}
 			return 0;
 		}
 		double thisDis = this.pov.getPos().totDistanceFrom(thisReal);
 		double otherDis = other.pov.getPos().totDistanceFrom(otherReal);
 
 		if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
+			if(!this.comps.containsKey(other)) {
+				this.comps.put(other, 0);
+			}
 			return 0;
 		} else if (thisDis > otherDis) {
 			if (thisInShape == this.viewPoints.length) {
@@ -889,6 +910,10 @@ public class Face implements Comparable<Face> {
 			} else {
 				this.visible = true;
 			}
+			
+			if(!this.comps.containsKey(other)) {
+				this.comps.put(other, -1);
+			}
 			return -1;
 		} else {
 			if (otherInShape == other.viewPoints.length) {
@@ -896,6 +921,9 @@ public class Face implements Comparable<Face> {
 				other.visible = false;
 			} else {
 				this.visible = true;
+			}
+			if(!this.comps.containsKey(other)) {
+				this.comps.put(other, 1);
 			}
 			return 1;
 		}
