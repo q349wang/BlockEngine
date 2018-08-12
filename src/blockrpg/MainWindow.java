@@ -157,7 +157,8 @@ public class MainWindow extends javax.swing.JFrame {
 		fps.setFont(new Font("Arial", Font.BOLD, 11));
 		fps.setBounds(20, 10, 50, 40);
 
-		gamePanel.addKeyListener(new KeyInput());
+		input = new KeyInput();
+		gamePanel.addKeyListener(input);
 		if (FPS) {
 			gamePanel.add(fps);
 		}
@@ -209,26 +210,26 @@ public class MainWindow extends javax.swing.JFrame {
 			}
 
 		});
-
-		Timer paintingThread = new Timer();
-		paintingThread.scheduleAtFixedRate(new TimerTask() {
-
-			@Override
-			public void run() {
-
-				// prism.addY(-3000);
-				// prism.rotate(Math.PI, axis);
-
-				// prevTick = System.nanoTime();
-
-				window.gamePanel.repaint();
-
-				// currTick = System.nanoTime();
-				// window.fps.setText("FPS: " + Long.toString(1000000000 / (currTick -
-				// prevTick)));
-			}
-
-		}, 0, 1);
+//
+//		Timer paintingThread = new Timer();
+//		paintingThread.scheduleAtFixedRate(new TimerTask() {
+//
+//			@Override
+//			public void run() {
+//
+//				// prism.addY(-3000);
+//				// prism.rotate(Math.PI, axis);
+//
+//				// prevTick = System.nanoTime();
+//
+//				window.gamePanel.repaint();
+//
+//				// currTick = System.nanoTime();
+//				// window.fps.setText("FPS: " + Long.toString(1000000000 / (currTick -
+//				// prevTick)));
+//			}
+//
+//		}, 0, 1);
 
 		thread.start();
 	}
@@ -244,33 +245,33 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void testFunc2() {
 		Color col1 = new Color(45, 84, 38);
-		Perspective pov = new Perspective(new double[] { -8000, -8000, -8000 }, new double[] { 1, 1, 1 },
+		Perspective pov = new Perspective(new double[] { -8000, 0, -8000 }, new double[] { 1, 0, 1 },
 				new double[] { 0, 1, 0 });
 		pov.setZoom(zoom);
-		Position2D[] points1 = { new Position2D(-1000, -500), new Position2D(-1000, 500), new Position2D(1000, 500), new Position2D(1000, -500) };
+		Position2D[] points1 = { new Position2D(-1000, -500), new Position2D(-1000, 500), new Position2D(1000, 500),
+				new Position2D(1000, -500) };
 		Plane plane1 = new Plane(new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), new Position3D(0, 0, 0));
 		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
 
 		Prism prism = new Prism(1000.0, new Position3D(0, 0, 0), pov, face1);
 		Prism prisms[] = new Prism[5];
-		for(int i = 0; i< 5;i++) {
+		for (int i = 0; i < 5; i++) {
 			prisms[i] = new Prism(prism);
-			prisms[i].addY(-500*i);
+			prisms[i].addY(-500 * i);
 		}
 
-		prism.setCol(col1);
 		for (int i = 0; i < 6; i++) {
-			prism.setCol(new Color(40 * i, 200 - 15 * i, 30 * i), i);
+			prism.setCol(new Color(50 * i, 200 - 15 * i, 210-30 * i), i);
 			faces.add(prism.getFaces()[i]);
-			for(int j = 0; j< 5;j++) {
-				//faces.add(prisms[j].getFaces()[i]);
+			for (int j = 0; j < 5; j++) {
+				// faces.add(prisms[j].getFaces()[i]);
 			}
 
 		}
 		Vector3D axis = new Vector3D(1, 0, 0);
 
 		// prism.addY(-3000);
-		//prism.rotate(Math.PI, axis);
+		// prism.rotate(Math.PI, axis);
 
 		prism.addY(1);
 
@@ -278,14 +279,21 @@ public class MainWindow extends javax.swing.JFrame {
 		Long currTick = System.nanoTime();
 		while (true) {
 			prevTick = System.nanoTime();
-			// prism.addY(1);
-			prism.rotate(0.001, axis);
+			prism.addY(input.test2);
+			//pov.orbit(input.test, axis, prism.getCenter());
+			prism.rotate(input.test, axis);
+			for (Face face : faces) {
+				face.setPoints();
+			}
 			Collections.sort(faces);
-			for(Face face : faces) {
+			for (Face face : faces) {
 				face.setMoved(false);
 			}
 			
+			java.awt.EventQueue.invokeLater(() -> {
+				gamePanel.repaint();
 
+			});
 			currTick = System.nanoTime();
 			fps.setText("FPS: " + Long.toString(1000000000 / (currTick - prevTick)));
 		}
@@ -401,4 +409,5 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private Drawer gamePanel;
 	private JLabel fps;
+	private KeyInput input;
 }

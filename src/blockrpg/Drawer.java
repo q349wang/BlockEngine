@@ -25,6 +25,7 @@ public class Drawer extends JPanel {
 		sortedFace = faces;
 	}
 
+
 	@Override
 	public void paintComponent(Graphics g) {
 

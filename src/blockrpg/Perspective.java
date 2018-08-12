@@ -353,4 +353,37 @@ public class Perspective {
 				+ this.pos.toString();
 	}
 
+	/**
+	 * Rotates direction of perspective ang radians ccw about axis
+	 * @param ang angle in radians
+	 * @param axis axis to rotate about
+	 */
+	public void rotateDir(double ang, Vector3D axis) {
+		dir.rotate(ang, axis);
+		dir = dir.normalize();
+		tilt = dir.perp(tilt).normalize();
+		norm = dir.cross(tilt);
+		setBasis();
+		
+	}
+	
+	/**
+	 * Orbits perspective ang radians ccw about axis around given point
+	 * @param ang angle in radians
+	 * @param axis axis to rotate about
+	 * @param pivot Point to orbit around
+	 */
+	public void orbit(double ang, Vector3D axis, Position3D pivot) {
+		Vector3D pivotDir = pivot.getDirection(this.pos);
+		dir.rotate(ang, axis);
+		dir = dir.normalize();
+		tilt = dir.perp(tilt).normalize();
+		norm = dir.cross(tilt);
+		
+		pivotDir.rotate(ang, axis);
+		this.pos = pivot.add(pivotDir);
+		setBasis();
+		
+	}
+
 }

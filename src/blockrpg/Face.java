@@ -205,11 +205,13 @@ public class Face implements Comparable<Face> {
 		setOffset();
 		this.seenFace = new Polygon();
 
-		this.viewPoints = null;
-		this.truePoints = null;
+		this.viewPoints = new Position2D[other.numPoints];
+		this.truePoints = new Position3D[other.numPoints];
 		this.relPoints = new Position2D[other.numPoints];
 		Position2D planeCenter = new Position2D();
 		for (int i = 0; i < other.numPoints; i++) {
+			this.viewPoints[i] = other.viewPoints[i].clone();
+			this.truePoints[i] = other.truePoints[i].clone();
 			this.relPoints[i] = other.relPoints[i].clone();
 			planeCenter = planeCenter.add(this.relPoints[i]);
 		}
@@ -525,6 +527,10 @@ public class Face implements Comparable<Face> {
 
 		this.moved = true;
 		this.visible = true;
+		
+		if(Math.abs(this.facePlane.getNorm().dot(this.pov.getDir())) < Coord3D.ERROR) {
+			this.visible = false;
+		}
 
 		this.bound3D = 0;
 
