@@ -264,7 +264,7 @@ public class Prism {
 	 */
 	public void rotate(double ang, Vector3D axis) {
 		for (int i = 0; i < faces.length; i++) {
-			faces[i].rotate(ang, axis);
+			faces[i].orbit(ang, axis, this.center);
 		}
 	}
 

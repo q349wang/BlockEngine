@@ -247,27 +247,24 @@ public class MainWindow extends javax.swing.JFrame {
 		Perspective pov = new Perspective(new double[] { -8000, -8000, -8000 }, new double[] { 1, 1, 1 },
 				new double[] { 0, 1, 0 });
 		pov.setZoom(zoom);
-		Position2D[] points1 = { new Position2D(-1000, -500), new Position2D(-1000, 500), new Position2D(0, 500) };
+		Position2D[] points1 = { new Position2D(-1000, -500), new Position2D(-1000, 500), new Position2D(1000, 500), new Position2D(1000, -500) };
 		Plane plane1 = new Plane(new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), new Position3D(0, 0, 0));
 		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
 
 		Prism prism = new Prism(1000.0, new Position3D(0, 0, 0), pov, face1);
-		Prism prism2 = new Prism(prism);
-		Prism prism3 = new Prism(prism);
-		Prism prism4 = new Prism(prism);
-		Prism prism5 = new Prism(prism);
-		Prism prism6 = new Prism(prism);
-		Prism prism7 = new Prism(prism);
+		Prism prisms[] = new Prism[5];
+		for(int i = 0; i< 5;i++) {
+			prisms[i] = new Prism(prism);
+			prisms[i].addY(-500*i);
+		}
+
 		prism.setCol(col1);
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			prism.setCol(new Color(40 * i, 200 - 15 * i, 30 * i), i);
 			faces.add(prism.getFaces()[i]);
-			faces.add(prism2.getFaces()[i]);
-			faces.add(prism3.getFaces()[i]);
-			faces.add(prism4.getFaces()[i]);
-			faces.add(prism5.getFaces()[i]);
-			faces.add(prism6.getFaces()[i]);
-			faces.add(prism7.getFaces()[i]);
+			for(int j = 0; j< 5;j++) {
+				//faces.add(prisms[j].getFaces()[i]);
+			}
 
 		}
 		Vector3D axis = new Vector3D(1, 0, 0);
@@ -281,10 +278,12 @@ public class MainWindow extends javax.swing.JFrame {
 		Long currTick = System.nanoTime();
 		while (true) {
 			prevTick = System.nanoTime();
-			 prism.addY(1);
-			//prism.rotate(0.01, axis);
+			// prism.addY(1);
+			prism.rotate(0.001, axis);
 			Collections.sort(faces);
-
+			for(Face face : faces) {
+				face.setMoved(false);
+			}
 			
 
 			currTick = System.nanoTime();

@@ -5,8 +5,8 @@
 		<width>1920</width>
 		<zoom>4000</zoom>
 		<fps>true</fps>
-		<debug>false</debug>
+		<debug>true</debug>
 		<wire>false</wire>
-		<center>true</center>
+		<center>false</center>
 	</size>
 </properties>

@@ -50,9 +50,8 @@ public class Face implements Comparable<Face> {
 
 	private boolean visible;
 	private boolean forceTransparent;
-	private boolean checkVisible;
+	private boolean moved;
 
-	private ArrayList<Position2D> intersects;
 	private Map<Face, Integer> comps;
 
 	private Color col;
@@ -82,9 +81,8 @@ public class Face implements Comparable<Face> {
 
 		this.visible = true;
 		this.setForceTransparent(false);
-		this.checkVisible = true;
+		this.moved = true;
 
-		this.intersects = new ArrayList<Position2D>();
 		this.comps = new HashMap<Face, Integer>();
 
 		this.col = new Color(0, 0, 0);
@@ -110,7 +108,7 @@ public class Face implements Comparable<Face> {
 		Position2D planeCenter = new Position2D();
 		for (int i = 0; i < numPoints; i++) {
 			this.relPoints[i] = relPoints[i].clone();
-			planeCenter.add(this.relPoints[i]);
+			planeCenter = planeCenter.add(this.relPoints[i]);
 		}
 
 		planeCenter.setCoord(planeCenter.toVec().multiply(1.0 / numPoints).getCoord());
@@ -133,9 +131,8 @@ public class Face implements Comparable<Face> {
 
 		this.visible = true;
 		this.setForceTransparent(false);
-		this.checkVisible = true;
+		this.moved = true;
 
-		this.intersects = new ArrayList<Position2D>();
 		this.comps = new HashMap<Face, Integer>();
 
 		this.col = new Color(0, 0, 0);
@@ -165,7 +162,7 @@ public class Face implements Comparable<Face> {
 		Position2D planeCenter = new Position2D();
 		for (int i = 0; i < numPoints; i++) {
 			this.relPoints[i] = relPoints[i].clone();
-			planeCenter.add(this.relPoints[i]);
+			planeCenter = planeCenter.add(this.relPoints[i]);
 		}
 
 		planeCenter.setCoord(planeCenter.toVec().multiply(1.0 / numPoints).getCoord());
@@ -188,9 +185,8 @@ public class Face implements Comparable<Face> {
 
 		this.visible = true;
 		this.setForceTransparent(false);
-		this.checkVisible = true;
+		this.moved = true;
 
-		this.intersects = new ArrayList<Position2D>();
 		this.comps = new HashMap<Face, Integer>();
 
 		this.col = new Color(col.getRGB());
@@ -212,11 +208,20 @@ public class Face implements Comparable<Face> {
 		this.viewPoints = null;
 		this.truePoints = null;
 		this.relPoints = new Position2D[other.numPoints];
+		Position2D planeCenter = new Position2D();
 		for (int i = 0; i < other.numPoints; i++) {
 			this.relPoints[i] = other.relPoints[i].clone();
+			planeCenter = planeCenter.add(this.relPoints[i]);
+		}
+
+		planeCenter.setCoord(planeCenter.toVec().multiply(1.0 / other.numPoints).getCoord());
+
+		for (int i = 0; i < other.numPoints; i++) {
+			this.relPoints[i] = this.relPoints[i].subtract(planeCenter);
 		}
 
 		this.facePlane = other.facePlane.clone();
+		this.facePlane.setPos(other.facePlane.placeOnPlane(planeCenter).getCoord());
 		this.numPoints = other.numPoints;
 
 		this.edges2D = null;
@@ -229,11 +234,10 @@ public class Face implements Comparable<Face> {
 
 		this.visible = true;
 		this.setForceTransparent(false);
-		this.checkVisible = true;
+		this.moved = true;
 
-		this.intersects = new ArrayList<Position2D>();
 		this.comps = new HashMap<Face, Integer>();
-		
+
 		this.col = new Color(other.col.getRGB());
 
 		setPoints();
@@ -278,9 +282,8 @@ public class Face implements Comparable<Face> {
 
 		this.visible = other.visible;
 		this.setForceTransparent(other.forceTransparent);
-		this.checkVisible = other.checkVisible;
-		
-		this.intersects = new ArrayList<Position2D>();
+		this.moved = other.moved;
+
 		this.comps = new HashMap<Face, Integer>();
 
 		this.col = new Color(other.col.getRGB());
@@ -520,7 +523,8 @@ public class Face implements Comparable<Face> {
 	 */
 	public void setPoints() {
 
-		this.checkVisible = true;
+		this.moved = true;
+		this.visible = true;
 
 		this.bound3D = 0;
 
@@ -640,8 +644,8 @@ public class Face implements Comparable<Face> {
 	 * 
 	 * @return Returns true if face needs to be checked for visibility
 	 */
-	public boolean checkVisible() {
-		return checkVisible;
+	public boolean checkMoved() {
+		return moved;
 	}
 
 	/**
@@ -662,18 +666,16 @@ public class Face implements Comparable<Face> {
 
 	/**
 	 * 
-	 * @param checkVisible Sets check for visible
+	 * @param moved Sets check for visible
 	 */
-	public void setCheckVisible(boolean checkVisible) {
-		this.checkVisible = checkVisible;
+	public void setMoved(boolean moved) {
+		this.moved = moved;
 	}
 
 	@Override
 	public int compareTo(Face other) {
 
-		int threshold = 2;
-
-		if ((!this.visible && !other.visible) && this.comps.containsKey(other)) {
+		if ((!this.moved && !other.moved) && this.comps.containsKey(other)) {
 			return this.comps.get(other);
 		}
 
@@ -682,16 +684,25 @@ public class Face implements Comparable<Face> {
 			return this.comps.get(other);
 		}
 
+		int coverCheck = this.checkCover(other);
+		if (coverCheck != 2) {
+			if (coverCheck < 0) {
+				this.visible = false;
+			}
+			if (coverCheck > 0) {
+				other.visible = false;
+			}
+			this.comps.put(other, coverCheck);
+			return coverCheck;
+		}
+
+		ArrayList<Position2D> intersects = new ArrayList<Position2D>();
 		intersects.clear();
 
 		for (int i = 0; i < this.edges2D.length - 1; i++) {
-			if (intersects.size() >= threshold) {
-				break;
-			}
+
 			for (int j = 0; j < other.edges2D.length - 1; j++) {
-				if (intersects.size() >= threshold) {
-					break;
-				}
+
 				Position2D poi = this.edges2D[i].intersects(other.edges2D[j]);
 				if (poi != null) { // Test for parallel
 					// Test for bounds
@@ -725,10 +736,6 @@ public class Face implements Comparable<Face> {
 						}
 					}
 				}
-			}
-
-			if (intersects.size() >= threshold) {
-				break;
 			}
 
 			Position2D poi = this.edges2D[i].intersects(other.edges2D[other.numPoints - 1]);
@@ -771,9 +778,7 @@ public class Face implements Comparable<Face> {
 		}
 
 		for (int j = 0; j < other.edges2D.length - 1; j++) {
-			if (intersects.size() >= threshold) {
-				break;
-			}
+
 			Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[j]);
 			if (poi != null) { // Test for parallel
 				// Test for bounds
@@ -812,76 +817,71 @@ public class Face implements Comparable<Face> {
 			}
 		}
 
-		if (intersects.size() < threshold) {
-			Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[other.numPoints - 1]);
-			if (poi != null) { // Test for parallel
-				// Test for bounds
-				if (this.inBounds(poi, this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
-					if (other.inBounds(poi, other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
+		Position2D poi = this.edges2D[this.numPoints - 1].intersects(other.edges2D[other.numPoints - 1]);
+		if (poi != null) { // Test for parallel
+			// Test for bounds
+			if (this.inBounds(poi, this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+				if (other.inBounds(poi, other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
 
-						intersects.add(poi);
-					}
-				}
-			} else if (this.edges2D[this.numPoints - 1].similar(other.edges2D[other.numPoints - 1])) {
-				if (this.inBounds(this.viewPoints[this.numPoints - 1], this.viewPoints[this.numPoints - 1],
-						this.viewPoints[0])) {
-					if (other.inBounds(this.viewPoints[this.numPoints - 1], other.viewPoints[other.numPoints - 1],
-							other.viewPoints[0])) {
-						intersects.add(this.viewPoints[this.numPoints - 1]);
-					}
-				}
-
-				if (this.inBounds(this.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
-					if (other.inBounds(this.viewPoints[0], other.viewPoints[other.numPoints - 1],
-							other.viewPoints[0])) {
-						intersects.add(this.viewPoints[0]);
-					}
-				}
-
-				if (this.inBounds(other.viewPoints[other.numPoints - 1], this.viewPoints[this.numPoints - 1],
-						this.viewPoints[0])) {
-					if (other.inBounds(other.viewPoints[other.numPoints - 1], other.viewPoints[other.numPoints - 1],
-							other.viewPoints[0])) {
-						intersects.add(other.viewPoints[other.numPoints - 1]);
-					}
-				}
-
-				if (this.inBounds(other.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
-					if (other.inBounds(other.viewPoints[0], other.viewPoints[other.numPoints - 1],
-							other.viewPoints[0])) {
-						intersects.add(other.viewPoints[0]);
-					}
+					intersects.add(poi);
 				}
 			}
-		}
-		
+		} else if (this.edges2D[this.numPoints - 1].similar(other.edges2D[other.numPoints - 1])) {
+			if (this.inBounds(this.viewPoints[this.numPoints - 1], this.viewPoints[this.numPoints - 1],
+					this.viewPoints[0])) {
+				if (other.inBounds(this.viewPoints[this.numPoints - 1], other.viewPoints[other.numPoints - 1],
+						other.viewPoints[0])) {
+					intersects.add(this.viewPoints[this.numPoints - 1]);
+				}
+			}
 
-		int thisInShape = 0;
+			if (this.inBounds(this.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+				if (other.inBounds(this.viewPoints[0], other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
+					intersects.add(this.viewPoints[0]);
+				}
+			}
+
+			if (this.inBounds(other.viewPoints[other.numPoints - 1], this.viewPoints[this.numPoints - 1],
+					this.viewPoints[0])) {
+				if (other.inBounds(other.viewPoints[other.numPoints - 1], other.viewPoints[other.numPoints - 1],
+						other.viewPoints[0])) {
+					intersects.add(other.viewPoints[other.numPoints - 1]);
+				}
+			}
+
+			if (this.inBounds(other.viewPoints[0], this.viewPoints[this.numPoints - 1], this.viewPoints[0])) {
+				if (other.inBounds(other.viewPoints[0], other.viewPoints[other.numPoints - 1], other.viewPoints[0])) {
+					intersects.add(other.viewPoints[0]);
+				}
+			}
+
+		}
+
 		for (Position2D vertex : this.viewPoints) {
 			if (other.inShape(vertex)) {
 				intersects.add(vertex);
-				thisInShape++;
 			}
 		}
 
-		int otherInShape = 0;
 		for (Position2D vertex : other.viewPoints) {
 			if (this.inShape(vertex)) {
 				intersects.add(vertex);
-				otherInShape++;
 			}
 		}
+
 		if (intersects.size() == 0) {
-			if(!this.comps.containsKey(other)) {
-				this.comps.put(other, 0);
-			}
+			this.comps.put(other, 0);
 			return 0;
 		}
 
 		Position2D center = new Position2D();
 
 		for (int i = 0; i < intersects.size(); i++) {
-			center.setCoord(center.add(intersects.get(i)).getCoord());
+			double[] coords = center.getCoord();
+			for (int j = 0; j < 2; j++) {
+				coords[j] += intersects.get(i).getCoord()[j];
+			}
+			center.setCoord(coords);
 		}
 
 		center.setCoord(center.toVec().multiply(1.0 / intersects.size()).toPos().getCoord());
@@ -890,41 +890,23 @@ public class Face implements Comparable<Face> {
 		Position3D otherReal = other.pov.getRealPoint(center, other.facePlane);
 
 		if (thisReal == null || otherReal == null) {
-			if(!this.comps.containsKey(other)) {
-				this.comps.put(other, 0);
-			}
+			this.comps.put(other, 0);
 			return 0;
 		}
 		double thisDis = this.pov.getPos().totDistanceFrom(thisReal);
 		double otherDis = other.pov.getPos().totDistanceFrom(otherReal);
 
 		if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
-			if(!this.comps.containsKey(other)) {
-				this.comps.put(other, 0);
-			}
+
+			this.comps.put(other, 0);
 			return 0;
 		} else if (thisDis > otherDis) {
-			if (thisInShape == this.viewPoints.length) {
-				this.checkVisible = false;
-				this.visible = false;
-			} else {
-				this.visible = true;
-			}
-			
-			if(!this.comps.containsKey(other)) {
-				this.comps.put(other, -1);
-			}
+
+			this.comps.put(other, -1);
 			return -1;
 		} else {
-			if (otherInShape == other.viewPoints.length) {
-				other.checkVisible = false;
-				other.visible = false;
-			} else {
-				this.visible = true;
-			}
-			if(!this.comps.containsKey(other)) {
-				this.comps.put(other, 1);
-			}
+
+			this.comps.put(other, 1);
 			return 1;
 		}
 
@@ -962,6 +944,98 @@ public class Face implements Comparable<Face> {
 		Position2D topPoint = upBound.subtract(lowBound);
 		return testPoint.toVec().dot(topPoint.toVec()) > 0
 				&& testPoint.toVec().getLength() <= topPoint.toVec().getLength();
+	}
+
+	/**
+	 * Checks if this object covers other object (-1 if other covers this, 1 if
+	 * other covers this, 0 if equal, 2 if they dont cover)
+	 * 
+	 * @param other
+	 * @return
+	 */
+	private int checkCover(Face other) {
+		ArrayList<Position2D> intersects = new ArrayList<Position2D>();
+		intersects.clear();
+
+		for (Position2D vertex : this.viewPoints) {
+			if (other.inShape(vertex)) {
+				intersects.add(vertex);
+			}
+		}
+
+		if (intersects.size() == this.viewPoints.length) {
+			Position2D center = new Position2D();
+
+			for (int i = 0; i < intersects.size(); i++) {
+				double[] coords = center.getCoord();
+				for (int j = 0; j < 2; j++) {
+					coords[j] += intersects.get(i).getCoord()[j];
+				}
+				center.setCoord(coords);
+			}
+
+			center.setCoord(center.toVec().multiply(1.0 / intersects.size()).toPos().getCoord());
+
+			Position3D thisReal = this.pov.getRealPoint(center, this.facePlane);
+			Position3D otherReal = other.pov.getRealPoint(center, other.facePlane);
+
+			if (thisReal == null || otherReal == null) {
+				return 0;
+			}
+			double thisDis = this.pov.getPos().totDistanceFrom(thisReal);
+			double otherDis = other.pov.getPos().totDistanceFrom(otherReal);
+
+			if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
+
+				return 0;
+			} else if (thisDis > otherDis) {
+
+				return -1;
+			} else {
+
+				return 1;
+			}
+		}
+
+		intersects.clear();
+		for (Position2D vertex : other.viewPoints) {
+			if (this.inShape(vertex)) {
+				intersects.add(vertex);
+			}
+		}
+
+		if (intersects.size() == other.viewPoints.length) {
+			Position2D center = new Position2D();
+
+			for (int i = 0; i < intersects.size(); i++) {
+				double[] coords = center.getCoord();
+				for (int j = 0; j < 2; j++) {
+					coords[j] += intersects.get(i).getCoord()[j];
+				}
+				center.setCoord(coords);
+			}
+
+			center.setCoord(center.toVec().multiply(1.0 / intersects.size()).toPos().getCoord());
+
+			Position3D thisReal = this.pov.getRealPoint(center, this.facePlane);
+			Position3D otherReal = other.pov.getRealPoint(center, other.facePlane);
+
+			if (thisReal == null || otherReal == null) {
+				return 0;
+			}
+			double thisDis = this.pov.getPos().totDistanceFrom(thisReal);
+			double otherDis = other.pov.getPos().totDistanceFrom(otherReal);
+
+			if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
+				return 0;
+			} else if (thisDis > otherDis) {
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+
+		return 2;
 	}
 
 	/**
