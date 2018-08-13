@@ -210,26 +210,26 @@ public class MainWindow extends javax.swing.JFrame {
 			}
 
 		});
-//
-//		Timer paintingThread = new Timer();
-//		paintingThread.scheduleAtFixedRate(new TimerTask() {
-//
-//			@Override
-//			public void run() {
-//
-//				// prism.addY(-3000);
-//				// prism.rotate(Math.PI, axis);
-//
-//				// prevTick = System.nanoTime();
-//
-//				window.gamePanel.repaint();
-//
-//				// currTick = System.nanoTime();
-//				// window.fps.setText("FPS: " + Long.toString(1000000000 / (currTick -
-//				// prevTick)));
-//			}
-//
-//		}, 0, 1);
+
+		Timer paintingThread = new Timer();
+		paintingThread.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+
+				// prism.addY(-3000);
+				// prism.rotate(Math.PI, axis);
+
+				// prevTick = System.nanoTime();
+
+				window.gamePanel.repaint();
+
+				// currTick = System.nanoTime();
+				// window.fps.setText("FPS: " + Long.toString(1000000000 / (currTick -
+				// prevTick)));
+			}
+
+		}, 0, 7);
 
 		thread.start();
 	}
@@ -257,43 +257,62 @@ public class MainWindow extends javax.swing.JFrame {
 		Prism prisms[] = new Prism[5];
 		for (int i = 0; i < 5; i++) {
 			prisms[i] = new Prism(prism);
-			prisms[i].addY(-500 * i);
+			prisms[i].setZ(-250 * (i-2));
+			prisms[i].setY(-1250 * (i-2));
 		}
 
 		for (int i = 0; i < 6; i++) {
-			prism.setCol(new Color(50 * i, 200 - 15 * i, 210-30 * i), i);
+			prism.setCol(new Color(50 * i, 200 - 15 * i, 210 - 30 * i), i);
 			faces.add(prism.getFaces()[i]);
 			for (int j = 0; j < 5; j++) {
-				// faces.add(prisms[j].getFaces()[i]);
+				faces.add(prisms[j].getFaces()[i]);
+				prisms[j].setCol(new Color(50 * i, 15*j + 10 * i, 12*j + 15 * i), i);
 			}
 
 		}
-		Vector3D axis = new Vector3D(1, 0, 0);
+		Vector3D axis = new Vector3D(0, 1, 0);
 
 		// prism.addY(-3000);
 		// prism.rotate(Math.PI, axis);
-
-		prism.addY(1);
+		Collections.sort(faces, new FirstFaceCompare());
 
 		Long prevTick = System.nanoTime();
 		Long currTick = System.nanoTime();
 		while (true) {
 			prevTick = System.nanoTime();
 			prism.addY(input.test2);
-			//pov.orbit(input.test, axis, prism.getCenter());
+			prism.addZ(input.test3);
+			// pov.orbit(input.test, axis, prism.getCenter());
 			prism.rotate(input.test, axis);
-			for (Face face : faces) {
-				face.setPoints();
-			}
+//			for (int i = 0; i < faces.size(); i++) {
+//				for (int j = 0; j < faces.size(); j++) {
+//					if ((faces.get(i).checkMoved() || faces.get(j).checkMoved()) && i != j
+//							&& (faces.get(i).getCenter2D().totDistanceFrom(faces.get(j).getCenter2D())
+//									- faces.get(i).getBound2D() - faces.get(j).getBound2D() < 0)) {
+//						int coverCheck = faces.get(i).checkCover(faces.get(j));
+//						if (coverCheck != 2) {
+//							if (coverCheck < 0) {
+//								faces.get(i).setVisible(false);
+//								faces.get(index)
+//								break;
+//							} else {
+//								faces.get(i).setVisible(true);
+//							}
+//						} else {
+//							faces.get(i).setVisible(true);
+//						}
+//					}
+//				}
+//			}
 			Collections.sort(faces);
 			for (Face face : faces) {
 				face.setMoved(false);
 			}
-			
-			java.awt.EventQueue.invokeLater(() -> {
-				gamePanel.repaint();
-
-			});
+//			java.awt.EventQueue.invokeLater(() -> {
+//
+//				gamePanel.repaint();
+//
+//			});
 			currTick = System.nanoTime();
 			fps.setText("FPS: " + Long.toString(1000000000 / (currTick - prevTick)));
 		}
@@ -362,9 +381,9 @@ public class MainWindow extends javax.swing.JFrame {
 
 			prevTick = System.nanoTime();
 
-			Vector3D axis = new Vector3D(0, 1, 1);
+			Vector3D axis = new Vector3D(0, 1, 0);
 			// Vector3D axis2 = new Vector3D(1, 0, 0);
-			// face1.rotate(0.01, axis);
+			face1.rotate(0.01, axis);
 			// face2 = face2.rotate(0.01, axis);
 
 			// face1 = face1.rotate(0.01, axis2);

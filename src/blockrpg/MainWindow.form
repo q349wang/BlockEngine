@@ -3,7 +3,7 @@
 	<size>
 		<height>1080</height>
 		<width>1920</width>
-		<zoom>4000</zoom>
+		<zoom>3000</zoom>
 		<fps>true</fps>
 		<debug>true</debug>
 		<wire>false</wire>

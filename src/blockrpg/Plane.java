@@ -28,9 +28,9 @@ public class Plane {
 	public Plane(Vector3D vecX, Vector3D vecY, Position3D pos) {
 		this.vecX = vecX.normalize();
 		this.vecY = this.vecX.perp(vecY).normalize();
-		norm = this.vecX.cross(this.vecY);
+		this.norm = this.vecX.cross(this.vecY);
 		this.pos = pos;
-		setD(norm.dot(this.pos.toVec()));
+		this.setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class Plane {
 		this.vecX.setCoord(coords);
 		this.vecX = this.vecX.normalize();
 		this.vecY = this.vecX.perp(this.vecY).normalize();
-		norm = this.vecX.cross(this.vecY);
-		setD(norm.dot(this.pos.toVec()));
+		this.norm = this.vecX.cross(this.vecY);
+		this.setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -72,8 +72,8 @@ public class Plane {
 	public void setvecY(double[] coords) {
 		this.vecY.setCoord(coords);
 		this.vecY = this.vecX.perp(vecY).normalize();
-		norm = this.vecX.cross(this.vecY);
-		setD(norm.dot(this.pos.toVec()));
+		this.norm = this.vecX.cross(this.vecY);
+		this.setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -83,6 +83,7 @@ public class Plane {
 	 */
 	public void setPos(double[] coords) {
 		this.pos.setCoord(coords);
+		this.setD(norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -123,7 +124,7 @@ public class Plane {
 	 */
 	public void addX(double x) {
 		this.pos.addX(x);
-		setD(norm.dot(this.pos.toVec()));
+		this.setD(this.norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class Plane {
 	 */
 	public void addY(double y) {
 		this.pos.addY(y);
-		setD(norm.dot(this.pos.toVec()));
+		this.setD(this.norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -141,7 +142,7 @@ public class Plane {
 	 */
 	public void addZ(double z) {
 		this.pos.addZ(z);
-		setD(norm.dot(this.pos.toVec()));
+		this.setD(this.norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -150,7 +151,7 @@ public class Plane {
 	 */
 	public void setX(double x) {
 		this.pos.setX(x);
-		setD(norm.dot(this.pos.toVec()));
+		this.setD(this.norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -159,7 +160,7 @@ public class Plane {
 	 */
 	public void setY(double y) {
 		this.pos.setY(y);
-		setD(norm.dot(this.pos.toVec()));
+		this.setD(this.norm.dot(this.pos.toVec()));
 	}
 
 	/**
@@ -168,7 +169,7 @@ public class Plane {
 	 */
 	public void setZ(double z) {
 		this.pos.setZ(z);
-		setD(norm.dot(this.pos.toVec()));
+		this.setD(this.norm.dot(this.pos.toVec()));
 	}
 
 	/**

@@ -206,7 +206,7 @@ public class Prism {
 	 */
 	public void addZ(double z) {
 		Position3D pos = this.center.clone();
-		pos.setZ(z);
+		pos.addZ(z);
 		this.set(pos);
 	}
 

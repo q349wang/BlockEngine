@@ -33,8 +33,6 @@ public class Drawer extends JPanel {
 
 		Graphics2D g2 = (Graphics2D) g; // Casts the Graphics to Graphics2D
 
-		g.setColor(this.getBackground());
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		// Turns on Anti-Aliasing
 		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHints(rh);
@@ -62,7 +60,8 @@ public class Drawer extends JPanel {
 			}
 
 			if (MainWindow.DEBUG) {
-				g2.drawString(Boolean.toString(sortedFace.get(i).isVisible()), 100, 100 + 10 * i);
+				g2.setColor(sortedFace.get(i).getCol());
+				g2.drawString(Boolean.toString(sortedFace.get(i).isVisible()) + " " + Double.toString(sortedFace.get(i).test), 100, 100 + 10 * i);
 
 			}
 		}
