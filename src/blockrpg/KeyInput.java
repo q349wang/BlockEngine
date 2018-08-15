@@ -8,7 +8,7 @@ public class KeyInput implements KeyListener {
 	public double test = 0;
 
 	public double test2 = 0;
-	
+
 	public double test3 = 0;
 
 	@Override
@@ -28,7 +28,7 @@ public class KeyInput implements KeyListener {
 		} else if (e.getKeyCode() == KeyEvent.VK_D) {
 			test2 = -12;
 		}
-		
+
 		if (e.getKeyCode() == KeyEvent.VK_W) {
 			test3 = -12;
 		} else if (e.getKeyCode() == KeyEvent.VK_S) {
@@ -46,7 +46,7 @@ public class KeyInput implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_A) {
 			test2 = 0;
 		}
-		
+
 		if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_S) {
 			test3 = 0;
 		}

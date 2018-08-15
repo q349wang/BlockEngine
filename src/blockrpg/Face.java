@@ -55,7 +55,7 @@ public class Face implements Comparable<Face> {
 	private Map<Face, Integer> comps;
 
 	private Color col;
-	
+
 	public double test = 0;
 
 	/**
@@ -365,7 +365,7 @@ public class Face implements Comparable<Face> {
 		this.facePlane.setZ(z);
 		setPoints();
 	}
-	
+
 	/**
 	 * 
 	 * @return Returns comparision map
@@ -536,12 +536,6 @@ public class Face implements Comparable<Face> {
 	public void setPoints() {
 
 		this.moved = true;
-		
-		if(Math.abs(this.facePlane.getNorm().dot(this.pov.getDir())) < Coord3D.ERROR) {
-			this.visible = false;
-		} else {
-			this.visible = true;
-		}
 
 		this.bound3D = 0;
 
@@ -586,6 +580,12 @@ public class Face implements Comparable<Face> {
 
 		for (int i = 0; i < this.numPoints; i++) {
 			this.bound3D = Math.max(this.bound3D, this.center3D.totDistanceFrom(this.truePoints[i]));
+		}
+		
+		if (Math.abs(this.facePlane.getNorm().dot(this.pov.getPos().getDirection(this.center3D))) < Coord3D.ERROR) {
+			this.visible = false;
+		} else {
+			this.visible = true;
 		}
 	}
 
@@ -691,7 +691,7 @@ public class Face implements Comparable<Face> {
 
 	@Override
 	public int compareTo(Face other) {
-		
+
 //		int coverCheck = this.checkCover(other);
 //		if (coverCheck != 2) {
 //			if (coverCheck < 0) {
@@ -876,13 +876,13 @@ public class Face implements Comparable<Face> {
 			}
 
 		}
-		
+
 		for (Position2D vertex : this.viewPoints) {
 			if (other.inShape(vertex)) {
 				intersects.add(vertex);
 			}
 		}
-		
+
 		for (Position2D vertex : other.viewPoints) {
 			if (this.inShape(vertex)) {
 				intersects.add(vertex);
@@ -890,7 +890,7 @@ public class Face implements Comparable<Face> {
 		}
 
 		if (intersects.size() == 0) {
-			if(this.comps.containsKey(other)) {
+			if (this.comps.containsKey(other)) {
 				return this.comps.get(other);
 			}
 			return 0;
@@ -908,18 +908,16 @@ public class Face implements Comparable<Face> {
 
 		center.setCoord(center.toVec().multiply(1.0 / intersects.size()).toPos().getCoord());
 
-		
 		Position3D thisReal = this.pov.getRealPoint(center, this.facePlane);
 		Position3D otherReal = other.pov.getRealPoint(center, other.facePlane);
 
-		
 		if (thisReal == null || otherReal == null) {
-			if(this.comps.containsKey(other)) {
+			if (this.comps.containsKey(other)) {
 				return this.comps.get(other);
 			}
 			return 0;
 		}
-		
+
 		Line3D ray = new Line3D(this.pov.getPos(), thisReal);
 		double thisDis = this.pov.getPos().totDistanceFrom(this.facePlane.getIntersect(ray));
 		double otherDis = other.pov.getPos().totDistanceFrom(other.facePlane.getIntersect(ray));
@@ -1011,13 +1009,12 @@ public class Face implements Comparable<Face> {
 			Position3D thisReal = this.pov.getRealPoint(center, this.facePlane);
 			Position3D otherReal = other.pov.getRealPoint(center, other.facePlane);
 
-			
 			if (thisReal == null || otherReal == null) {
-				if(this.comps.containsKey(other)) {
+				if (this.comps.containsKey(other)) {
 					return this.comps.get(other);
 				}
 			}
-			
+
 			Line3D ray = new Line3D(this.pov.getPos(), thisReal);
 			double thisDis = this.pov.getPos().totDistanceFrom(this.facePlane.getIntersect(ray));
 			double otherDis = other.pov.getPos().totDistanceFrom(other.facePlane.getIntersect(ray));
@@ -1058,7 +1055,7 @@ public class Face implements Comparable<Face> {
 			Position3D otherReal = other.pov.getRealPoint(center, other.facePlane);
 
 			if (thisReal == null || otherReal == null) {
-				if(this.comps.containsKey(other)) {
+				if (this.comps.containsKey(other)) {
 					return this.comps.get(other);
 				}
 			}

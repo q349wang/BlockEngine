@@ -206,7 +206,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 			@Override
 			public void run() {
-				window.testFunc2();
+				window.testFunc3();
 			}
 
 		});
@@ -245,7 +245,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 	private void testFunc2() {
 		Color col1 = new Color(45, 84, 38);
-		Perspective pov = new Perspective(new double[] { -8000, 0, -8000 }, new double[] { 1, 0, 1 },
+		Perspective pov = new Perspective(new double[] { -8000, 0, 8000 }, new double[] { 1, 0, -1 },
 				new double[] { 0, 1, 0 });
 		pov.setZoom(zoom);
 		Position2D[] points1 = { new Position2D(-1000, -500), new Position2D(-1000, 500), new Position2D(1000, 500),
@@ -281,7 +281,7 @@ public class MainWindow extends javax.swing.JFrame {
 		while (true) {
 			prevTick = System.nanoTime();
 			prism.addY(input.test2);
-			prism.addZ(input.test3);
+			prism.addX(input.test3);
 			// pov.orbit(input.test, axis, prism.getCenter());
 			prism.rotate(input.test, axis);
 //			for (int i = 0; i < faces.size(); i++) {
@@ -308,16 +308,51 @@ public class MainWindow extends javax.swing.JFrame {
 			for (Face face : faces) {
 				face.setMoved(false);
 			}
-//			java.awt.EventQueue.invokeLater(() -> {
-//
-//				gamePanel.repaint();
-//
-//			});
+			java.awt.EventQueue.invokeLater(() -> {
+
+				gamePanel.repaint();
+
+			});
+
 			currTick = System.nanoTime();
 			fps.setText("FPS: " + Long.toString(1000000000 / (currTick - prevTick)));
 		}
 	}
 
+	private void testFunc3() {
+		Color col1 = new Color(45, 84, 38);
+		Color col2 = new Color(72, 41, 124);
+		Perspective pov = new Perspective(new double[] { -8000, 0, 8000 }, new double[] { 1, 0, -1 },
+				new double[] { 0, 1, 0 });
+		pov.setZoom(zoom);
+		
+		Position2D[] points1 = { new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
+				new Position2D(500, -1000) };
+		Position2D[] points2 = { new Position2D(-500, -500), new Position2D(-500, 500), new Position2D(500, 500),
+				new Position2D(500, -500) };
+		Plane plane1 = new Plane(new Vector3D(-1, 0, 0), new Vector3D(0, 0, 1), new Position3D(400, 900, 1000));
+		Plane plane2 = new Plane(new Vector3D(1,0, 0), new Vector3D(0, 1, 0), new Position3D(400, 400, 0));
+		
+		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
+		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
+		
+		faces.add(face1);
+		faces.add(face2);
+		
+		Position3D pos = new Position3D(400,400, 1000);
+		Vector3D axis = new Vector3D(0,0,1);
+		while (true) {
+		face1.orbit(input.test, axis, pos);
+		face2.orbit(input.test, axis, pos);
+		Collections.sort(faces);
+		gamePanel.setList(faces);
+		java.awt.EventQueue.invokeLater(() -> {
+			gamePanel.repaint();
+
+		});
+		}
+	}
+	
 	private void testFunc() {
 		Color col1 = new Color(45, 84, 38);
 		Color col2 = new Color(72, 41, 124);
