@@ -322,28 +322,55 @@ public class MainWindow extends javax.swing.JFrame {
 	private void testFunc3() {
 		Color col1 = new Color(45, 84, 38);
 		Color col2 = new Color(72, 41, 124);
+		Color col3 = new Color(120, 41, 124);
+		Color col4 = new Color(84, 30, 224);
+		Color col5 = new Color(102, 41, 14);
+		Color col6 = new Color(62, 91, 124);
 		Perspective pov = new Perspective(new double[] { -8000, 0, 8000 }, new double[] { 1, 0, -1 },
 				new double[] { 0, 1, 0 });
 		pov.setZoom(zoom);
 		
 		Position2D[] points1 = { new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
 				new Position2D(500, -1000) };
-		Position2D[] points2 = { new Position2D(-500, -500), new Position2D(-500, 500), new Position2D(500, 500),
+		Position2D[] points2 ={ new Position2D(-500, -500), new Position2D(-500, 500), new Position2D(500, 500),
+				new Position2D(500, -500) };
+		Position2D[] points3 ={ new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
+				new Position2D(500, -1000) };
+		Position2D[] points4 = { new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
+				new Position2D(500, -1000) };
+		Position2D[] points5 ={ new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
+				new Position2D(500, -1000) };
+		Position2D[] points6 =  { new Position2D(-500, -500), new Position2D(-500, 500), new Position2D(500, 500),
 				new Position2D(500, -500) };
 		Plane plane1 = new Plane(new Vector3D(-1, 0, 0), new Vector3D(0, 0, 1), new Position3D(400, 900, 1000));
-		Plane plane2 = new Plane(new Vector3D(1,0, 0), new Vector3D(0, 1, 0), new Position3D(400, 400, 0));
-		
+		Plane plane2 = new Plane(new Vector3D(1,0, 0), new Vector3D(0, -1, 0), new Position3D(400, 400, 0));
+		Plane plane3 = new Plane(new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), new Position3D(900, 400, 1000));
+		Plane plane4 = new Plane(new Vector3D(0, -1, 0), new Vector3D(0, 0, 1), new Position3D(-100, 400, 1000));
+		Plane plane5 = new Plane(new Vector3D(-1, 0, 0), new Vector3D(0, 0, 1), new Position3D(400, -100, 1000));
+		Plane plane6 = new Plane(new Vector3D(1,0, 0), new Vector3D(0, 1, 0), new Position3D(400, 400, 2000));
 		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
 		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
-		
+		Face face3 = new Face(points3, points3.length, plane3, pov, col3);
+		Face face4 = new Face(points4, points4.length, plane4, pov, col4);
+		Face face5 = new Face(points5, points5.length, plane5, pov, col5);
+		Face face6 = new Face(points6, points6.length, plane6, pov, col6);
 		faces.add(face1);
 		faces.add(face2);
+		faces.add(face3);
+		faces.add(face4);
+		faces.add(face5);
+		faces.add(face6);
 		
 		Position3D pos = new Position3D(400,400, 1000);
 		Vector3D axis = new Vector3D(0,0,1);
 		while (true) {
-		face1.orbit(input.test, axis, pos);
-		face2.orbit(input.test, axis, pos);
+			double num = input.test;
+		face1.orbit(num, axis, pos);
+		face2.orbit(num, axis, pos);
+		face3.orbit(num, axis, pos);
+		face4.orbit(num, axis, pos);
+		face5.orbit(num, axis, pos);
+		face6.orbit(num, axis, pos);
 		Collections.sort(faces);
 		gamePanel.setList(faces);
 		java.awt.EventQueue.invokeLater(() -> {
