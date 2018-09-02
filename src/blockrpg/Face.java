@@ -9,6 +9,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,10 +29,13 @@ public class Face implements Comparable<Face> {
 	public static double xOffset;
 	public static double yOffset;
 
-	protected double bound2D;
-	protected double bound3D;
+	private double bound2D;
+	private double bound2DSQ;
+	private double bound3D;
+	private double bound3DSQ;
 
 	private Polygon seenFace;
+	private double[][] zBuf;
 
 	private Position2D[] viewPoints;
 	private Position2D[] relPoints;
@@ -482,6 +486,7 @@ public class Face implements Comparable<Face> {
 	private void setPoly(Position2D[] points, int num) {
 
 		this.bound2D = 0;
+		this.bound2DSQ = 0;
 
 		if (this.edges2D == null) {
 			this.edges2D = new Line2D[this.numPoints];
@@ -515,8 +520,72 @@ public class Face implements Comparable<Face> {
 		this.center2D.setCoord(new double[] { xCent, yCent });
 
 		for (int i = 0; i < num; i++) {
-			this.bound2D = Math.max(this.bound2D, this.center2D.totDistanceFrom(points[i]));
+			this.bound2DSQ = Math.max(this.bound2DSQ, this.center2D.totDistanceFromSQ(points[i]));
+
 		}
+
+		this.bound2D = Math.sqrt(this.bound2DSQ);
+		
+		int dim = (int) Math.ceil(2 * this.bound2D);
+		
+		long time = System.nanoTime();
+		this.zBuf = new double[dim][dim];
+		for (int i = 0; i < dim; i++) {
+
+			Line2D scanLine = new Line2D(new Vector2D(1, 0),
+					new Position2D(0, i + this.center2D.getY() - this.bound2D));
+
+			ArrayList<Integer> pivots = new ArrayList<Integer>();
+
+			for (int j = 0; j < this.edges2D.length - 1; j++) {
+				Position2D poi = this.edges2D[j].intersects(scanLine);
+				if (poi != null) { // Test for parallel
+					// Test for bounds
+					if (this.inBounds(poi, this.viewPoints[j], this.viewPoints[j + 1])) {
+						pivots.add((int) Math.round(poi.getCoord()[0]));
+					}
+				}
+			}
+
+			Position2D poi = this.edges2D[num - 1].intersects(scanLine);
+			if (poi != null) { // Test for parallel
+				// Test for bounds
+				if (this.inBounds(poi, this.viewPoints[0], this.viewPoints[num - 1])) {
+					pivots.add((int) Math.round(poi.getCoord()[0]));
+				}
+			}
+Collections.sort(pivots);
+			int pivot = 0;
+			int in = -1;
+			if (pivots.size() == 0) {
+				for (int j = 0; j < dim; j++) {
+
+					zBuf[j][i] = -1;
+				}
+			} else {
+				for (int j = 0; j < dim; j++) {
+					if (pivot < pivots.size() && j + this.center2D.getX() - this.bound2D >= pivots.get(pivot)) {
+						in = -in;
+						pivot++;
+					}
+
+					if (in < 0) {
+						zBuf[j][i] = -1;
+					} else {
+//						Position3D pos = this.pov.getRealPoint(new Position2D(j + this.center2D.getX() - this.bound2D,
+//								i + this.center2D.getY() - this.bound2D), this.facePlane);
+//						if(pos != null) {
+//							zBuf[j][i] = this.pov.getPos().totDistanceFromSQ(pos);
+//						}
+						
+					}
+				}
+			}
+
+		}
+		
+		System.out.println(System.nanoTime() - time);
+//		System.out.println(this.bound2DSQ);
 		seenFace.npoints = num;
 		seenFace.xpoints = x;
 		seenFace.ypoints = y;
@@ -538,6 +607,7 @@ public class Face implements Comparable<Face> {
 		this.moved = true;
 
 		this.bound3D = 0;
+		this.bound3DSQ = 0;
 
 		// Sets arrays if they are null
 		if (this.viewPoints == null) {
@@ -579,9 +649,10 @@ public class Face implements Comparable<Face> {
 		this.center3D.setCoord(coords);
 
 		for (int i = 0; i < this.numPoints; i++) {
-			this.bound3D = Math.max(this.bound3D, this.center3D.totDistanceFrom(this.truePoints[i]));
+			this.bound3DSQ = Math.max(this.bound3DSQ, this.center3D.totDistanceFromSQ(this.truePoints[i]));
 		}
-		
+
+		this.bound3D = Math.sqrt(this.bound3DSQ);
 		if (Math.abs(this.facePlane.getNorm().dot(this.pov.getPos().getDirection(this.center3D))) < Coord3D.ERROR) {
 			this.visible = false;
 		} else {
@@ -919,8 +990,8 @@ public class Face implements Comparable<Face> {
 		}
 
 		Line3D ray = new Line3D(this.pov.getPos(), thisReal);
-		double thisDis = this.pov.getPos().totDistanceFrom(this.facePlane.getIntersect(ray));
-		double otherDis = other.pov.getPos().totDistanceFrom(other.facePlane.getIntersect(ray));
+		double thisDis = this.pov.getPos().totDistanceFromSQ(this.facePlane.getIntersect(ray));
+		double otherDis = other.pov.getPos().totDistanceFromSQ(other.facePlane.getIntersect(ray));
 
 		test = thisDis;
 		if (Math.abs(thisDis - otherDis) < Coord3D.ERROR) {
@@ -1181,12 +1252,39 @@ public class Face implements Comparable<Face> {
 	 * @param pivot Pivot point
 	 */
 	public void orbit(double ang, Vector3D axis, Position3D pivot) {
+		if (ang == 0) {
+			return;
+		}
 		Vector3D dir = pivot.getDirection(this.center3D);
 
 		this.rotate(ang, axis);
 		dir.rotate(ang, axis);
 
 		this.setCoords(pivot.add(dir).getCoord());
+	}
+
+	public double getBound2DSQ() {
+		return bound2DSQ;
+	}
+
+	public void setBound2DSQ(double bound2dsq) {
+		bound2DSQ = bound2dsq;
+	}
+
+	public double getBound3DSQ() {
+		return bound3DSQ;
+	}
+
+	public void setBound3DSQ(double bound3dsq) {
+		bound3DSQ = bound3dsq;
+	}
+
+	public double[][] getzBuf() {
+		return zBuf;
+	}
+
+	public void setzBuf(double[][] zBuf) {
+		this.zBuf = zBuf;
 	}
 
 }

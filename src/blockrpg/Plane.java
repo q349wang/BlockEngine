@@ -316,7 +316,7 @@ public class Plane {
 			return null;
 		}
 
-		double t = (this.d - this.norm.dot(other.getPos().toVec())) / this.norm.dot(other.getDir());
+		double t = (this.d - this.norm.dot(other.getPos())) / this.norm.dot(other.getDir());
 		return other.getLinePoint(t);
 	}
 

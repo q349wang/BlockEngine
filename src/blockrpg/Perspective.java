@@ -164,9 +164,8 @@ public class Perspective {
 				newCoords[j] += viewBasisInverse[i][j] * oldCoords[i] + 0.0;
 			}
 		}
-		Vector3D viewCoord = new Vector3D();
-		viewCoord.setCoord(newCoords);
-		return viewCoord;
+
+		return new Vector3D(newCoords);
 	}
 
 	/**
@@ -187,9 +186,8 @@ public class Perspective {
 		for (int i = 0; i < 3; i++) {
 			newCoords[i] += posCoords[i];
 		}
-		Vector3D stdCoord = new Vector3D();
-		stdCoord.setCoord(newCoords);
-		return stdCoord;
+
+		return new Vector3D(newCoords);
 	}
 
 	/**
@@ -207,9 +205,8 @@ public class Perspective {
 				newCoords[j] += viewBasisInverse[i][j] * oldCoords[i] + 0.0;
 			}
 		}
-		Position3D viewCoord = new Position3D();
-		viewCoord.setCoord(newCoords);
-		return viewCoord;
+
+		return new Position3D(newCoords);
 	}
 
 	/**
@@ -230,9 +227,8 @@ public class Perspective {
 		for (int i = 0; i < 3; i++) {
 			newCoords[i] += posCoords[i];
 		}
-		Position3D stdCoord = new Position3D();
-		stdCoord.setCoord(newCoords);
-		return stdCoord;
+
+		return new Position3D(newCoords);
 	}
 
 	/**
@@ -296,15 +292,18 @@ public class Perspective {
 	 * 
 	 * @param point 2D view point
 	 * @param plane Plane to look at
-	 * @return
+	 * @return Returns Position3D corresponding to 2D point placed on plane
 	 */
 	public Position3D getRealPoint(Position2D point, Plane plane) {
 
 		double xVal = Math.sqrt(this.zoom * this.zoom - point.getY() * point.getY() - point.getX() * point.getX());
 
 		Position3D viewPoint3D = this.toViewBasis(this.pos).add(new Position3D(xVal, -point.getX(), point.getY()));
+
 		Line3D ray = new Line3D(this.pos, this.toStdBasis(viewPoint3D));
+
 		Position3D stdPoint = plane.getIntersect(ray);
+
 		if (stdPoint == null) {
 			return null;
 		} else {
@@ -355,7 +354,8 @@ public class Perspective {
 
 	/**
 	 * Rotates direction of perspective ang radians ccw about axis
-	 * @param ang angle in radians
+	 * 
+	 * @param ang  angle in radians
 	 * @param axis axis to rotate about
 	 */
 	public void rotateDir(double ang, Vector3D axis) {
@@ -364,13 +364,14 @@ public class Perspective {
 		tilt = dir.perp(tilt).normalize();
 		norm = dir.cross(tilt);
 		setBasis();
-		
+
 	}
-	
+
 	/**
 	 * Orbits perspective ang radians ccw about axis around given point
-	 * @param ang angle in radians
-	 * @param axis axis to rotate about
+	 * 
+	 * @param ang   angle in radians
+	 * @param axis  axis to rotate about
 	 * @param pivot Point to orbit around
 	 */
 	public void orbit(double ang, Vector3D axis, Position3D pivot) {
@@ -379,11 +380,11 @@ public class Perspective {
 		dir = dir.normalize();
 		tilt = dir.perp(tilt).normalize();
 		norm = dir.cross(tilt);
-		
+
 		pivotDir.rotate(ang, axis);
 		this.pos = pivot.add(pivotDir);
 		setBasis();
-		
+
 	}
 
 }

@@ -114,10 +114,10 @@ public class Vector3D extends Coord3D {
 
 	/**
 	 * 
-	 * @param other other Vector3D to dot with
+	 * @param other other Coord3D to dot with
 	 * @return returns dot product as double
 	 */
-	public double dot(Vector3D other) {
+	public double dot(Coord3D other) {
 		double product = this.x * other.x + this.y * other.y + this.z * other.z;
 		if (Math.abs(product - 0.0) < ERROR) {
 			product = 0.0;
@@ -125,6 +125,8 @@ public class Vector3D extends Coord3D {
 
 		return product;
 	}
+	
+	
 
 	/**
 	 * 

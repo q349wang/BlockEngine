@@ -73,6 +73,19 @@ public class Position2D extends Coord2D {
 		double deltaY = yDistancefrom(other);
 		return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 	}
+	
+	/**
+	 * 
+	 * @param other
+	 *            Another position
+	 * @return the total distance squared from this to the other position as a double
+	 */
+	public double totDistanceFromSQ(Position2D other) {
+
+		double deltaX = xDistancefrom(other);
+		double deltaY = yDistancefrom(other);
+		return deltaX * deltaX + deltaY * deltaY;
+	}
 
 	/**
 	 * 

@@ -85,6 +85,20 @@ public class Position3D extends Coord3D {
 		double deltaZ = zDistancefrom(other);
 		return Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
 	}
+	
+	/**
+	 * 
+	 * @param other
+	 *            Another position
+	 * @return the total distance squared from this to the other position as a double
+	 */
+	public double totDistanceFromSQ(Position3D other) {
+
+		double deltaX = xDistancefrom(other);
+		double deltaY = yDistancefrom(other);
+		double deltaZ = zDistancefrom(other);
+		return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+	}
 
 	/**
 	 * 

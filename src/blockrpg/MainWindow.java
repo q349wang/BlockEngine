@@ -40,8 +40,8 @@ public class MainWindow extends javax.swing.JFrame {
 	 */
 	private static final long serialVersionUID = 9112470272791066228L;
 
-	private int _width;
-	private int _height;
+	public static int _width;
+	public static int _height;
 	private int zoom;
 
 	public static boolean FPS;
@@ -116,10 +116,10 @@ public class MainWindow extends javax.swing.JFrame {
 
 		faces = new ArrayList<Face>();
 
+		setSize(_width, _height);
 		setExtendedState(MainWindow.MAXIMIZED_BOTH);
 		setUndecorated(true);
 		setVisible(true);
-		setSize(_width, _height);
 
 		gamePanel = new Drawer();
 		fps = new JLabel();
@@ -257,8 +257,8 @@ public class MainWindow extends javax.swing.JFrame {
 		Prism prisms[] = new Prism[5];
 		for (int i = 0; i < 5; i++) {
 			prisms[i] = new Prism(prism);
-			prisms[i].setZ(-250 * (i-2));
-			prisms[i].setY(-1250 * (i-2));
+			prisms[i].setZ(-250 * (i - 2));
+			prisms[i].setY(-1250 * (i - 2));
 		}
 
 		for (int i = 0; i < 6; i++) {
@@ -266,7 +266,7 @@ public class MainWindow extends javax.swing.JFrame {
 			faces.add(prism.getFaces()[i]);
 			for (int j = 0; j < 5; j++) {
 				faces.add(prisms[j].getFaces()[i]);
-				prisms[j].setCol(new Color(50 * i, 15*j + 10 * i, 12*j + 15 * i), i);
+				prisms[j].setCol(new Color(50 * i, 15 * j + 10 * i, 12 * j + 15 * i), i);
 			}
 
 		}
@@ -329,25 +329,25 @@ public class MainWindow extends javax.swing.JFrame {
 		Perspective pov = new Perspective(new double[] { -8000, 0, 8000 }, new double[] { 1, 0, -1 },
 				new double[] { 0, 1, 0 });
 		pov.setZoom(zoom);
-		
+//
 		Position2D[] points1 = { new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
 				new Position2D(500, -1000) };
-		Position2D[] points2 ={ new Position2D(-500, -500), new Position2D(-500, 500), new Position2D(500, 500),
+		Position2D[] points2 = { new Position2D(-500, -500), new Position2D(-500, 500), new Position2D(500, 500),
 				new Position2D(500, -500) };
-		Position2D[] points3 ={ new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
+		Position2D[] points3 = { new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
 				new Position2D(500, -1000) };
 		Position2D[] points4 = { new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
 				new Position2D(500, -1000) };
-		Position2D[] points5 ={ new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
+		Position2D[] points5 = { new Position2D(-500, -1000), new Position2D(-500, 1000), new Position2D(500, 1000),
 				new Position2D(500, -1000) };
-		Position2D[] points6 =  { new Position2D(-500, -500), new Position2D(-500, 500), new Position2D(500, 500),
+		Position2D[] points6 = { new Position2D(-500, -500), new Position2D(-500, 500), new Position2D(500, 500),
 				new Position2D(500, -500) };
 		Plane plane1 = new Plane(new Vector3D(-1, 0, 0), new Vector3D(0, 0, 1), new Position3D(400, 900, 1000));
-		Plane plane2 = new Plane(new Vector3D(1,0, 0), new Vector3D(0, -1, 0), new Position3D(400, 400, 0));
+		Plane plane2 = new Plane(new Vector3D(1, 0, 0), new Vector3D(0, -1, 0), new Position3D(400, 400, 0));
 		Plane plane3 = new Plane(new Vector3D(0, 1, 0), new Vector3D(0, 0, 1), new Position3D(900, 400, 1000));
 		Plane plane4 = new Plane(new Vector3D(0, -1, 0), new Vector3D(0, 0, 1), new Position3D(-100, 400, 1000));
 		Plane plane5 = new Plane(new Vector3D(-1, 0, 0), new Vector3D(0, 0, 1), new Position3D(400, -100, 1000));
-		Plane plane6 = new Plane(new Vector3D(1,0, 0), new Vector3D(0, 1, 0), new Position3D(400, 400, 2000));
+		Plane plane6 = new Plane(new Vector3D(1, 0, 0), new Vector3D(0, 1, 0), new Position3D(400, 400, 2000));
 		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
 		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
 		Face face3 = new Face(points3, points3.length, plane3, pov, col3);
@@ -360,26 +360,37 @@ public class MainWindow extends javax.swing.JFrame {
 		faces.add(face4);
 		faces.add(face5);
 		faces.add(face6);
-		
-		Position3D pos = new Position3D(400,400, 1000);
-		Vector3D axis = new Vector3D(0,0,1);
-		while (true) {
-			double num = input.test;
-		face1.orbit(num, axis, pos);
-		face2.orbit(num, axis, pos);
-		face3.orbit(num, axis, pos);
-		face4.orbit(num, axis, pos);
-		face5.orbit(num, axis, pos);
-		face6.orbit(num, axis, pos);
-		Collections.sort(faces);
-		gamePanel.setList(faces);
-		java.awt.EventQueue.invokeLater(() -> {
-			gamePanel.repaint();
 
-		});
+		Position3D pos = new Position3D(400, 400, 1000);
+		Vector3D axis = new Vector3D(0, 0, 1);
+
+		Long prevTick = System.nanoTime();
+		Long currTick = System.nanoTime();
+
+		while (true) {
+			prevTick = System.nanoTime();
+			double num = input.test;
+			face1.orbit(num, axis, pos);
+			face2.orbit(num, axis, pos);
+			face3.orbit(num, axis, pos);
+			face4.orbit(num, axis, pos);
+			face5.orbit(num, axis, pos);
+			face6.orbit(num, axis, pos);
+			Collections.sort(faces);
+			gamePanel.setList(faces);
+			java.awt.EventQueue.invokeLater(() -> {
+				gamePanel.repaint();
+
+			});
+
+			currTick = System.nanoTime();
+			fps.setText("FPS: " + Long.toString(1000000000 / (currTick - prevTick)));
 		}
+		
+//		Position2D test = new Position2D();
+//		Position3D testResult = pov.getRealPoint(test, plane1);
 	}
-	
+
 	private void testFunc() {
 		Color col1 = new Color(45, 84, 38);
 		Color col2 = new Color(72, 41, 124);
