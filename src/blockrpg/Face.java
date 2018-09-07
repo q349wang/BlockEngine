@@ -525,17 +525,18 @@ public class Face implements Comparable<Face> {
 		}
 
 		this.bound2D = Math.sqrt(this.bound2DSQ);
-		
+
 		int dim = (int) Math.ceil(2 * this.bound2D);
-		
+
 		long time = System.nanoTime();
 		this.zBuf = new double[dim][dim];
+		Line2D scanLine = new Line2D(new Vector2D(1, 0), new Position2D());
+		ArrayList<Integer> pivots = new ArrayList<Integer>();
 		for (int i = 0; i < dim; i++) {
 
-			Line2D scanLine = new Line2D(new Vector2D(1, 0),
-					new Position2D(0, i + this.center2D.getY() - this.bound2D));
+			scanLine.setPos(new double[] { 0, i + this.center2D.getY() - this.bound2D });
 
-			ArrayList<Integer> pivots = new ArrayList<Integer>();
+			pivots.clear();
 
 			for (int j = 0; j < this.edges2D.length - 1; j++) {
 				Position2D poi = this.edges2D[j].intersects(scanLine);
@@ -554,7 +555,7 @@ public class Face implements Comparable<Face> {
 					pivots.add((int) Math.round(poi.getCoord()[0]));
 				}
 			}
-Collections.sort(pivots);
+			Collections.sort(pivots);
 			int pivot = 0;
 			int in = -1;
 			if (pivots.size() == 0) {
@@ -572,19 +573,19 @@ Collections.sort(pivots);
 					if (in < 0) {
 						zBuf[j][i] = -1;
 					} else {
-//						Position3D pos = this.pov.getRealPoint(new Position2D(j + this.center2D.getX() - this.bound2D,
-//								i + this.center2D.getY() - this.bound2D), this.facePlane);
-//						if(pos != null) {
-//							zBuf[j][i] = this.pov.getPos().totDistanceFromSQ(pos);
-//						}
-						
+						Position3D pos = this.pov.getRealPoint(new Position2D(j + this.center2D.getX() - this.bound2D,
+								i + this.center2D.getY() - this.bound2D), this.facePlane);
+						if (pos != null) {
+							zBuf[j][i] = this.pov.getPos().totDistanceFromSQ(pos);
+						}
+
 					}
 				}
 			}
 
 		}
-		
-		System.out.println(System.nanoTime() - time);
+
+//		System.out.println(System.nanoTime() - time);
 //		System.out.println(this.bound2DSQ);
 		seenFace.npoints = num;
 		seenFace.xpoints = x;
