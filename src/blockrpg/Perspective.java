@@ -298,7 +298,10 @@ public class Perspective {
 
 		double xVal = Math.sqrt(this.zoom * this.zoom - point.getY() * point.getY() - point.getX() * point.getX());
 
-		Position3D viewPoint3D = this.toViewBasis(this.pos).add(new Position3D(xVal, -point.getX(), point.getY()));
+		Position3D viewPoint3D = this.toViewBasis(this.pos);
+		viewPoint3D.addX(xVal);
+		viewPoint3D.addY(-point.getX());
+		viewPoint3D.addZ(point.getY());
 
 		Line3D ray = new Line3D(this.pos, this.toStdBasis(viewPoint3D));
 
@@ -310,6 +313,8 @@ public class Perspective {
 			return stdPoint;
 		}
 	}
+	
+	
 
 	// Overriding equals() to compare two Perspective objects
 	@Override

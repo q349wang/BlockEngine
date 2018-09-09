@@ -561,7 +561,7 @@ public class Face implements Comparable<Face> {
 			if (pivots.size() == 0) {
 				for (int j = 0; j < dim; j++) {
 
-					zBuf[j][i] = -1;
+					zBuf[j][i] = 0;
 				}
 			} else {
 				for (int j = 0; j < dim; j++) {
@@ -571,7 +571,7 @@ public class Face implements Comparable<Face> {
 					}
 
 					if (in < 0) {
-						zBuf[j][i] = -1;
+						zBuf[j][i] = 0;
 					} else {
 						Position3D pos = this.pov.getRealPoint(new Position2D(j + this.center2D.getX() - this.bound2D,
 								i + this.center2D.getY() - this.bound2D), this.facePlane);
@@ -1039,13 +1039,13 @@ public class Face implements Comparable<Face> {
 	 * @return Returns true if in between points
 	 */
 	public boolean inBounds(Position2D pos, Position2D lowBound, Position2D upBound) {
-		Position2D testPoint = pos.subtract(lowBound);
-		if (testPoint.toVec().isOrigin()) {
-			return true;
-		}
-		Position2D topPoint = upBound.subtract(lowBound);
-		return testPoint.toVec().dot(topPoint.toVec()) > 0
-				&& testPoint.toVec().getLength() <= topPoint.toVec().getLength();
+		boolean testX = (pos.getX() >= lowBound.getX() && pos.getX() <= upBound.getX())
+				|| (pos.getX() <= lowBound.getX() && pos.getX() >= upBound.getX());
+
+		boolean testY = (pos.getY() >= lowBound.getY() && pos.getY() <= upBound.getY())
+				|| (pos.getY() <= lowBound.getY() && pos.getY() >= upBound.getY());
+
+		return testX && testY;
 	}
 
 	/**

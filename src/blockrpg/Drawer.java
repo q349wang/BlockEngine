@@ -24,7 +24,7 @@ public class Drawer extends JPanel {
 	public Drawer() {
 		sortedFace = new ArrayList<Face>();
 		screen = new BufferedImage(MainWindow._width, MainWindow._height, BufferedImage.TYPE_INT_RGB);
-		colBuf = new double[MainWindow._width][MainWindow._height];
+		colBuf = new int[MainWindow._width][MainWindow._height];
 		zBuf = new double[MainWindow._width][MainWindow._height];
 	}
 
@@ -42,32 +42,40 @@ public class Drawer extends JPanel {
 		// Turns on Anti-Aliasing
 		RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		 g2.setRenderingHints(rh);
+		 
+
 		Position2D pos2D = new Position2D();
 		Position3D pos3D = new Position3D();
 		for (int i = 0; i < MainWindow._width; i++) {
 			for (int j = 0; j < MainWindow._height; j++) {
 				int col = Color.WHITE.getRGB();
 				colBuf[i][j] = col;
-				zBuf[i][j] = -1;
+				zBuf[i][j] = 0;
 			}
 		}
 
-		for(Face face : sortedFace) {
+		for(int k = 0; k < sortedFace.size();k++) {
+			Face face = sortedFace.get(k);
 			double[][] faceBuf = face.getzBuf();
 			
 			int dim = (int) Math.ceil(2 * face.getBound2D());
 			for(int i = 0; i < dim;i++) {
 				for(int j = 0; j < dim;j++) {
-					int x = (int) (Math.floor(i-face.getBound2D()+face.getCenter2D().getX()) - Face.xOffset);
-					int y = (int) (-Math.floor(j-face.getBound2D()+face.getCenter2D().getY()) - Face.yOffset);
-					if(x >= 0 && x < MainWindow._width && y >= 0 && y < MainWindow._height) {
-						if(zBuf[x][y] == -1) {
-							zBuf[x][y] = faceBuf[i][j];
-							colBuf[x][y] = face.getCol().getRGB();
-						} else if (faceBuf[i][j] < zBuf[x][y]) {
-							zBuf[x][y] = faceBuf[i][j];
-							colBuf[x][y] = face.getCol().getRGB();
-						}
+					if (i < faceBuf.length && faceBuf.length != 0 && j < faceBuf[0].length) {
+						int x = (int) (Math.floor(i - face.getBound2D() + face.getCenter2D().getX()) + Face.xOffset);
+						int y = (int) (-Math.floor(j - face.getBound2D() + face.getCenter2D().getY()) + Face.yOffset);
+						if (x >= 0 && x < MainWindow._width && y >= 0 && y < MainWindow._height) {
+							if (zBuf[x][y] == 0) {
+								zBuf[x][y] = faceBuf[i][j];
+								if (zBuf[x][y] != 0) {
+									colBuf[x][y] = face.getCol().getRGB();
+								}
+
+							} else if (faceBuf[i][j] < zBuf[x][y]) {
+								zBuf[x][y] = faceBuf[i][j];
+								colBuf[x][y] = face.getCol().getRGB();
+							}
+						} 
 					}
 				}
 			}
