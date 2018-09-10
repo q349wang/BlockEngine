@@ -1,4 +1,4 @@
-# BlockRPG
+# BlockEngine
 Currently just a 3D graphics engine in development.
 
 - Perspectives are supported
