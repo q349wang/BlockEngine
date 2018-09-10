@@ -526,64 +526,64 @@ public class Face implements Comparable<Face> {
 
 		this.bound2D = Math.sqrt(this.bound2DSQ);
 
-		int dim = (int) Math.ceil(2 * this.bound2D);
-
-		long time = System.nanoTime();
-		this.zBuf = new double[dim][dim];
-		Line2D scanLine = new Line2D(new Vector2D(1, 0), new Position2D());
-		ArrayList<Integer> pivots = new ArrayList<Integer>();
-		for (int i = 0; i < dim; i++) {
-
-			scanLine.setPos(new double[] { 0, i + this.center2D.getY() - this.bound2D });
-
-			pivots.clear();
-
-			for (int j = 0; j < this.edges2D.length - 1; j++) {
-				Position2D poi = this.edges2D[j].intersects(scanLine);
-				if (poi != null) { // Test for parallel
-					// Test for bounds
-					if (this.inBounds(poi, this.viewPoints[j], this.viewPoints[j + 1])) {
-						pivots.add((int) Math.round(poi.getCoord()[0]));
-					}
-				}
-			}
-
-			Position2D poi = this.edges2D[num - 1].intersects(scanLine);
-			if (poi != null) { // Test for parallel
-				// Test for bounds
-				if (this.inBounds(poi, this.viewPoints[0], this.viewPoints[num - 1])) {
-					pivots.add((int) Math.round(poi.getCoord()[0]));
-				}
-			}
-			Collections.sort(pivots);
-			int pivot = 0;
-			int in = -1;
-			if (pivots.size() == 0) {
-				for (int j = 0; j < dim; j++) {
-
-					zBuf[j][i] = 0;
-				}
-			} else {
-				for (int j = 0; j < dim; j++) {
-					if (pivot < pivots.size() && j + this.center2D.getX() - this.bound2D >= pivots.get(pivot)) {
-						in = -in;
-						pivot++;
-					}
-
-					if (in < 0) {
-						zBuf[j][i] = 0;
-					} else {
-						Position3D pos = this.pov.getRealPoint(new Position2D(j + this.center2D.getX() - this.bound2D,
-								i + this.center2D.getY() - this.bound2D), this.facePlane);
-						if (pos != null) {
-							zBuf[j][i] = this.pov.getPos().totDistanceFromSQ(pos);
-						}
-
-					}
-				}
-			}
-
-		}
+//		int dim = (int) Math.ceil(2 * this.bound2D);
+//
+//		long time = System.nanoTime();
+//		this.zBuf = new double[dim][dim];
+//		Line2D scanLine = new Line2D(new Vector2D(1, 0), new Position2D());
+//		ArrayList<Integer> pivots = new ArrayList<Integer>();
+//		for (int i = 0; i < dim; i++) {
+//
+//			scanLine.setPos(new double[] { 0, i + this.center2D.getY() - this.bound2D });
+//
+//			pivots.clear();
+//
+//			for (int j = 0; j < this.edges2D.length - 1; j++) {
+//				Position2D poi = this.edges2D[j].intersects(scanLine);
+//				if (poi != null) { // Test for parallel
+//					// Test for bounds
+//					if (this.inBounds(poi, this.viewPoints[j], this.viewPoints[j + 1])) {
+//						pivots.add((int) Math.round(poi.getCoord()[0]));
+//					}
+//				}
+//			}
+//
+//			Position2D poi = this.edges2D[num - 1].intersects(scanLine);
+//			if (poi != null) { // Test for parallel
+//				// Test for bounds
+//				if (this.inBounds(poi, this.viewPoints[0], this.viewPoints[num - 1])) {
+//					pivots.add((int) Math.round(poi.getCoord()[0]));
+//				}
+//			}
+//			Collections.sort(pivots);
+//			int pivot = 0;
+//			int in = -1;
+//			if (pivots.size() == 0) {
+//				for (int j = 0; j < dim; j++) {
+//
+//					zBuf[j][i] = 0;
+//				}
+//			} else {
+//				for (int j = 0; j < dim; j++) {
+//					if (pivot < pivots.size() && j + this.center2D.getX() - this.bound2D >= pivots.get(pivot)) {
+//						in = -in;
+//						pivot++;
+//					}
+//
+//					if (in < 0) {
+//						zBuf[j][i] = 0;
+//					} else {
+//						Position3D pos = this.pov.getRealPoint(new Position2D(j + this.center2D.getX() - this.bound2D,
+//								i + this.center2D.getY() - this.bound2D), this.facePlane);
+//						if (pos != null) {
+//							zBuf[j][i] = this.pov.getPos().totDistanceFromSQ(pos);
+//						}
+//
+//					}
+//				}
+//			}
+//
+//		}
 
 //		System.out.println(System.nanoTime() - time);
 //		System.out.println(this.bound2DSQ);
@@ -1287,5 +1287,58 @@ public class Face implements Comparable<Face> {
 	public void setzBuf(double[][] zBuf) {
 		this.zBuf = zBuf;
 	}
-
+	
+	public static ArrayList<Face> sort(ArrayList<Face> faces, int lo, int hi) {
+		ArrayList<Face> ans = new ArrayList<Face>();
+		if(faces.size() < 1 || lo > hi) {
+			return ans;
+		}
+		if(faces.size() == 1 || lo == hi) {
+			ans.add(faces.get(0));
+			return ans;
+		}
+		
+		if(faces.size() == 2 || lo-hi == 1) {
+			
+			if(faces.get(0).compareTo(faces.get(1)) > 0) {
+				
+				ans.add(faces.get(1));
+				ans.add(faces.get(0));
+			}else {
+				ans.add(faces.get(0));
+				ans.add(faces.get(1));
+			}
+			return ans;
+		}
+		int mid = (hi+lo)/2;
+		ArrayList<Face> left = sort(faces, lo, mid);
+		ArrayList<Face> right = sort(faces, mid+1, hi);
+		
+		int i = 0;
+		int l = 0;
+		int r = 0;
+		while(i < faces.size()) {
+			if(l < left.size() && r < right.size()) {
+				if(left.get(l).compareTo(right.get(r)) <= 0) {
+					ans.add(left.get(l));
+					l++;
+				} else {
+					ans.add(right.get(r));
+					r++;
+				}
+			} else if(l >= left.size()  && r < right.size()) {
+				ans.add(right.get(r));
+				r++;
+			} else if(r >= right.size() && l < left.size()) {
+				ans.add(left.get(l));
+				l++;
+			}
+			
+			i++;
+		}
+		
+		return ans;
+		
+	}
+	
 }

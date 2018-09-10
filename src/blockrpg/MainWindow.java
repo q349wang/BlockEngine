@@ -349,17 +349,17 @@ public class MainWindow extends javax.swing.JFrame {
 		Plane plane5 = new Plane(new Vector3D(-1, 0, 0), new Vector3D(0, 0, 1), new Position3D(400, -100, 1000));
 		Plane plane6 = new Plane(new Vector3D(1, 0, 0), new Vector3D(0, 1, 0), new Position3D(400, 400, 2000));
 		Face face1 = new Face(points1, points1.length, plane1, pov, col1);
-		//Face face2 = new Face(points2, points2.length, plane2, pov, col2);
-		//Face face3 = new Face(points3, points3.length, plane3, pov, col3);
-		//Face face4 = new Face(points4, points4.length, plane4, pov, col4);
-		//Face face5 = new Face(points5, points5.length, plane5, pov, col5);
-		//Face face6 = new Face(points6, points6.length, plane6, pov, col6);
+		Face face2 = new Face(points2, points2.length, plane2, pov, col2);
+		Face face3 = new Face(points3, points3.length, plane3, pov, col3);
+		Face face4 = new Face(points4, points4.length, plane4, pov, col4);
+		Face face5 = new Face(points5, points5.length, plane5, pov, col5);
+		Face face6 = new Face(points6, points6.length, plane6, pov, col6);
 		faces.add(face1);
-		//faces.add(face2);
-		//faces.add(face3);
-		//faces.add(face4);
-		//faces.add(face5);
-		//faces.add(face6);
+		faces.add(face2);
+		faces.add(face3);
+		faces.add(face4);
+		faces.add(face5);
+		faces.add(face6);
 
 		Position3D pos = new Position3D(400, 400, 1000);
 		Vector3D axis = new Vector3D(0, 0, 1);
@@ -371,12 +371,12 @@ public class MainWindow extends javax.swing.JFrame {
 			prevTick = System.nanoTime();
 			double num = input.test;
 			face1.orbit(num, axis, pos);
-			//face2.orbit(num, axis, pos);
-			//face3.orbit(num, axis, pos);
-			//face4.orbit(num, axis, pos);
-			//face5.orbit(num, axis, pos);
-			//face6.orbit(num, axis, pos);
-			//Collections.sort(faces);
+			face2.orbit(num, axis, pos);
+			face3.orbit(num, axis, pos);
+			face4.orbit(num, axis, pos);
+			face5.orbit(num, axis, pos);
+			face6.orbit(num, axis, pos);
+			faces = Face.sort(faces, 0, faces.size() - 1);
 			gamePanel.setList(faces);
 			java.awt.EventQueue.invokeLater(() -> {
 				gamePanel.repaint();
