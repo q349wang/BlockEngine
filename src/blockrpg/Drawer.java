@@ -115,7 +115,7 @@ public class Drawer extends JPanel {
 
 			if (MainWindow.DEBUG) {
 				g2.setColor(sortedFace.get(i).getCol());
-				g2.drawString(Boolean.toString(sortedFace.get(i).isVisible()) + " " + Double.toString(sortedFace.get(i).getBound2DSQ()), 100, 100 + 10 * i);
+				g2.drawString(Boolean.toString(sortedFace.get(i).isVisible()) + " " + Double.toString(sortedFace.get(i).getPlane().getNorm().dot(sortedFace.get(i).getPOV().getPos().getDirection(sortedFace.get(i).getCenter3D()))), 100, 100 + 10 * i);
 
 			}
 		}

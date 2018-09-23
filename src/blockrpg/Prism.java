@@ -42,14 +42,14 @@ public class Prism {
 
 		plane.setPos(center.add(plane.getNorm().multiply(length / 2).toPos()).getCoord());
 
-		faces[0] = new Face(points, points.length, plane, pov);
+		faces[1] = new Face(points, points.length, plane, pov);
 
 		plane.setPos(center.subtract(plane.getNorm().multiply(length / 2).toPos()).getCoord());
 		for (Position2D point : points) {
 			point.setCoord(point.toVec().multiply(-1).getCoord());
 		}
 		plane.rotatePlane(Math.PI, new Vector3D(0, 0, 1));
-		faces[1] = new Face(points, points.length, plane, pov);
+		faces[0] = new Face(points, points.length, plane, pov);
 		for (int i = 2; i < faces.length - 1; i++) {
 			points = new Position2D[4];
 			Position3D[] truePoints = new Position3D[4];

@@ -654,11 +654,13 @@ public class Face implements Comparable<Face> {
 		}
 
 		this.bound3D = Math.sqrt(this.bound3DSQ);
-		if (Math.abs(this.facePlane.getNorm().dot(this.pov.getPos().getDirection(this.center3D))) < Coord3D.ERROR) {
+		if (this.facePlane.getNorm().dot(this.pov.getDir()) > Coord3D.ERROR) {
 			this.visible = false;
 		} else {
 			this.visible = true;
 		}
+		
+		
 	}
 
 	/**
@@ -1294,7 +1296,7 @@ public class Face implements Comparable<Face> {
 			return ans;
 		}
 		if(faces.size() == 1 || lo == hi) {
-			ans.add(faces.get(0));
+			ans.add(faces.get(lo));
 			return ans;
 		}
 		

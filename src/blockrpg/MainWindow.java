@@ -206,7 +206,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 			@Override
 			public void run() {
-				window.testFunc3();
+				window.testFunc2();
 			}
 
 		});
@@ -304,10 +304,11 @@ public class MainWindow extends javax.swing.JFrame {
 //					}
 //				}
 //			}
-			Collections.sort(faces);
+			faces = Face.sort(faces, 0, faces.size() - 1);
 			for (Face face : faces) {
 				face.setMoved(false);
 			}
+			gamePanel.setList(faces);
 			java.awt.EventQueue.invokeLater(() -> {
 
 				gamePanel.repaint();
