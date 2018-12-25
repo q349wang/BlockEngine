@@ -16,19 +16,19 @@ public class Drawer extends JPanel {
 	private static final Stroke THIN = new BasicStroke(1);
 	private static final Stroke THICK = new BasicStroke((float) 1.5);
 
-	private List<Face> sortedFace;
+	private List<List<Face>> sortedFace;
 	private BufferedImage screen;
 	private double[][] zBuf;
 	private int[][] colBuf;
 
 	public Drawer() {
-		sortedFace = new ArrayList<Face>();
+		sortedFace = new ArrayList<List<Face>>();
 		screen = new BufferedImage(MainWindow._width, MainWindow._height, BufferedImage.TYPE_INT_RGB);
 		colBuf = new int[MainWindow._width][MainWindow._height];
 		zBuf = new double[MainWindow._width][MainWindow._height];
 	}
 
-	public void setList(ArrayList<Face> faces) {
+	public void setList(ArrayList<List<Face>>faces) {
 		sortedFace = faces;
 	}
 
@@ -91,34 +91,34 @@ public class Drawer extends JPanel {
 //		
 		
 
-		for (int i = 0; i < sortedFace.size(); i++) {
-			if (sortedFace.get(i).isVisible()) {
-				g2.setColor(sortedFace.get(i).getCol());
-				if (MainWindow.WIRE) {
-					g2.setStroke(THIN);
-					g2.drawPolygon(sortedFace.get(i).getPoly());
-				} else {
-					// g2.setStroke(THICK);
-					// g2.drawPolygon(sortedFace.get(i).getPoly());
-					g2.fillPolygon(sortedFace.get(i).getPoly());
-
-				}
-
-				if (MainWindow.SHOWCENT) {
-					Position2D center = sortedFace.get(i).getPOV().getViewPoint(sortedFace.get(i).getCenter3D());
-					g2.setColor(Color.BLACK);
-					g2.fillArc((int) (center.getX() + Face.xOffset - 5), (int) (-center.getY() + Face.yOffset - 5), 10,
-							10, 0, 360);
-				}
-
-			}
-
-			if (MainWindow.DEBUG) {
-				g2.setColor(sortedFace.get(i).getCol());
-				g2.drawString(Boolean.toString(sortedFace.get(i).isVisible()) + " " + Double.toString(sortedFace.get(i).getPlane().getNorm().dot(sortedFace.get(i).getPOV().getPos().getDirection(sortedFace.get(i).getCenter3D()))), 100, 100 + 10 * i);
-
-			}
-		}
+//		for (int i = 0; i < sortedFace.size(); i++) {
+//			if (sortedFace.get(i).isVisible()) {
+//				g2.setColor(sortedFace.get(i).getCol());
+//				if (MainWindow.WIRE) {
+//					g2.setStroke(THIN);
+//					g2.drawPolygon(sortedFace.get(i).getPoly());
+//				} else {
+//					// g2.setStroke(THICK);
+//					// g2.drawPolygon(sortedFace.get(i).getPoly());
+//					g2.fillPolygon(sortedFace.get(i).getPoly());
+//
+//				}
+//
+//				if (MainWindow.SHOWCENT) {
+//					Position2D center = sortedFace.get(i).getPOV().getViewPoint(sortedFace.get(i).getCenter3D());
+//					g2.setColor(Color.BLACK);
+//					g2.fillArc((int) (center.getX() + Face.xOffset - 5), (int) (-center.getY() + Face.yOffset - 5), 10,
+//							10, 0, 360);
+//				}
+//
+//			}
+//
+//			if (MainWindow.DEBUG) {
+//				g2.setColor(sortedFace.get(i).getCol());
+//				g2.drawString(Boolean.toString(sortedFace.get(i).isVisible()) + " " + Double.toString(sortedFace.get(i).getPlane().getNorm().dot(sortedFace.get(i).getPOV().getPos().getDirection(sortedFace.get(i).getCenter3D()))), 100, 100 + 10 * i);
+//
+//			}
+//		}
 
 	}
 }

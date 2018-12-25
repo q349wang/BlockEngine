@@ -163,7 +163,7 @@ public class MainWindow extends javax.swing.JFrame {
 			gamePanel.add(fps);
 		}
 		gamePanel.setLayout(null);
-		gamePanel.setList(faces);
+		//gamePanel.setList(faces);
 		gamePanel.requestFocus();
 		pack();
 	}
@@ -308,7 +308,7 @@ public class MainWindow extends javax.swing.JFrame {
 			for (Face face : faces) {
 				face.setMoved(false);
 			}
-			gamePanel.setList(faces);
+			//gamePanel.setList(faces);
 			java.awt.EventQueue.invokeLater(() -> {
 
 				gamePanel.repaint();
@@ -378,7 +378,7 @@ public class MainWindow extends javax.swing.JFrame {
 			face5.orbit(num, axis, pos);
 			face6.orbit(num, axis, pos);
 			faces = Face.sort(faces, 0, faces.size() - 1);
-			gamePanel.setList(faces);
+			//gamePanel.setList(faces);
 			java.awt.EventQueue.invokeLater(() -> {
 				gamePanel.repaint();
 
@@ -418,7 +418,7 @@ public class MainWindow extends javax.swing.JFrame {
 		// gamePanel.addShape(face2);
 		// gamePanel.addShape(face3);
 		Collections.sort(faces);
-		gamePanel.setList(faces);
+		//gamePanel.setList(faces);
 		java.awt.EventQueue.invokeLater(() -> {
 			gamePanel.repaint();
 
@@ -427,7 +427,7 @@ public class MainWindow extends javax.swing.JFrame {
 		face1.setX(1000);
 		face2.setX(-1000);
 		Collections.sort(faces);
-		gamePanel.setList(faces);
+		//gamePanel.setList(faces);
 		java.awt.EventQueue.invokeLater(() -> {
 			gamePanel.repaint();
 
@@ -488,7 +488,7 @@ public class MainWindow extends javax.swing.JFrame {
 			// gamePanel.addShape(face1);
 			// gamePanel.addShape(face2);
 			Collections.sort(faces);
-			gamePanel.setList(faces);
+			//gamePanel.setList(faces);
 			java.awt.EventQueue.invokeLater(() -> {
 				gamePanel.repaint();
 
