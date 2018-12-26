@@ -1,17 +1,22 @@
 package blockrpg;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.util.ArrayList;
 
 public class Shape {
-	protected Face[] faces;
+	protected ArrayList<Face> faces;
 	protected Perspective pov;
 
 	protected Position3D center;
 	
+	protected static final Stroke THIN = new BasicStroke(1);
+	protected static final Stroke THICK = new BasicStroke((float) 1.5);
 	
-	public Shape(Face[] faces, Perspective pov, Position3D center) {
-		this.faces = faces.clone();
+	public Shape(ArrayList<Face> faces, Perspective pov, Position3D center) {
+		this.faces = faces;
 		this.pov = pov;
 		this.center = center.clone();
 	}
@@ -149,11 +154,11 @@ public class Shape {
 	 * @param index Index of face
 	 */
 	public void setCol(Color col, int index) {
-		if (index >= faces.length) {
+		if (index >= faces.size()) {
 			throw new IndexOutOfBoundsException();
 		}
 
-		faces[index].setCol(col);
+		faces.get(index).setCol(col);
 	}
 
 	/**
@@ -163,8 +168,8 @@ public class Shape {
 	 * @param axis Axis of rotation
 	 */
 	public void rotate(double ang, Vector3D axis) {
-		for (int i = 0; i < faces.length; i++) {
-			faces[i].orbit(ang, axis, this.center);
+		for (int i = 0; i < faces.size(); i++) {
+			faces.get(i).orbit(ang, axis, this.center);
 		}
 	}
 
@@ -172,7 +177,7 @@ public class Shape {
 	 * 
 	 * @return Returns array of faces
 	 */
-	public Face[] getFaces() {
+	public ArrayList<Face> getFaces() {
 		return this.faces;
 	}
 	
@@ -181,6 +186,33 @@ public class Shape {
 	 * @param g2
 	 */
 	public void draw(Graphics2D g2) {
-		
+		for (int i = 0; i < faces.size(); i++) {
+		if (faces.get(i).isVisible()) {
+			g2.setColor(faces.get(i).getCol());
+			if (MainWindow.WIRE) {
+				g2.setStroke(THIN);
+				g2.drawPolygon(faces.get(i).getPoly());
+			} else {
+				// g2.setStroke(THICK);
+				// g2.drawPolygon(sortedFace.get(i).getPoly());
+				g2.fillPolygon(faces.get(i).getPoly());
+
+			}
+
+			if (MainWindow.SHOWCENT) {
+				Position2D center = faces.get(i).getPOV().getViewPoint(faces.get(i).getCenter3D());
+				g2.setColor(Color.BLACK);
+				g2.fillArc((int) (center.getX() + Face.xOffset - 5), (int) (-center.getY() + Face.yOffset - 5), 10,
+						10, 0, 360);
+			}
+
+		}
+
+		if (MainWindow.DEBUG) {
+			g2.setColor(faces.get(i).getCol());
+			g2.drawString(Boolean.toString(faces.get(i).isVisible()) + " " + Double.toString(faces.get(i).getPlane().getNorm().dot(faces.get(i).getPOV().getPos().getDirection(faces.get(i).getCenter3D()))), 100, 100 + 10 * i);
+
+		}
+	}
 	}
 }
