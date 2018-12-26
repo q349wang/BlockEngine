@@ -16,19 +16,19 @@ public class Drawer extends JPanel {
 	private static final Stroke THIN = new BasicStroke(1);
 	private static final Stroke THICK = new BasicStroke((float) 1.5);
 
-	private List<List<Face>> sortedFace;
+	private List<Shape> sortedFace;
 	private BufferedImage screen;
 	private double[][] zBuf;
 	private int[][] colBuf;
 
 	public Drawer() {
-		sortedFace = new ArrayList<List<Face>>();
+		sortedFace = new ArrayList<Shape>();
 		screen = new BufferedImage(MainWindow._width, MainWindow._height, BufferedImage.TYPE_INT_RGB);
 		colBuf = new int[MainWindow._width][MainWindow._height];
 		zBuf = new double[MainWindow._width][MainWindow._height];
 	}
 
-	public void setList(ArrayList<List<Face>>faces) {
+	public void setList(ArrayList<Shape>faces) {
 		sortedFace = faces;
 	}
 
@@ -90,6 +90,7 @@ public class Drawer extends JPanel {
 //		 g2.drawImage(screen, 0, 0, MainWindow._width, MainWindow._height, null);
 //		
 		
+		 
 
 //		for (int i = 0; i < sortedFace.size(); i++) {
 //			if (sortedFace.get(i).isVisible()) {
