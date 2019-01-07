@@ -15,6 +15,12 @@ public class Shape {
 	protected static final Stroke THIN = new BasicStroke(1);
 	protected static final Stroke THICK = new BasicStroke((float) 1.5);
 	
+	public Shape() {
+		this.faces = new ArrayList<Face>();
+		this.pov = new Perspective();
+		this.center = new Position3D();
+	}
+	
 	public Shape(ArrayList<Face> faces, Perspective pov, Position3D center) {
 		this.faces = faces;
 		this.pov = pov;
