@@ -263,9 +263,9 @@ public class MainWindow extends javax.swing.JFrame {
 
 		for (int i = 0; i < 6; i++) {
 			prism.setCol(new Color(50 * i, 200 - 15 * i, 210 - 30 * i), i);
-			faces.add(prism.getFaces()[i]);
+			faces.add(prism.getFaces().get(i));
 			for (int j = 0; j < 5; j++) {
-				faces.add(prisms[j].getFaces()[i]);
+				//faces.add(prisms[j].getFaces()[i]);
 				prisms[j].setCol(new Color(50 * i, 15 * j + 10 * i, 12 * j + 15 * i), i);
 			}
 

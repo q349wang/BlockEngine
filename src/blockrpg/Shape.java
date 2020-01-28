@@ -186,39 +186,4 @@ public class Shape {
 	public ArrayList<Face> getFaces() {
 		return this.faces;
 	}
-	
-	/**
-	 * Draws shape on g2
-	 * @param g2
-	 */
-	public void draw(Graphics2D g2) {
-		for (int i = 0; i < faces.size(); i++) {
-		if (faces.get(i).isVisible()) {
-			g2.setColor(faces.get(i).getCol());
-			if (MainWindow.WIRE) {
-				g2.setStroke(THIN);
-				g2.drawPolygon(faces.get(i).getPoly());
-			} else {
-				// g2.setStroke(THICK);
-				// g2.drawPolygon(sortedFace.get(i).getPoly());
-				g2.fillPolygon(faces.get(i).getPoly());
-
-			}
-
-			if (MainWindow.SHOWCENT) {
-				Position2D center = faces.get(i).getPOV().getViewPoint(faces.get(i).getCenter3D());
-				g2.setColor(Color.BLACK);
-				g2.fillArc((int) (center.getX() + Face.xOffset - 5), (int) (-center.getY() + Face.yOffset - 5), 10,
-						10, 0, 360);
-			}
-
-		}
-
-		if (MainWindow.DEBUG) {
-			g2.setColor(faces.get(i).getCol());
-			g2.drawString(Boolean.toString(faces.get(i).isVisible()) + " " + Double.toString(faces.get(i).getPlane().getNorm().dot(faces.get(i).getPOV().getPos().getDirection(faces.get(i).getCenter3D()))), 100, 100 + 10 * i);
-
-		}
-	}
-	}
 }

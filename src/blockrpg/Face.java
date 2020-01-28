@@ -1041,11 +1041,11 @@ public class Face implements Comparable<Face> {
 	 * @return Returns true if in between points
 	 */
 	public boolean inBounds(Position2D pos, Position2D lowBound, Position2D upBound) {
-		boolean testX = (pos.getX() >= lowBound.getX() && pos.getX() <= upBound.getX())
-				|| (pos.getX() <= lowBound.getX() && pos.getX() >= upBound.getX());
+		boolean testX = lowBound.getX() <= upBound.getX() ? (pos.getX() >= lowBound.getX() && pos.getX() <= upBound.getX()) :
+				 (pos.getX() <= lowBound.getX() && pos.getX() >= upBound.getX());
 
-		boolean testY = (pos.getY() >= lowBound.getY() && pos.getY() <= upBound.getY())
-				|| (pos.getY() <= lowBound.getY() && pos.getY() >= upBound.getY());
+		boolean testY = lowBound.getY() <= upBound.getY() ? (pos.getY() >= lowBound.getY() && pos.getY() <= upBound.getY()) :
+				(pos.getY() <= lowBound.getY() && pos.getY() >= upBound.getY());
 
 		return testX && testY;
 	}
@@ -1288,6 +1288,23 @@ public class Face implements Comparable<Face> {
 
 	public void setzBuf(double[][] zBuf) {
 		this.zBuf = zBuf;
+	}
+	
+	/**
+	 * 
+	 * @param line Line to check intersection with
+	 * @return Returns arraylist of Position2Ds which intersects line
+	 */
+	public ArrayList<Position2D> intersectsView(Line2D line) {
+		ArrayList<Position2D> intersects = new ArrayList<Position2D>();
+		for(int i = 0; i < this.edges2D.length; i++) {
+			Position2D poi = this.edges2D[i].intersects(line);
+			if(poi != null)
+			{
+				intersects.add(poi);
+			}
+		}
+		return intersects;
 	}
 	
 	public static ArrayList<Face> sort(ArrayList<Face> faces, int lo, int hi) {

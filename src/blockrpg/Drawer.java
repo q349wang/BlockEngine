@@ -1,9 +1,12 @@
 package blockrpg;
 
 import javax.swing.JPanel;
+
+import javafx.util.Pair;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.List;
 
 public class Drawer extends JPanel {
@@ -17,19 +20,57 @@ public class Drawer extends JPanel {
 	private static final Stroke THICK = new BasicStroke((float) 1.5);
 
 	private List<Shape> sortedFace;
+	private List<Position2D> drawStack;
 	private BufferedImage screen;
 	private double[][] zBuf;
 	private int[][] colBuf;
 
 	public Drawer() {
-		sortedFace = new ArrayList<Shape>();
+		sortedFace = new Vector<Shape>();
 		screen = new BufferedImage(MainWindow._width, MainWindow._height, BufferedImage.TYPE_INT_RGB);
 		colBuf = new int[MainWindow._width][MainWindow._height];
 		zBuf = new double[MainWindow._width][MainWindow._height];
 	}
 
-	public void setList(ArrayList<Shape>faces) {
+	public void setList(Vector<Shape>faces) {
 		sortedFace = faces;
+	}
+	
+	public void drawScreen() {
+		drawStack.clear();
+		for (int i = 0; i < MainWindow._height; i++) {
+			for (int j = 0; j <MainWindow._width; j++) {
+				
+			}
+		}
+	}
+	
+	private List<Position2D> drawLine(int yOffset) {
+		List<Position2D> toUpdate = new Vector<Position2D>();
+		List<Position2D> intersects = new Vector<Position2D>();
+		Line2D line = new Line2D(new Vector2D(0,1), new Position2D(0, yOffset));
+		for(Shape shape : sortedFace)
+		{
+			for(Face face : shape.getFaces())
+			{
+				List<Position2D> faceIntersects = face.intersectsView(line);
+				if (faceIntersects.size() > 0)
+				{
+					for (Position2D pos : faceIntersects)
+					{
+						if (pos.getX() < Face.xOffset)
+						{
+							intersects.add(pos);
+						}
+					}
+				}
+			}
+		}
+		for(int i = 0; i < MainWindow._width; i++)
+		{
+			
+		}
+		return toUpdate;
 	}
 
 	@Override
@@ -92,34 +133,13 @@ public class Drawer extends JPanel {
 		
 		 
 
-//		for (int i = 0; i < sortedFace.size(); i++) {
-//			if (sortedFace.get(i).isVisible()) {
-//				g2.setColor(sortedFace.get(i).getCol());
-//				if (MainWindow.WIRE) {
-//					g2.setStroke(THIN);
-//					g2.drawPolygon(sortedFace.get(i).getPoly());
-//				} else {
-//					// g2.setStroke(THICK);
-//					// g2.drawPolygon(sortedFace.get(i).getPoly());
-//					g2.fillPolygon(sortedFace.get(i).getPoly());
-//
-//				}
-//
-//				if (MainWindow.SHOWCENT) {
-//					Position2D center = sortedFace.get(i).getPOV().getViewPoint(sortedFace.get(i).getCenter3D());
-//					g2.setColor(Color.BLACK);
-//					g2.fillArc((int) (center.getX() + Face.xOffset - 5), (int) (-center.getY() + Face.yOffset - 5), 10,
-//							10, 0, 360);
-//				}
-//
-//			}
-//
-//			if (MainWindow.DEBUG) {
-//				g2.setColor(sortedFace.get(i).getCol());
-//				g2.drawString(Boolean.toString(sortedFace.get(i).isVisible()) + " " + Double.toString(sortedFace.get(i).getPlane().getNorm().dot(sortedFace.get(i).getPOV().getPos().getDirection(sortedFace.get(i).getCenter3D()))), 100, 100 + 10 * i);
-//
-//			}
-//		}
+		for (int i = 0; i < sortedFace.size(); i++) {
+			for(Face face : sortedFace.get(i).getFaces())
+			if (MainWindow.DEBUG) {
+				g2.setColor(face.getCol());
+				g2.drawString(Boolean.toString(face.isVisible()) + " " + Double.toString(face.getPlane().getNorm().dot(face.getPOV().getPos().getDirection(face.getCenter3D()))), 100, 100 + 10 * i);
 
+			}
+		}
 	}
 }
